@@ -1,10 +1,10 @@
-# Clio Audiobook Player (Beta)
+# Clio Audiobook Player
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.html)
 
-A minimalistic, lightning-fast, and distraction-free local audiobook player for Android.
+Clio is a clean, simple audiobook player for Android designed for listening to local audio files without clutter, tracking, or account requirements.
 
-> **Status: Beta** — This app is currently in beta. Feedback and issue reports are welcome.
+It started as a fork of [Voice](https://github.com/PaulWoitaschek/Voice) by Paul Woitaschek, refined with practical everyday features, a refreshed interface, and a focus on speed and battery efficiency.
 
 ---
 
@@ -26,44 +26,44 @@ A minimalistic, lightning-fast, and distraction-free local audiobook player for 
 
 ---
 
-## What's New & Changelog (vs. Original)
+## What's Different in Clio
 
-Clio is a specialized fork built upon the open-source foundation of [Voice](https://github.com/PaulWoitaschek/Voice) by Paul Woitaschek, featuring significant UI modernizations, new player capabilities, and comprehensive internal performance optimizations:
+Compared to the original Voice app, Clio brings several usability tweaks and quality-of-life additions:
 
-### New Player & UI Features
-- **Playback Screen Lock:** Dedicated lock button to disable touchscreen interactions while playing, preventing accidental skips or pauses in your pocket.
-- **Integrated 5-Band Graphic Equalizer:** Real-time audio equalizer with presets (Spoken Word, Bass Boost, Treble Boost, Vocal Clarity) and custom frequency sliders.
-- **Refined Navigation & Controls:** Sleek collapse arrow buttons instead of the generic close "X" icon.
-- **Modernized UI & Adaptive Icon:** Refreshed Material You layout with a custom warm orange-red gradient adaptive icon.
-- **"NEW" Badge Indicator:** Clear visual badge on freshly added and unplayed audiobooks in the library.
-- **Percentage Progress Indicator:** Exact listening progress percentage displayed across book cards, chapter rows, and player views.
-- **Auto-Open Last Audiobook on Startup:** Option to automatically launch straight into the last played audiobook when opening the app.
-- **Independent Skip & Rewind Durations:** Skip-forward and rewind times can now be configured separately (e.g., 30s forward, 10s backward).
-- **Customizable Playback Backgrounds:** Choose between cover art blur, dynamic theme colors, and solid dark backgrounds.
+### Player & Interface
+- Playback lock: A dedicated lock button keeps the screen from reacting to accidental taps while your phone is in your pocket or bag. The icon glows reddish when locked so you always know the current state.
+- Built-in equalizer: A 5-band equalizer with presets for spoken voice, bass boost, treble boost, and vocal clarity, as well as manual sliders.
+- Cleaner navigation: Collapsible header arrows and organized popup menus instead of cluttered controls.
+- Refreshed look: Modern Material You styling with a warm adaptive app icon.
+- Library indicators: Clear badges for newly added books and exact listening progress percentages across cards, chapters, and the main player.
+- Quick resume: Optional setting to jump straight into your last played audiobook when opening the app.
+- Separate skip intervals: Set forward and rewind skip durations independently (for example, 30s forward, 10s backward).
+- Flexible player backgrounds: Choose between blurred cover art, dynamic theme colors, or plain dark backgrounds.
 
-### Performance & Engine Improvements
-- **Instant Cold Start:** Near-instant application startup powered by Android Baseline Profiles and lean composable initialization.
-- **Optimized Audio Rendering Pipeline:** Custom audio-only renderers factory with reduced playback latency and minimal CPU overhead.
-- **Faster Library Scanning & Database:** Streamlined Room database queries and multi-threaded chapter/metadata parsing.
-- **Zero Telemetry & Bloat:** Completely free of background analytics, ads, and external donation prompts.
-- **100% German & English Localization:** Full translation coverage for all settings, dialogs, and controls.
+### Under the Hood
+- Fast startup: Optimized launch time so the player opens instantly.
+- Lean audio engine: Tuned specifically for spoken audio with minimal background CPU and battery usage.
+- Faster scanning: Quicker folder imports and smoother indexing for large libraries.
+- Private and offline: No tracking, analytics, ads, or internet permissions required.
+- Full translations: Complete German and English localization throughout all menus and dialogs.
 
 ---
 
-## Download Release
+## Downloads
 
-- **[`Clio-Audiobook-Player-v1.0.1.apk`](https://github.com/mryx007/clio-audiobook-player/releases/download/v1.0.1/Clio-Audiobook-Player-v1.0.1.apk)** — Standalone release build (v1.0.1).
-- **[`Clio-Audiobook-Player-v1.0.0-beta.apk`](https://github.com/mryx007/clio-audiobook-player/releases/download/v1.0.0-beta/Clio-Audiobook-Player-v1.0.0-beta.apk)** — Previous beta build (v1.0.0-beta).
+- [Clio-Audiobook-Player-v1.0.1.apk](https://github.com/mryx007/clio-audiobook-player/releases/download/v1.0.1/Clio-Audiobook-Player-v1.0.1.apk) - Latest release (v1.0.1)
+- [Clio-Audiobook-Player-v1.0.0-beta.apk](https://github.com/mryx007/clio-audiobook-player/releases/download/v1.0.0-beta/Clio-Audiobook-Player-v1.0.0-beta.apk) - Previous beta build (v1.0.0-beta)
 
 ---
 
 ## Credits & Acknowledgements
 
-Clio Audiobook Player is a fork developed from the open-source project [Voice](https://github.com/PaulWoitaschek/Voice) created by **Paul Woitaschek**. 
-All original work remains under the **GNU General Public License v3.0 (GPLv3)**.
+Clio Audiobook Player is based on the open-source player [Voice](https://github.com/PaulWoitaschek/Voice) created by **Paul Woitaschek**.
+All original work is licensed under the **GNU General Public License v3.0 (GPLv3)**.
 
 ---
 
 ## License
 
 This project is licensed under the [GNU General Public License v3.0](LICENSE).
+
