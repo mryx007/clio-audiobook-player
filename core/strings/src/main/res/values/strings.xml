@@ -346,4 +346,32 @@
     <string name="playback.equalizer.preset.bass_cut">Bass cut</string>
     <!-- Equalizer preset label for softening harsh sibilants. -->
     <string name="playback.equalizer.preset.de_esser">De-Esser</string>
+    <!-- Settings row title for listening statistics. -->
+    <string name="settings.statistics.title">Listening statistics</string>
+    <!-- Settings row summary for listening statistics. -->
+    <string name="settings.statistics.summary">View your listening history, monthly breakdown, and total time</string>
+    <!-- Title of the listening statistics screen. -->
+    <string name="statistics.title">Listening statistics</string>
+    <!-- Stat card label for total listening time. -->
+    <string name="statistics.total_time">Total listening time</string>
+    <!-- Stat card label for listening time this month. -->
+    <string name="statistics.this_month">This month</string>
+    <!-- Stat card label for count of distinct audiobooks listened to. -->
+    <string name="statistics.books_listened">Audiobooks</string>
+    <!-- Section header for monthly listening history breakdown. -->
+    <string name="statistics.monthly_history">Monthly history</string>
+    <!-- Section header for per-audiobook statistics breakdown. -->
+    <string name="statistics.book_history">By audiobook</string>
+    <!-- Action button label to import statistics from Smart AudioBook Player XML file. -->
+    <string name="statistics.import_button">Import from Smart AudioBook Player</string>
+    <!-- Message shown after successfully importing statistics. -->
+    <string name="statistics.import_success">%1$d audiobooks and %2$d hours imported successfully</string>
+    <!-- Message shown when statistics import fails. -->
+    <string name="statistics.import_error">Failed to import statistics.xml</string>
+    <!-- Message shown when no statistics have been recorded yet. -->
+    <string name="statistics.empty">No listening statistics recorded yet. Start listening to build your history!</string>
+    <!-- Action to clear all recorded statistics. -->
+    <string name="statistics.clear_all">Clear statistics</string>
+    <!-- Confirmation dialog message before deleting all statistics. -->
+    <string name="statistics.clear_confirm">Are you sure you want to delete all listening statistics?</string>
 </resources>

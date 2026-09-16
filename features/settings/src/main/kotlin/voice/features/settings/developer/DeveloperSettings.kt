@@ -151,7 +151,7 @@ interface DeveloperSettingsProvider {
 
   @Provides
   @IntoSet
-  fun navEntryProvider(): NavEntryProvider<*> = NavEntryProvider<Destination.DeveloperSettings> { key ->
+  fun developerSettingsNavEntryProvider(): NavEntryProvider<*> = NavEntryProvider<Destination.DeveloperSettings> { key ->
     NavEntry(key) {
       DeveloperSettings()
     }

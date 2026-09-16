@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import voice.core.data.repo.BookRepository
+import voice.core.data.repo.ListeningStatisticRepository
 import voice.core.featureflag.ExperimentalPlaybackPersistenceQualifier
 import voice.core.featureflag.FeatureFlag
 import voice.core.logging.api.Logger
@@ -28,6 +29,7 @@ import kotlin.time.Duration.Companion.minutes
 @SingleIn(PlaybackScope::class)
 class PositionUpdater(
   private val bookRepo: BookRepository,
+  private val listeningStatisticRepo: ListeningStatisticRepository,
   private val scope: CoroutineScope,
   private val playStateManager: PlayStateManager,
   @ExperimentalPlaybackPersistenceQualifier
@@ -36,6 +38,7 @@ class PositionUpdater(
 
   private var player: Player? = null
   private var updateJob: Job? = null
+  private var lastTrackedWallTimeMs: Long = 0L
 
   fun attachTo(player: Player) {
     this.player?.removeListener(this)
@@ -48,6 +51,7 @@ class PositionUpdater(
         .distinctUntilChanged()
         .collectLatest { playing ->
           if (playing) {
+            lastTrackedWallTimeMs = System.currentTimeMillis()
             while (true) {
               delay(
                 if (experimentalPlaybackPersistenceFeatureFlag.get()) {
@@ -57,7 +61,11 @@ class PositionUpdater(
                 },
               )
               flushPositionNow()
+              trackListeningTimeNow()
             }
+          } else {
+            trackListeningTimeNow()
+            lastTrackedWallTimeMs = 0L
           }
         }
     }
@@ -118,6 +126,23 @@ class PositionUpdater(
         Logger.w("$mediaId not in $content")
         content
       }
+    }
+  }
+
+  private suspend fun trackListeningTimeNow() {
+    if (lastTrackedWallTimeMs <= 0L) return
+    val now = System.currentTimeMillis()
+    val elapsedMs = now - lastTrackedWallTimeMs
+    val elapsedSeconds = elapsedMs / 1000L
+    if (elapsedSeconds >= 1L) {
+      lastTrackedWallTimeMs = now - (elapsedMs % 1000L)
+      val player = player ?: return
+      val mediaItem = player.currentMediaItem ?: return
+      val mediaId = mediaItem.mediaId.toMediaIdOrNull() ?: return
+      val bookId = mediaId.bookId ?: return
+      val book = bookRepo.get(bookId)
+      val title = book?.content?.name ?: return
+      listeningStatisticRepo.recordListeningTime(bookId, title, elapsedSeconds)
     }
   }
 

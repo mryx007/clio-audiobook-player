@@ -177,4 +177,18 @@
     <string name="playback.equalizer.preset.treble_boost">Höhen-Boost</string>
     <string name="playback.equalizer.preset.bass_cut">Bass-Cut</string>
     <string name="playback.equalizer.preset.de_esser">De-Esser</string>
+    <string name="settings.statistics.title">Hörstatistiken</string>
+    <string name="settings.statistics.summary">Hörhistorie, Monatsübersicht und Gesamtdauer ansehen</string>
+    <string name="statistics.title">Hörstatistiken</string>
+    <string name="statistics.total_time">Gesamte Hörzeit</string>
+    <string name="statistics.this_month">Dieser Monat</string>
+    <string name="statistics.books_listened">Hörbücher</string>
+    <string name="statistics.monthly_history">Monatsübersicht</string>
+    <string name="statistics.book_history">Nach Hörbuch</string>
+    <string name="statistics.import_button">Aus Smart AudioBook Player importieren</string>
+    <string name="statistics.import_success">%1$d Hörbücher und %2$d Stunden erfolgreich importiert</string>
+    <string name="statistics.import_error">Import der statistics.xml fehlgeschlagen</string>
+    <string name="statistics.empty">Noch keine Hörstatistiken vorhanden. Starte die Wiedergabe, um deine Historie aufzubauen!</string>
+    <string name="statistics.clear_all">Statistiken zurücksetzen</string>
+    <string name="statistics.clear_confirm">Möchtest du wirklich alle aufgezeichneten Hörstatistiken löschen?</string>
 </resources>

@@ -218,6 +218,24 @@ private fun Settings(
 
       item {
         ListItem(
+          modifier = Modifier.clickable { listener.openStatistics() },
+          leadingContent = {
+            Icon(
+              imageVector = VoiceIcons.Analytics,
+              contentDescription = stringResource(StringsR.string.settings_statistics_title),
+              tint = MaterialTheme.colorScheme.primary,
+            )
+          },
+          supportingContent = {
+            Text(stringResource(StringsR.string.settings_statistics_summary))
+          },
+        ) {
+          Text(stringResource(StringsR.string.settings_statistics_title))
+        }
+      }
+
+      item {
+        ListItem(
           modifier = Modifier.clickable { listener.openBugReport() },
           leadingContent = {
             Icon(
