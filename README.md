@@ -8,6 +8,24 @@ A minimalistic, lightning-fast, and distraction-free local audiobook player for 
 
 ---
 
+## Screenshots
+
+<p align="center">
+  <img src="docs/screenshots/Screenshot_1789584256.png" width="30%" alt="Clio Screenshot 1" />
+  <img src="docs/screenshots/Screenshot_1789584298.png" width="30%" alt="Clio Screenshot 2" />
+  <img src="docs/screenshots/Screenshot_1789584321.png" width="30%" alt="Clio Screenshot 3" />
+</p>
+<p align="center">
+  <img src="docs/screenshots/Screenshot_1789584325.png" width="30%" alt="Clio Screenshot 4" />
+  <img src="docs/screenshots/Screenshot_1789584336.png" width="30%" alt="Clio Screenshot 5" />
+  <img src="docs/screenshots/Screenshot_1789584396.png" width="30%" alt="Clio Screenshot 6" />
+</p>
+<p align="center">
+  <img src="docs/screenshots/Screenshot_1789584595.png" width="30%" alt="Clio Screenshot 7" />
+</p>
+
+---
+
 ## What's New & Changelog (vs. Original)
 
 Clio is a specialized fork built upon the open-source foundation of [Voice](https://github.com/PaulWoitaschek/Voice) by Paul Woitaschek, featuring significant UI modernizations, new player capabilities, and comprehensive internal performance optimizations:
