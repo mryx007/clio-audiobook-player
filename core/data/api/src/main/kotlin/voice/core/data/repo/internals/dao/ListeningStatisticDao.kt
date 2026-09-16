@@ -24,11 +24,17 @@ public interface ListeningStatisticDao {
   @Query("UPDATE listening_statistics SET durationSeconds = durationSeconds + :additionalSeconds WHERE id = :id")
   public suspend fun addDuration(id: Long, additionalSeconds: Long)
 
+  @Query("UPDATE listening_statistics SET durationSeconds = :durationSeconds WHERE id = :id")
+  public suspend fun updateDuration(id: Long, durationSeconds: Long)
+
   @Query("SELECT yearMonth, SUM(durationSeconds) as totalSeconds FROM listening_statistics GROUP BY yearMonth ORDER BY yearMonth DESC")
   public fun getMonthlyStatisticsFlow(): Flow<List<MonthlyStatistic>>
 
-  @Query("SELECT bookTitle, bookId, SUM(durationSeconds) as totalSeconds FROM listening_statistics GROUP BY bookTitle ORDER BY totalSeconds DESC")
+  @Query("SELECT bookTitle, bookId, SUM(durationSeconds) as totalSeconds, MAX(coverUrl) as coverUrl FROM listening_statistics GROUP BY bookTitle ORDER BY totalSeconds DESC")
   public fun getBookStatisticsFlow(): Flow<List<BookStatistic>>
+
+  @Query("UPDATE listening_statistics SET coverUrl = :coverUrl WHERE bookTitle = :bookTitle")
+  public suspend fun updateCoverForBook(bookTitle: String, coverUrl: String)
 
   @Query("SELECT COALESCE(SUM(durationSeconds), 0) FROM listening_statistics")
   public fun getTotalSecondsFlow(): Flow<Long>
@@ -38,6 +44,9 @@ public interface ListeningStatisticDao {
 
   @Query("SELECT COUNT(DISTINCT bookTitle) FROM listening_statistics")
   public fun getDistinctBooksCountFlow(): Flow<Int>
+
+  @Query("SELECT * FROM listening_statistics")
+  public suspend fun getAll(): List<ListeningStatistic>
 
   @Query("DELETE FROM listening_statistics")
   public suspend fun clearAll()

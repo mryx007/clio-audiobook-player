@@ -35,6 +35,7 @@ dependencies {
 
   implementation(libs.datastore)
   implementation(libs.androidxCore)
+  implementation(libs.documentFile)
   implementation(libs.serialization.json)
   implementation(libs.coroutines.core)
   implementation(projects.core.analytics.api)

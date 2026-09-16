@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
@@ -44,7 +45,6 @@ import voice.core.ui.R as UiR
 internal fun GridBooks(
   books: Map<BookOverviewCategory, Map<BookId, State<BookOverviewItemViewState>>>,
   onBookClick: (BookId) -> Unit,
-  onBookLongClick: (BookId) -> Unit,
   showPermissionBugCard: Boolean,
   onPermissionBugCardClick: () -> Unit,
 ) {
@@ -82,7 +82,6 @@ internal fun GridBooks(
         GridBook(
           book = bookState.value,
           onBookClick = onBookClick,
-          onBookLongClick = onBookLongClick,
         )
       }
       item(
@@ -98,13 +97,10 @@ internal fun GridBooks(
 internal fun GridBook(
   book: BookOverviewItemViewState,
   onBookClick: (BookId) -> Unit,
-  onBookLongClick: (BookId) -> Unit,
 ) {
   BookCard(
     bookId = book.id,
     onBookClick = onBookClick,
-    onBookLongClick = onBookLongClick,
-    showNewBadge = book.progress == 0f,
   ) {
     Column(
       modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 12.dp),
@@ -163,11 +159,11 @@ internal fun gridColumnCount(): Int {
 @Composable
 @Preview(widthDp = 200)
 private fun GridBookPreviewWithProgress() {
-  GridBook(BookOverviewPreviewParameterProvider().book().copy(progress = 0.66f), {}, {})
+  GridBook(BookOverviewPreviewParameterProvider().book().copy(progress = 0.66f), {})
 }
 
 @Composable
 @Preview(widthDp = 200)
 private fun GridBookPreviewWithoutProgress() {
-  GridBook(BookOverviewPreviewParameterProvider().book().copy(progress = 0f), {}, {})
+  GridBook(BookOverviewPreviewParameterProvider().book().copy(progress = 0f), {})
 }

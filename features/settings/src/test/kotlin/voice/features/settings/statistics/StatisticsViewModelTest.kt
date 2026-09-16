@@ -43,7 +43,7 @@ class StatisticsViewModelTest {
         MonthlyStatistic("2024-10", 7200L),
       ),
       bookStats = listOf(
-        BookStatistic("Der Schwarm", null, 5000L),
+        BookStatistic("Der Schwarm", null, 5000L, coverUrl = "file:///cover.png"),
         BookStatistic("Meteor", null, 2200L),
       ),
     ),
@@ -76,6 +76,8 @@ class StatisticsViewModelTest {
       assertEquals(2, state.booksListenedCount)
       assertEquals(1, state.monthlyStats.size)
       assertEquals(2, state.bookStats.size)
+      assertEquals("file:///cover.png", state.bookStats[0].coverUrl)
+      assertEquals(null, state.bookStats[1].coverUrl)
       assertEquals(1.0f, state.monthlyStats[0].progressFraction)
       assertEquals(1.0f, state.bookStats[0].progressFraction)
       assertFalse(state.showClearDialog)

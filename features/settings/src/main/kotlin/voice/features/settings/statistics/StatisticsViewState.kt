@@ -19,6 +19,7 @@ public data class StatisticsViewState(
 
   public data class BookStatItem(
     val bookTitle: String,
+    val coverUrl: String? = null,
     val formattedDuration: String,
     val totalSeconds: Long,
     val progressFraction: Float,
