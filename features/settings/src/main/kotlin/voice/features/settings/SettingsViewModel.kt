@@ -222,15 +222,15 @@ class SettingsViewModel(
   }
 
   override fun getSupport() {
-    navigator.goTo(Destination.Website("https://github.com/PaulWoitaschek/Voice/discussions/categories/q-a"))
+    navigator.goTo(Destination.Website("https://github.com/mryx007/clio-audiobook-player/discussions"))
   }
 
   override fun suggestIdea() {
-    navigator.goTo(Destination.Website("https://github.com/PaulWoitaschek/Voice/discussions/categories/ideas"))
+    navigator.goTo(Destination.Website("https://github.com/mryx007/clio-audiobook-player/discussions"))
   }
 
   override fun openBugReport() {
-    val url = "https://github.com/PaulWoitaschek/Voice/issues/new".toUri()
+    val url = "https://github.com/mryx007/clio-audiobook-player/issues/new".toUri()
       .buildUpon()
       .appendQueryParameter("template", "bug.yml")
       .appendQueryParameter("version", appInfoProvider.versionName)
