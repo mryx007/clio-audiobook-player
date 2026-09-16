@@ -144,4 +144,11 @@
     <string name="sleep_timer.dialog.title">Sogni d\'oro! 🌙</string>
     <string name="sleep_timer.end_of_chapter">Fine del capitolo</string>
     <string name="book.badge.new">NUOVO</string>
+    <string name="playback.equalizer.title">Equalizzatore</string>
+    <string name="playback.equalizer.reset">Reimposta</string>
+    <string name="playback.equalizer.preset.flat">Neutro</string>
+    <string name="playback.equalizer.preset.vocal_clarity">Chiarezza vocale</string>
+    <string name="playback.equalizer.preset.treble_boost">Enfasi alti</string>
+    <string name="playback.equalizer.preset.bass_cut">Taglio bassi</string>
+    <string name="playback.equalizer.preset.de_esser">De-Esser</string>
 </resources>

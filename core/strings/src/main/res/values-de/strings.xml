@@ -172,4 +172,9 @@
     <string name="sleep_timer.end_of_chapter">Kapitelende</string>
     <string name="playback.equalizer.title">Equalizer</string>
     <string name="playback.equalizer.reset">Zurücksetzen</string>
+    <string name="playback.equalizer.preset.flat">Neutral</string>
+    <string name="playback.equalizer.preset.vocal_clarity">Sprachklarheit</string>
+    <string name="playback.equalizer.preset.treble_boost">Höhen-Boost</string>
+    <string name="playback.equalizer.preset.bass_cut">Bass-Cut</string>
+    <string name="playback.equalizer.preset.de_esser">De-Esser</string>
 </resources>

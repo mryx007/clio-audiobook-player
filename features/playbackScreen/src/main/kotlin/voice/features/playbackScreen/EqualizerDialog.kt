@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import voice.core.data.EqualizerPreset
 import voice.core.data.EqualizerSetting
 import voice.core.strings.R as StringsR
 import kotlin.math.roundToInt
@@ -47,12 +48,12 @@ internal fun EqualizerDialog(
             .horizontalScroll(rememberScrollState()),
           horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-          EqualizerSetting.Presets.forEach { (label, presetSetting) ->
-            val isSelected = presetSetting.bands == dialogState.bands
+          EqualizerPreset.entries.forEach { preset ->
+            val isSelected = preset.setting.bands == dialogState.bands
             FilterChip(
               selected = isSelected,
-              onClick = { viewModel.onEqualizerPresetSelected(presetSetting) },
-              label = { Text(label) },
+              onClick = { viewModel.onEqualizerPresetSelected(preset.setting) },
+              label = { Text(preset.label()) },
             )
           }
         }
@@ -116,3 +117,13 @@ internal fun EqualizerDialog(
     },
   )
 }
+
+@Composable
+private fun EqualizerPreset.label(): String = when (this) {
+  EqualizerPreset.Flat -> stringResource(StringsR.string.playback_equalizer_preset_flat)
+  EqualizerPreset.VocalClarity -> stringResource(StringsR.string.playback_equalizer_preset_vocal_clarity)
+  EqualizerPreset.TrebleBoost -> stringResource(StringsR.string.playback_equalizer_preset_treble_boost)
+  EqualizerPreset.BassCut -> stringResource(StringsR.string.playback_equalizer_preset_bass_cut)
+  EqualizerPreset.DeEsser -> stringResource(StringsR.string.playback_equalizer_preset_de_esser)
+}
+
