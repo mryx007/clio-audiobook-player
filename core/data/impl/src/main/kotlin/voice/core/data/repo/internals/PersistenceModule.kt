@@ -26,6 +26,9 @@ public interface PersistenceModule {
   private fun bookmarkDao(appDb: AppDb): BookmarkDao = appDb.bookmarkDao()
 
   @Provides
+  private fun listeningStatisticDao(appDb: AppDb): voice.core.data.repo.internals.dao.ListeningStatisticDao = appDb.listeningStatisticDao()
+
+  @Provides
   private fun recentBookSearchDao(appDb: AppDb): RecentBookSearchDao = appDb.recentBookSearchDao()
 
   @Provides

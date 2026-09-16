@@ -35,6 +35,7 @@ interface SettingsListener {
   fun onAppVersionClick()
 
   fun openDeveloperMenu()
+  fun openStatistics()
 
   companion object {
     fun noop() = object : SettingsListener {
@@ -66,6 +67,7 @@ interface SettingsListener {
       override fun openFolderPicker() {}
       override fun onAppVersionClick() {}
       override fun openDeveloperMenu() {}
+      override fun openStatistics() {}
     }
   }
 }

@@ -1,0 +1,29 @@
+package voice.core.data.repo
+
+import kotlinx.coroutines.flow.Flow
+import voice.core.data.BookId
+import voice.core.data.BookStatistic
+import voice.core.data.ImportResult
+import voice.core.data.MonthlyStatistic
+import voice.core.data.StatisticsSummary
+
+public interface ListeningStatisticRepository {
+
+  public fun getMonthlyStatistics(): Flow<List<MonthlyStatistic>>
+
+  public fun getBookStatistics(): Flow<List<BookStatistic>>
+
+  public fun getTotalListeningTimeSeconds(): Flow<Long>
+
+  public fun getStatisticsSummary(): Flow<StatisticsSummary>
+
+  public suspend fun recordListeningTime(
+    bookId: BookId?,
+    bookTitle: String,
+    seconds: Long,
+  )
+
+  public suspend fun importSmartAudioBookPlayerXml(xmlContent: String): ImportResult
+
+  public suspend fun clearStatistics()
+}

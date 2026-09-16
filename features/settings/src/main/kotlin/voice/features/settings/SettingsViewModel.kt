@@ -253,6 +253,10 @@ class SettingsViewModel(
     navigator.goTo(Destination.SupportVoice)
   }
 
+  override fun openStatistics() {
+    navigator.goTo(Destination.Statistics)
+  }
+
   override fun openFolderPicker() {
     navigator.goTo(Destination.FolderPicker)
   }
