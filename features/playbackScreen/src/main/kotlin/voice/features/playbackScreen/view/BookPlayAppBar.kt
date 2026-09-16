@@ -42,10 +42,11 @@ internal fun BookPlayAppBar(
   val contentColor = if (isCustomBackground) Color.White else MaterialTheme.colorScheme.onSurface
 
   val appBarActions: @Composable RowScope.() -> Unit = {
+    val lockTint = if (viewState.isLocked) Color(0xFFE57373) else contentColor
     IconButton(onClick = onLockClick) {
       Icon(
         imageVector = if (viewState.isLocked) VoiceIcons.Lock else VoiceIcons.LockOpen,
-        tint = contentColor,
+        tint = lockTint,
         contentDescription = stringResource(
           id = if (viewState.isLocked) R.string.playback_action_unlock else R.string.playback_action_lock,
         ),

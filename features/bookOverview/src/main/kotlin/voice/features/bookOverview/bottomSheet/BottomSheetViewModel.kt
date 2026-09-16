@@ -9,6 +9,9 @@ import kotlinx.coroutines.launch
 import voice.core.data.BookId
 import voice.features.bookOverview.di.BookOverviewScope
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+
 @SingleIn(BookOverviewScope::class)
 @Inject
 class BottomSheetViewModel(private val viewModels: Set<@JvmSuppressWildcards BottomSheetItemViewModel>) {
@@ -21,8 +24,12 @@ class BottomSheetViewModel(private val viewModels: Set<@JvmSuppressWildcards Bot
   var bookId: BookId? = null
     private set
 
+  var selectedBookId: BookId? by mutableStateOf(null)
+    private set
+
   internal fun bookSelected(bookId: BookId) {
     this.bookId = bookId
+    this.selectedBookId = bookId
     scope.launch {
       val items = viewModels.flatMap { it.items(bookId) }
         .toSet()

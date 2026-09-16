@@ -48,4 +48,22 @@ class SmartAudioBookPlayerXmlParserTest {
     assertEquals("2023-01", results[3].yearMonth)
     assertEquals(12000L, results[3].durationSeconds)
   }
+
+  @Test
+  fun `parses detailed retains raw path and title`() {
+    val xml = """
+      <?xml version="1.0" encoding="UTF-8"?><root>
+          <book>
+              <path>Audiobooks\Dan.Brown-Meteor.Uncut-7CD-MP3-DE-PaZ</path>
+              <time>2025-06 87423</time>
+          </book>
+      </root>
+    """.trimIndent()
+
+    val detailed = SmartAudioBookPlayerXmlParser.parseDetailed(xml)
+    assertEquals(1, detailed.size)
+    assertEquals("Audiobooks\\Dan.Brown-Meteor.Uncut-7CD-MP3-DE-PaZ", detailed[0].rawPath)
+    assertEquals("Dan.Brown-Meteor.Uncut-7CD-MP3-DE-PaZ", detailed[0].bookTitle)
+    assertEquals(1, detailed[0].statistics.size)
+  }
 }

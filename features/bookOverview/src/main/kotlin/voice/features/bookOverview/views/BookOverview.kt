@@ -16,22 +16,14 @@ import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SheetValue.Expanded
-import androidx.compose.material3.SheetValue.Hidden
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.retain.retain
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
@@ -44,12 +36,10 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.IntoSet
 import dev.zacsweers.metro.Provides
-import kotlinx.coroutines.launch
 import voice.core.common.rootGraphAs
 import voice.core.data.BookId
 import voice.core.ui.VoiceTheme
 import voice.core.ui.icons.VoiceIcons
-import voice.features.bookOverview.bottomSheet.BottomSheetContent
 import voice.features.bookOverview.bottomSheet.BottomSheetItem
 import voice.features.bookOverview.deleteBook.DeleteBookDialog
 import voice.features.bookOverview.di.BookOverviewGraph
@@ -94,8 +84,6 @@ fun BookOverviewScreen(modifier: Modifier = Modifier) {
   }
   val viewState = bookOverviewViewModel.state()
 
-  val scope = rememberCoroutineScope()
-
   val getContentLauncher = rememberLauncherForActivityResult(
     contract = ActivityResultContracts.GetContent(),
     onResult = { uri ->
@@ -105,14 +93,18 @@ fun BookOverviewScreen(modifier: Modifier = Modifier) {
     },
   )
 
-  var showBottomSheet by remember { mutableStateOf(false) }
   BookOverview(
     viewState = viewState,
     onSettingsClick = bookOverviewViewModel::onSettingsClick,
     onBookClick = bookOverviewViewModel::onBookClick,
-    onBookLongClick = { bookId ->
-      bottomSheetViewModel.bookSelected(bookId)
-      showBottomSheet = true
+    onBookMoreClick = bottomSheetViewModel::bookSelected,
+    selectedBookId = bottomSheetViewModel.selectedBookId,
+    menuItems = bottomSheetViewModel.state.value.items,
+    onMenuItemClick = { bookId, item ->
+      if (item == BottomSheetItem.FileCover) {
+        getContentLauncher.launch("image/*")
+      }
+      bottomSheetViewModel.onItemClick(item)
     },
     onBookFolderClick = bookOverviewViewModel::onBookFolderClick,
     onFolderPickerMovedDialogDismiss = bookOverviewViewModel::onFolderPickerMovedDialogDismiss,
@@ -120,6 +112,7 @@ fun BookOverviewScreen(modifier: Modifier = Modifier) {
     onSearchQueryChange = bookOverviewViewModel::onSearchQueryChange,
     onSearchBookClick = bookOverviewViewModel::onSearchBookClick,
     onPermissionBugCardClick = bookOverviewViewModel::onPermissionBugCardClick,
+    modifier = modifier,
   )
   val deleteBookViewState = deleteBookViewModel.state.value
   if (deleteBookViewState != null) {
@@ -139,35 +132,6 @@ fun BookOverviewScreen(modifier: Modifier = Modifier) {
       onUpdateEditTitle = editBookTitleViewModel::onUpdateEditTitle,
     )
   }
-
-  if (showBottomSheet) {
-    val sheetState = rememberBottomSheetState(
-      initialValue = Hidden,
-      enabledValues = setOf(Hidden, Expanded),
-    )
-    ModalBottomSheet(
-      modifier = modifier,
-      sheetState = sheetState,
-      content = {
-        BottomSheetContent(
-          state = bottomSheetViewModel.state.value,
-          onItemClick = { item ->
-            if (item == BottomSheetItem.FileCover) {
-              getContentLauncher.launch("image/*")
-            }
-            scope.launch {
-              sheetState.hide()
-              bottomSheetViewModel.onItemClick(item)
-              showBottomSheet = false
-            }
-          },
-        )
-      },
-      onDismissRequest = {
-        showBottomSheet = false
-      },
-    )
-  }
 }
 
 @Composable
@@ -175,7 +139,10 @@ internal fun BookOverview(
   viewState: BookOverviewViewState,
   onSettingsClick: () -> Unit,
   onBookClick: (BookId) -> Unit,
-  onBookLongClick: (BookId) -> Unit,
+  onBookMoreClick: (BookId) -> Unit,
+  selectedBookId: BookId?,
+  menuItems: List<BottomSheetItem>,
+  onMenuItemClick: (BookId, BottomSheetItem) -> Unit,
   onBookFolderClick: () -> Unit,
   onFolderPickerMovedDialogDismiss: () -> Unit,
   onSearchActiveChange: (Boolean) -> Unit,
@@ -217,7 +184,10 @@ internal fun BookOverview(
           ListBooks(
             books = viewState.books,
             onBookClick = onBookClick,
-            onBookLongClick = onBookLongClick,
+            onBookMoreClick = onBookMoreClick,
+            selectedBookId = selectedBookId,
+            menuItems = menuItems,
+            onMenuItemClick = onMenuItemClick,
             showPermissionBugCard = viewState.showStoragePermissionBugCard,
             onPermissionBugCardClick = onPermissionBugCardClick,
           )
@@ -226,7 +196,6 @@ internal fun BookOverview(
           GridBooks(
             books = viewState.books,
             onBookClick = onBookClick,
-            onBookLongClick = onBookLongClick,
             showPermissionBugCard = viewState.showStoragePermissionBugCard,
             onPermissionBugCardClick = onPermissionBugCardClick,
           )
@@ -285,7 +254,10 @@ fun BookOverviewPreview(
       viewState = viewState,
       onSettingsClick = {},
       onBookClick = {},
-      onBookLongClick = {},
+      onBookMoreClick = {},
+      selectedBookId = null,
+      menuItems = emptyList(),
+      onMenuItemClick = { _, _ -> },
       onBookFolderClick = {},
       onFolderPickerMovedDialogDismiss = {},
       onSearchActiveChange = {},

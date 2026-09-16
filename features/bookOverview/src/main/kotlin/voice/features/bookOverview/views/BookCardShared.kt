@@ -1,11 +1,9 @@
 package voice.features.bookOverview.views
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -30,30 +29,18 @@ import voice.core.strings.R as StringsR
 internal fun BookCard(
   bookId: BookId,
   onBookClick: (BookId) -> Unit,
-  onBookLongClick: (BookId) -> Unit,
   modifier: Modifier = Modifier,
-  showNewBadge: Boolean = false,
   content: @Composable () -> Unit,
 ) {
   ElevatedCard(
     shape = MaterialTheme.shapes.medium,
     modifier = modifier
       .fillMaxWidth()
-      .combinedClickable(
+      .clickable(
         onClick = { onBookClick(bookId) },
-        onLongClick = { onBookLongClick(bookId) },
       ),
   ) {
-    Box(Modifier.fillMaxWidth()) {
-      content()
-      if (showNewBadge) {
-        NewBadge(
-          modifier = Modifier
-            .align(Alignment.TopEnd)
-            .padding(top = 8.dp, end = 8.dp),
-        )
-      }
-    }
+    content()
   }
 }
 
@@ -89,6 +76,7 @@ internal fun BookRemainingProgressRow(
   modifier: Modifier = Modifier,
   remainingTimeMaxLines: Int = Int.MAX_VALUE,
   progressMaxLines: Int = Int.MAX_VALUE,
+  textStyle: TextStyle = MaterialTheme.typography.labelMedium,
 ) {
   Row(
     modifier = modifier.fillMaxWidth(),
@@ -97,13 +85,13 @@ internal fun BookRemainingProgressRow(
   ) {
     Text(
       text = remainingTime,
-      style = MaterialTheme.typography.labelMedium,
+      style = textStyle,
       color = MaterialTheme.colorScheme.onSurfaceVariant,
       maxLines = remainingTimeMaxLines,
     )
     Text(
       text = "${(progress * 100).toInt()}%",
-      style = MaterialTheme.typography.labelMedium,
+      style = textStyle,
       color = MaterialTheme.colorScheme.onSurfaceVariant,
       maxLines = progressMaxLines,
     )

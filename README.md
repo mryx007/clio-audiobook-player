@@ -52,7 +52,8 @@ Clio is a specialized fork built upon the open-source foundation of [Voice](http
 
 ## Download Release
 
-- **[`Clio-Audiobook-Player-v1.0.0-beta.apk`](https://github.com/mryx007/clio-audiobook-player/releases/download/v1.0.0-beta/Clio-Audiobook-Player-v1.0.0-beta.apk)** — Standalone, optimized release build.
+- **[`Clio-Audiobook-Player-v1.0.1.apk`](https://github.com/mryx007/clio-audiobook-player/releases/download/v1.0.1/Clio-Audiobook-Player-v1.0.1.apk)** — Standalone release build (v1.0.1).
+- **[`Clio-Audiobook-Player-v1.0.0-beta.apk`](https://github.com/mryx007/clio-audiobook-player/releases/download/v1.0.0-beta/Clio-Audiobook-Player-v1.0.0-beta.apk)** — Previous beta build (v1.0.0-beta).
 
 ---
 

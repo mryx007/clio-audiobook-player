@@ -23,7 +23,10 @@ public interface ListeningStatisticRepository {
     seconds: Long,
   )
 
-  public suspend fun importSmartAudioBookPlayerXml(xmlContent: String): ImportResult
+  public suspend fun importSmartAudioBookPlayerXml(
+    xmlContent: String,
+    coverProvider: (suspend (rawPath: String, bookTitle: String) -> java.io.InputStream?)? = null,
+  ): ImportResult
 
   public suspend fun clearStatistics()
 }

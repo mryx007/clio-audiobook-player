@@ -19,6 +19,7 @@ public data class ListeningStatistic(
   val yearMonth: String,
   val day: String? = null,
   val durationSeconds: Long,
+  val coverUrl: String? = null,
 )
 
 public data class MonthlyStatistic(
@@ -30,6 +31,7 @@ public data class BookStatistic(
   val bookTitle: String,
   val bookId: BookId?,
   val totalSeconds: Long,
+  val coverUrl: String? = null,
 )
 
 public data class StatisticsSummary(

@@ -5,10 +5,20 @@ import voice.core.data.ListeningStatistic
 import java.io.ByteArrayInputStream
 import javax.xml.parsers.DocumentBuilderFactory
 
+public data class ParsedSmartAudioBook(
+  val rawPath: String,
+  val bookTitle: String,
+  val statistics: List<ListeningStatistic>,
+)
+
 public object SmartAudioBookPlayerXmlParser {
 
   public fun parse(xmlContent: String): List<ListeningStatistic> {
-    val results = mutableListOf<ListeningStatistic>()
+    return parseDetailed(xmlContent).flatMap { it.statistics }
+  }
+
+  public fun parseDetailed(xmlContent: String): List<ParsedSmartAudioBook> {
+    val results = mutableListOf<ParsedSmartAudioBook>()
     if (xmlContent.isBlank()) return results
 
     try {
@@ -26,6 +36,7 @@ public object SmartAudioBookPlayerXmlParser {
 
         val title = cleanTitleFromPath(path)
         val timeNodes = bookElement.getElementsByTagName("time")
+        val bookStats = mutableListOf<ListeningStatistic>()
 
         for (j in 0 until timeNodes.length) {
           val text = timeNodes.item(j).textContent?.trim() ?: ""
@@ -35,7 +46,7 @@ public object SmartAudioBookPlayerXmlParser {
               val yearMonth = parts[0].trim()
               val seconds = parts[1].trim().toLongOrNull() ?: 0L
               if (yearMonth.isNotEmpty() && seconds > 0L) {
-                results.add(
+                bookStats.add(
                   ListeningStatistic(
                     bookTitle = title,
                     yearMonth = yearMonth,
@@ -45,6 +56,16 @@ public object SmartAudioBookPlayerXmlParser {
               }
             }
           }
+        }
+
+        if (bookStats.isNotEmpty()) {
+          results.add(
+            ParsedSmartAudioBook(
+              rawPath = path,
+              bookTitle = title,
+              statistics = bookStats,
+            ),
+          )
         }
       }
     } catch (_: Exception) {

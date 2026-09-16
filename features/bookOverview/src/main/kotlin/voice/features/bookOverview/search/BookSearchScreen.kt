@@ -80,13 +80,16 @@ internal fun BookSearchContent(
             modifier = Modifier
               .padding(contentPadding)
               .padding(horizontal = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
             content = {
               items(viewState.books) { book ->
                 ListBookRow(
                   book = book,
                   onBookClick = onBookClick,
-                  onBookLongClick = onBookClick,
+                  onBookMoreClick = {},
+                  selectedBookId = null,
+                  menuItems = emptyList(),
+                  onMenuItemClick = { _, _ -> },
                 )
               }
             },
@@ -103,7 +106,6 @@ internal fun BookSearchContent(
                 GridBook(
                   book = book,
                   onBookClick = onBookClick,
-                  onBookLongClick = onBookClick,
                 )
               }
             },

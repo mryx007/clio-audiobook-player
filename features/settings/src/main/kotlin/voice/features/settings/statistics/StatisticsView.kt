@@ -44,12 +44,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation3.runtime.NavEntry
+import coil.compose.AsyncImage
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.IntoSet
@@ -59,6 +62,7 @@ import voice.core.ui.icons.VoiceIcons
 import voice.navigation.Destination
 import voice.navigation.NavEntryProvider
 import voice.core.strings.R as StringsR
+import voice.core.ui.R as UiR
 
 @Composable
 internal fun StatisticsView(
@@ -66,11 +70,11 @@ internal fun StatisticsView(
   viewModel: StatisticsViewModel,
 ) {
   val snackbarHostState = remember { SnackbarHostState() }
-  val openXmlLauncher = rememberLauncherForActivityResult(
-    contract = ActivityResultContracts.OpenDocument(),
+  val openFolderLauncher = rememberLauncherForActivityResult(
+    contract = ActivityResultContracts.OpenDocumentTree(),
     onResult = { uri ->
       if (uri != null) {
-        viewModel.importXml(uri)
+        viewModel.importFromUri(uri)
       }
     },
   )
@@ -106,7 +110,7 @@ internal fun StatisticsView(
         },
         actions = {
           IconButton(
-            onClick = { openXmlLauncher.launch(arrayOf("text/xml", "application/xml", "*/*")) },
+            onClick = { openFolderLauncher.launch(null) },
             enabled = !viewState.isImporting,
           ) {
             if (viewState.isImporting) {
@@ -134,7 +138,7 @@ internal fun StatisticsView(
       EmptyStatisticsView(
         paddingValues = paddingValues,
         isImporting = viewState.isImporting,
-        onImportClick = { openXmlLauncher.launch(arrayOf("text/xml", "application/xml", "*/*")) },
+        onImportClick = { openFolderLauncher.launch(null) },
       )
     } else {
       LazyColumn(
@@ -152,7 +156,7 @@ internal fun StatisticsView(
         // Import Banner / Button
         item {
           OutlinedButton(
-            onClick = { openXmlLauncher.launch(arrayOf("text/xml", "application/xml", "*/*")) },
+            onClick = { openFolderLauncher.launch(null) },
             modifier = Modifier.fillMaxWidth(),
             enabled = !viewState.isImporting,
           ) {
@@ -353,43 +357,61 @@ private fun BookStatCard(item: StatisticsViewState.BookStatItem) {
       containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f),
     ),
   ) {
-    Column(
+    Row(
       modifier = Modifier
         .fillMaxWidth()
-        .padding(14.dp),
+        .padding(12.dp),
+      verticalAlignment = Alignment.CenterVertically,
     ) {
-      Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
+      AsyncImage(
+        modifier = Modifier
+          .size(48.dp)
+          .clip(RoundedCornerShape(8.dp)),
+        model = item.coverUrl,
+        placeholder = painterResource(id = UiR.drawable.album_art),
+        error = painterResource(id = UiR.drawable.album_art),
+        contentScale = ContentScale.Crop,
+        contentDescription = null,
+      )
+
+      Spacer(modifier = Modifier.width(12.dp))
+
+      Column(
+        modifier = Modifier.weight(1f),
       ) {
-        Text(
-          text = item.bookTitle,
-          style = MaterialTheme.typography.bodyMedium,
-          fontWeight = FontWeight.SemiBold,
-          color = MaterialTheme.colorScheme.onSurface,
-          maxLines = 1,
-          overflow = TextOverflow.Ellipsis,
-          modifier = Modifier.weight(1f, fill = false),
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(
-          text = item.formattedDuration,
-          style = MaterialTheme.typography.bodySmall,
-          fontWeight = FontWeight.Medium,
-          color = MaterialTheme.colorScheme.primary,
+        Row(
+          modifier = Modifier.fillMaxWidth(),
+          horizontalArrangement = Arrangement.SpaceBetween,
+          verticalAlignment = Alignment.CenterVertically,
+        ) {
+          Text(
+            text = item.bookTitle,
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.onSurface,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.weight(1f, fill = false),
+          )
+          Spacer(modifier = Modifier.width(8.dp))
+          Text(
+            text = item.formattedDuration,
+            style = MaterialTheme.typography.bodySmall,
+            fontWeight = FontWeight.Medium,
+            color = MaterialTheme.colorScheme.primary,
+          )
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        LinearProgressIndicator(
+          progress = { item.progressFraction },
+          modifier = Modifier
+            .fillMaxWidth()
+            .height(6.dp)
+            .clip(RoundedCornerShape(3.dp)),
         )
       }
-
-      Spacer(modifier = Modifier.height(8.dp))
-
-      LinearProgressIndicator(
-        progress = { item.progressFraction },
-        modifier = Modifier
-          .fillMaxWidth()
-          .height(6.dp)
-          .clip(RoundedCornerShape(3.dp)),
-      )
     }
   }
 }
