@@ -141,4 +141,11 @@
     <string name="sleep_timer.dialog.title">Slaapwel! 🌙</string>
     <string name="sleep_timer.end_of_chapter">Einde van hoofdstuk</string>
     <string name="book.badge.new">NIEUW</string>
+    <string name="playback.equalizer.title">Equalizer</string>
+    <string name="playback.equalizer.reset">Herstellen</string>
+    <string name="playback.equalizer.preset.flat">Neutraal</string>
+    <string name="playback.equalizer.preset.vocal_clarity">Spraakhelderheid</string>
+    <string name="playback.equalizer.preset.treble_boost">Hoge tonen boost</string>
+    <string name="playback.equalizer.preset.bass_cut">Bas verminderen</string>
+    <string name="playback.equalizer.preset.de_esser">De-Esser</string>
 </resources>

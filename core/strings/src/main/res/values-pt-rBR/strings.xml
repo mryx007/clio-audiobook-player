@@ -144,4 +144,11 @@
     <string name="sleep_timer.dialog.title">Bons sonhos! 🌙</string>
     <string name="sleep_timer.end_of_chapter">Fim do capítulo</string>
     <string name="book.badge.new">NOVO</string>
+    <string name="playback.equalizer.title">Equalizador</string>
+    <string name="playback.equalizer.reset">Redefinir</string>
+    <string name="playback.equalizer.preset.flat">Neutro</string>
+    <string name="playback.equalizer.preset.vocal_clarity">Clareza vocal</string>
+    <string name="playback.equalizer.preset.treble_boost">Reforço de agudos</string>
+    <string name="playback.equalizer.preset.bass_cut">Corte de graves</string>
+    <string name="playback.equalizer.preset.de_esser">De-Esser</string>
 </resources>

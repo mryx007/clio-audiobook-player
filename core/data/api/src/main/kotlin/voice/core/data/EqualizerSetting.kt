@@ -28,13 +28,7 @@ public data class EqualizerSetting(
     // Zischlaute dämpfen (De-Esser)
     public val DeEsser: EqualizerSetting = EqualizerSetting(listOf(0, 0, 0, 0, 0, 0, -2, -5, -4, -2))
 
-    public val Presets: List<Pair<String, EqualizerSetting>> = listOf(
-      "Neutral" to Flat,
-      "Sprachklarheit" to VocalClarity,
-      "Höhen-Boost" to TrebleBoost,
-      "Bass-Cut" to BassCut,
-      "De-Esser" to DeEsser,
-    )
+    public val Presets: List<EqualizerPreset> = EqualizerPreset.entries
 
     public val Frequencies: List<String> = listOf(
       "31 Hz", "63 Hz", "125 Hz", "250 Hz", "500 Hz",
@@ -48,4 +42,14 @@ public data class EqualizerSetting(
       return EqualizerSetting(parsed)
     }
   }
+}
+
+public enum class EqualizerPreset(
+  public val setting: EqualizerSetting,
+) {
+  Flat(EqualizerSetting.Flat),
+  VocalClarity(EqualizerSetting.VocalClarity),
+  TrebleBoost(EqualizerSetting.TrebleBoost),
+  BassCut(EqualizerSetting.BassCut),
+  DeEsser(EqualizerSetting.DeEsser),
 }

@@ -336,4 +336,14 @@
     <string name="playback.equalizer.title">Equalizer</string>
     <!-- Action to reset equalizer to flat. -->
     <string name="playback.equalizer.reset">Reset</string>
+    <!-- Equalizer preset label for flat / neutral sound. -->
+    <string name="playback.equalizer.preset.flat">Neutral</string>
+    <!-- Equalizer preset label for enhanced speech clarity. -->
+    <string name="playback.equalizer.preset.vocal_clarity">Vocal clarity</string>
+    <!-- Equalizer preset label for boosting high frequencies. -->
+    <string name="playback.equalizer.preset.treble_boost">Treble boost</string>
+    <!-- Equalizer preset label for cutting low frequency rumble. -->
+    <string name="playback.equalizer.preset.bass_cut">Bass cut</string>
+    <!-- Equalizer preset label for softening harsh sibilants. -->
+    <string name="playback.equalizer.preset.de_esser">De-Esser</string>
 </resources>
