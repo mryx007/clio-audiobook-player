@@ -27,14 +27,14 @@ internal fun Cover(
     modifier = Modifier
       .fillMaxSize()
       .sharedCoverElementModifier(bookId)
+      .clip(RoundedCornerShape(8.dp))
       .pointerInput(Unit) {
         detectTapGestures(
           onDoubleTap = {
             onDoubleClick()
           },
         )
-      }
-      .clip(RoundedCornerShape(20.dp)),
+      },
     contentScale = ContentScale.Crop,
     model = cover,
     placeholder = painterResource(id = UiR.drawable.album_art),

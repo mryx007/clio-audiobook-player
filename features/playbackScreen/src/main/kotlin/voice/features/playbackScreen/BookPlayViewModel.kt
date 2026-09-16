@@ -19,13 +19,18 @@ import voice.core.common.DispatcherProvider
 import voice.core.common.MainScope
 import voice.core.data.Book
 import voice.core.data.BookId
+import voice.core.data.EqualizerSetting
 import voice.core.data.KioskModeDemoData
+import voice.core.data.PlaybackBackgroundStyle
 import voice.core.data.durationMs
 import voice.core.data.markForPosition
 import voice.core.data.repo.BookRepository
 import voice.core.data.repo.BookmarkRepo
 import voice.core.data.sleeptimer.SleepTimerPreference
 import voice.core.data.store.CurrentBookStore
+import voice.core.data.store.FastForwardTimeStore
+import voice.core.data.store.PlaybackBackgroundStyleStore
+import voice.core.data.store.RewindTimeStore
 import voice.core.data.store.SleepTimerPreferenceStore
 import voice.core.featureflag.ExperimentalPlaybackPersistenceQualifier
 import voice.core.featureflag.FeatureFlag
@@ -60,6 +65,12 @@ class BookPlayViewModel(
   private val playStateManager: PlayStateManager,
   @CurrentBookStore
   private val currentBookStoreId: DataStore<BookId?>,
+  @RewindTimeStore
+  private val rewindTimeStore: DataStore<Int>,
+  @FastForwardTimeStore
+  private val fastForwardTimeStore: DataStore<Int>,
+  @PlaybackBackgroundStyleStore
+  private val playbackBackgroundStyleStore: DataStore<PlaybackBackgroundStyle>,
   private val navigator: Navigator,
   private val bookmarkRepository: BookmarkRepo,
   private val volumeGainFormatter: VolumeGainFormatter,
@@ -82,6 +93,8 @@ class BookPlayViewModel(
 
   internal val dialogState: State<BookPlayDialogViewState?>
     field = mutableStateOf<BookPlayDialogViewState?>(null)
+
+  private val isLocked = mutableStateOf(false)
 
   init {
     scope.launch {
@@ -126,6 +139,10 @@ class BookPlayViewModel(
     }
 
     val sleepTime = remember { sleepTimer.state }.collectAsState().value
+    val backgroundStyle = remember { playbackBackgroundStyleStore.data }
+      .collectAsState(initial = null).value ?: return null
+    val rewindTime = remember { rewindTimeStore.data }.collectAsState(initial = 20).value
+    val fastForwardTime = remember { fastForwardTimeStore.data }.collectAsState(initial = 30).value
     val hasMoreThanOneChapter = book.chapters.sumOf { it.chapterMarks.count() } > 1
     return BookPlayViewState(
       sleepTimerState = sleepTime.toViewState(),
@@ -135,8 +152,14 @@ class BookPlayViewModel(
       chapterName = currentMark.name.takeIf { hasMoreThanOneChapter },
       duration = currentMark.durationMs.milliseconds,
       playedTime = positionInCurrentMark.milliseconds,
+      totalDuration = book.duration.milliseconds,
+      totalPlayedTime = book.position.milliseconds,
+      isLocked = isLocked.value,
+      backgroundStyle = backgroundStyle,
       cover = book.content.coverUrl,
       skipSilence = book.content.skipSilence,
+      rewindTimeInSeconds = rewindTime,
+      fastForwardTimeInSeconds = fastForwardTime,
     )
   }
 
@@ -151,8 +174,14 @@ class BookPlayViewModel(
       chapterName = currentlyPlaying.chapter,
       duration = 14.hours + 27.minutes,
       playedTime = 10.hours + 24.minutes,
+      totalDuration = 14.hours + 27.minutes,
+      totalPlayedTime = 10.hours + 24.minutes,
+      isLocked = false,
+      backgroundStyle = PlaybackBackgroundStyle.Solid,
       cover = book.coverUrl,
       skipSilence = false,
+      rewindTimeInSeconds = 20,
+      fastForwardTimeInSeconds = 30,
     )
   }
 
@@ -253,6 +282,10 @@ class BookPlayViewModel(
     player.fastForward()
   }
 
+  fun toggleLock() {
+    isLocked.value = !isLocked.value
+  }
+
   fun onCloseClick() {
     navigator.goBack()
   }
@@ -315,6 +348,34 @@ class BookPlayViewModel(
     )
   }
 
+  fun onEqualizerIconClick() {
+    scope.launch {
+      val content = currentBook()?.content ?: return@launch
+      dialogState.value = BookPlayDialogViewState.EqualizerDialog(content.equalizerSetting.bands)
+    }
+  }
+
+  fun onEqualizerBandChanged(index: Int, gainDb: Int) {
+    val currentDialog = dialogState.value as? BookPlayDialogViewState.EqualizerDialog ?: return
+    val newBands = currentDialog.bands.toMutableList()
+    if (index in newBands.indices) {
+      newBands[index] = gainDb.coerceIn(-12, 12)
+      dialogState.value = BookPlayDialogViewState.EqualizerDialog(newBands)
+      player.setEqualizer(newBands)
+    }
+  }
+
+  fun onEqualizerPresetSelected(setting: EqualizerSetting) {
+    dialogState.value = BookPlayDialogViewState.EqualizerDialog(setting.bands)
+    player.setEqualizer(setting.bands)
+  }
+
+  fun onEqualizerReset() {
+    val flatBands = EqualizerSetting.Flat.bands
+    dialogState.value = BookPlayDialogViewState.EqualizerDialog(flatBands)
+    player.setEqualizer(flatBands)
+  }
+
   fun onBookmarkClick() {
     navigator.goTo(Destination.Bookmarks(bookId))
   }
@@ -332,6 +393,22 @@ class BookPlayViewModel(
   }
 
   fun seekTo(position: Duration) {
+    scope.launch {
+      val book = currentBook() ?: return@launch
+      var remaining = position.inWholeMilliseconds
+      for (chapter in book.chapters) {
+        if (remaining < chapter.duration) {
+          player.setPosition(remaining, chapter.id)
+          return@launch
+        }
+        remaining -= chapter.duration
+      }
+      val lastChapter = book.chapters.last()
+      player.setPosition(lastChapter.duration, lastChapter.id)
+    }
+  }
+
+  fun seekToChapter(position: Duration) {
     scope.launch {
       val book = currentBook() ?: return@launch
       val currentChapter = book.currentChapter

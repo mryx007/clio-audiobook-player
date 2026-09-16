@@ -34,7 +34,7 @@
     </plurals>
     <string name="folder.mode.root.title">Αρχικός φάκελος βιβλίων. Ένας υποφάκελος = ένα βιβλίο.</string>
     <string name="folder.mode.single.title">Φάκελος ενός βιβλίου</string>
-    <string name="folder.type.book_example.empty">Το Voice δεν μπόρεσε να εντοπίσει βιβλία. Υπάρχουν αρχεία ήχου;</string>
+    <string name="folder.type.book_example.empty">Το Clio δεν μπόρεσε να εντοπίσει βιβλία. Υπάρχουν αρχεία ήχου;</string>
     <string name="folder.type.book_example.header">Αυτό θα οδηγήσει στον εντοπισμό των παρακάτω βιβλίων</string>
     <plurals name="folder.type.file_count">
         <item quantity="one">%d αρχείο ήχου</item>
@@ -67,7 +67,7 @@
     <string name="settings.playback.auto_rewind.title">Αυτόματη αναζήτηση προς τα πίσω</string>
     <string name="settings.playback.seek_time.title">Χρονική μετακίνηση</string>
     <string name="settings.support.get_support.title">Λήψη υποστήριξης</string>
-    <string name="settings.support.help_translating.title">Βοήθεια στη μετάφραση του Voice</string>
+    <string name="settings.support.help_translating.title">Βοήθεια στη μετάφραση του Clio</string>
     <string name="settings.support.report_issue.title">Αναφορά προβλήματος</string>
     <string name="settings.support.suggest_idea.title">Προτείνετε μια ιδέα</string>
     <string name="shortcut.play_current.short_label">Αναπαραγωγή τρέχοντος</string>

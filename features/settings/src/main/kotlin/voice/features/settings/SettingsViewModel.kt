@@ -17,20 +17,23 @@ import voice.core.common.AppInfoProvider
 import voice.core.common.DispatcherProvider
 import voice.core.common.MainScope
 import voice.core.data.GridMode
-import voice.core.data.ThemeColorScheme
+import voice.core.data.PlaybackBackgroundStyle
+import voice.core.data.ThemeColor
 import voice.core.data.ThemeMode
 import voice.core.data.sleeptimer.SleepTimerPreference
 import voice.core.data.store.AnalyticsConsentStore
 import voice.core.data.store.AutoRewindAmountStore
 import voice.core.data.store.DeveloperMenuUnlockedStore
 import voice.core.data.store.GridModeStore
-import voice.core.data.store.SeekTimeStore
+import voice.core.data.store.OpenLastBookOnStartupStore
+import voice.core.data.store.FastForwardTimeStore
+import voice.core.data.store.PlaybackBackgroundStyleStore
+import voice.core.data.store.RewindTimeStore
 import voice.core.data.store.SleepTimerPreferenceStore
-import voice.core.data.store.ThemeColorSchemeStore
+import voice.core.data.store.ThemeColorStore
 import voice.core.data.store.ThemeModeStore
 import voice.core.featureflag.FeatureFlag
 import voice.core.featureflag.KioskModeFeatureFlagQualifier
-import voice.core.ui.DynamicColorAvailability
 import voice.core.ui.GridCount
 import voice.navigation.Destination
 import voice.navigation.Navigator
@@ -40,12 +43,14 @@ import java.time.LocalTime
 class SettingsViewModel(
   @ThemeModeStore
   private val themeModeStore: DataStore<ThemeMode>,
-  @ThemeColorSchemeStore
-  private val themeColorSchemeStore: DataStore<ThemeColorScheme>,
+  @ThemeColorStore
+  private val themeColorStore: DataStore<ThemeColor>,
   @AutoRewindAmountStore
   private val autoRewindAmountStore: DataStore<Int>,
-  @SeekTimeStore
-  private val seekTimeStore: DataStore<Int>,
+  @RewindTimeStore
+  private val rewindTimeStore: DataStore<Int>,
+  @FastForwardTimeStore
+  private val fastForwardTimeStore: DataStore<Int>,
   private val navigator: Navigator,
   private val appInfoProvider: AppInfoProvider,
   @GridModeStore
@@ -59,7 +64,10 @@ class SettingsViewModel(
   private val kioskModeFeatureFlag: FeatureFlag<Boolean>,
   @DeveloperMenuUnlockedStore
   private val developerMenuUnlockedStore: DataStore<Boolean>,
-  private val dynamicColorAvailability: DynamicColorAvailability,
+  @OpenLastBookOnStartupStore
+  private val openLastBookOnStartupStore: DataStore<Boolean>,
+  @PlaybackBackgroundStyleStore
+  private val playbackBackgroundStyleStore: DataStore<PlaybackBackgroundStyle>,
   dispatcherProvider: DispatcherProvider,
 ) : SettingsListener {
 
@@ -72,26 +80,27 @@ class SettingsViewModel(
   @Composable
   fun viewState(): SettingsViewState {
     val themeMode by remember { themeModeStore.data }.collectAsState(initial = ThemeMode.FollowSystem)
-    val themeColorScheme by remember { themeColorSchemeStore.data }.collectAsState(initial = ThemeColorScheme.VoiceBlue)
+    val customThemeColor by remember { themeColorStore.data }.collectAsState(initial = ThemeColor())
     val autoRewindAmount by remember { autoRewindAmountStore.data }.collectAsState(initial = 0)
-    val seekTime by remember { seekTimeStore.data }.collectAsState(initial = 0)
+    val rewindTime by remember { rewindTimeStore.data }.collectAsState(initial = 20)
+    val fastForwardTime by remember { fastForwardTimeStore.data }.collectAsState(initial = 30)
     val gridMode by remember { gridModeStore.data }.collectAsState(initial = GridMode.GRID)
     val autoSleepTimer by remember { sleepTimerPreferenceStore.data }.collectAsState(
       initial = SleepTimerPreference.Default,
     )
     val analyticsEnabled by remember { analyticsConsentStore.data }.collectAsState(initial = false)
+    val openLastBookOnStartup by remember { openLastBookOnStartupStore.data }.collectAsState(initial = false)
+    val playbackBackgroundStyle by remember { playbackBackgroundStyleStore.data }.collectAsState(initial = PlaybackBackgroundStyle.Solid)
     val kioskMode = remember {
       kioskModeFeatureFlag.get()
     }
     val showDeveloperMenu by remember { developerMenuUnlockedStore.data }.collectAsState(initial = false)
-    val showThemeColorSchemePref = remember {
-      dynamicColorAvailability.isSupported()
-    }
     return SettingsViewState(
       themeMode = themeMode,
-      themeColorScheme = themeColorScheme,
-      showThemeColorSchemePref = showThemeColorSchemePref,
-      seekTimeInSeconds = seekTime,
+      customThemeColor = customThemeColor,
+      playbackBackgroundStyle = playbackBackgroundStyle,
+      rewindTimeInSeconds = rewindTime,
+      fastForwardTimeInSeconds = fastForwardTime,
       autoRewindInSeconds = autoRewindAmount,
       dialog = dialog.value,
       appVersion = appInfoProvider.versionName,
@@ -106,6 +115,7 @@ class SettingsViewModel(
         endTime = autoSleepTimer.autoSleepEndTime,
       ),
       analyticsEnabled = analyticsEnabled,
+      openLastBookOnStartup = openLastBookOnStartup,
       showAnalyticSetting = appInfoProvider.analyticsIncluded,
       showDeveloperMenu = showDeveloperMenu,
       showSupportDevelopment = appInfoProvider.supportDevelopmentIncluded,
@@ -121,8 +131,8 @@ class SettingsViewModel(
     dialog.value = SettingsViewState.Dialog.Theme
   }
 
-  override fun onThemeColorSchemeRowClick() {
-    dialog.value = SettingsViewState.Dialog.ColorScheme
+  override fun onPlaybackBackgroundStyleRowClick() {
+    dialog.value = SettingsViewState.Dialog.BackgroundStyle
   }
 
   override fun setThemeMode(themeMode: ThemeMode) {
@@ -132,9 +142,31 @@ class SettingsViewModel(
     dialog.value = null
   }
 
-  override fun setThemeColorScheme(themeColorScheme: ThemeColorScheme) {
+  override fun setCustomTheme(hex: String, hue: Int) {
+    val formatted = if (hex.startsWith("#")) hex else "#$hex"
     mainScope.launch {
-      themeColorSchemeStore.updateData { themeColorScheme }
+      themeColorStore.updateData { it.copy(hex = formatted, hue = hue) }
+      themeModeStore.updateData { ThemeMode.Custom }
+    }
+    dialog.value = null
+  }
+
+  override fun setCustomThemeHex(hex: String) {
+    val clean = hex.removePrefix("#").trim()
+    val colorInt = try {
+      (0xFF000000L or clean.toLong(16)).toInt()
+    } catch (_: Exception) {
+      0
+    }
+    val hsv = FloatArray(3)
+    android.graphics.Color.colorToHSV(colorInt, hsv)
+    val hue = if (hsv[1] >= 0.12f) hsv[0].toInt() else 212
+    setCustomTheme(hex, hue)
+  }
+
+  override fun setPlaybackBackgroundStyle(style: PlaybackBackgroundStyle) {
+    mainScope.launch {
+      playbackBackgroundStyleStore.updateData { style }
     }
     dialog.value = null
   }
@@ -155,14 +187,24 @@ class SettingsViewModel(
     }
   }
 
-  override fun seekAmountChanged(seconds: Int) {
+  override fun rewindAmountChanged(seconds: Int) {
     mainScope.launch {
-      seekTimeStore.updateData { seconds }
+      rewindTimeStore.updateData { seconds }
     }
   }
 
-  override fun onSeekAmountRowClick() {
-    dialog.value = SettingsViewState.Dialog.SeekTime
+  override fun onRewindRowClick() {
+    dialog.value = SettingsViewState.Dialog.RewindTime
+  }
+
+  override fun fastForwardAmountChanged(seconds: Int) {
+    mainScope.launch {
+      fastForwardTimeStore.updateData { seconds }
+    }
+  }
+
+  override fun onFastForwardRowClick() {
+    dialog.value = SettingsViewState.Dialog.FastForwardTime
   }
 
   override fun autoRewindAmountChang(seconds: Int) {
@@ -242,6 +284,12 @@ class SettingsViewModel(
   override fun toggleAnalytics() {
     mainScope.launch {
       analyticsConsentStore.updateData { !it }
+    }
+  }
+
+  override fun toggleOpenLastBookOnStartup() {
+    mainScope.launch {
+      openLastBookOnStartupStore.updateData { !it }
     }
   }
 

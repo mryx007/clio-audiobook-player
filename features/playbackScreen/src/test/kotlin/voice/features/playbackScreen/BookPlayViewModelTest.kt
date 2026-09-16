@@ -25,6 +25,7 @@ import voice.core.data.Chapter
 import voice.core.data.ChapterId
 import voice.core.data.KioskModeDemoData
 import voice.core.data.MarkData
+import voice.core.data.PlaybackBackgroundStyle
 import voice.core.data.sleeptimer.SleepTimerPreference
 import voice.core.featureflag.MemoryFeatureFlag
 import voice.core.playback.CurrentBookResolver
@@ -105,6 +106,9 @@ class BookPlayViewModelTest {
     },
     volumeGainFormatter = mockk(),
     batteryOptimization = mockk(),
+    rewindTimeStore = MemoryDataStore(20),
+    fastForwardTimeStore = MemoryDataStore(30),
+    playbackBackgroundStyleStore = MemoryDataStore(PlaybackBackgroundStyle.Solid),
     sleepTimerPreferenceStore = sleepTimerDataStore,
     bookId = book.id,
     dispatcherProvider = DispatcherProvider(scope.coroutineContext, scope.coroutineContext, scope.coroutineContext),
@@ -347,6 +351,9 @@ class BookPlayViewModelTest {
       bookmarkRepository = mockk(),
       volumeGainFormatter = mockk(),
       batteryOptimization = mockk(),
+      rewindTimeStore = MemoryDataStore(20),
+      fastForwardTimeStore = MemoryDataStore(30),
+      playbackBackgroundStyleStore = MemoryDataStore(PlaybackBackgroundStyle.Solid),
       sleepTimerPreferenceStore = sleepTimerDataStore,
       bookId = book.id,
       dispatcherProvider = DispatcherProvider(scope.coroutineContext, scope.coroutineContext, scope.coroutineContext),

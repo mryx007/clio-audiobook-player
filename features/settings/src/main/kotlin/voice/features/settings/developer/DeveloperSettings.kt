@@ -1,11 +1,18 @@
 package voice.features.settings.developer
 
 import android.content.ClipData
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -53,6 +60,14 @@ private fun DeveloperSettings(
             )
           }
         },
+      )
+    },
+    bottomBar = {
+      Spacer(
+        Modifier
+          .fillMaxWidth()
+          .windowInsetsBottomHeight(WindowInsets.navigationBars)
+          .background(MaterialTheme.colorScheme.surface),
       )
     },
   ) { contentPadding ->

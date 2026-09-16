@@ -4,6 +4,11 @@ import android.content.Context
 import androidx.documentfile.provider.DocumentFile
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 import voice.core.data.Book
 import voice.core.data.toUri
@@ -17,8 +22,15 @@ internal class CoverScanner(
   private val coverExtractor: CoverExtractor,
 ) {
 
-  suspend fun scan(books: List<Book>) {
-    books.forEach { findCoverForBook(it) }
+  suspend fun scan(books: List<Book>): Unit = coroutineScope {
+    val semaphore = Semaphore(4)
+    books.map { book ->
+      async(Dispatchers.IO) {
+        semaphore.withPermit {
+          findCoverForBook(book)
+        }
+      }
+    }.awaitAll()
   }
 
   private suspend fun findCoverForBook(book: Book) {

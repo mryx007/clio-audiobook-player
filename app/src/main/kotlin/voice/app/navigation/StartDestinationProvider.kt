@@ -10,6 +10,7 @@ import voice.core.data.BookId
 import voice.core.data.folders.AudiobookFolders
 import voice.core.data.store.CurrentBookStore
 import voice.core.data.store.OnboardingCompletedStore
+import voice.core.data.store.OpenLastBookOnStartupStore
 import voice.core.playback.PlayerController
 import voice.navigation.Destination
 
@@ -20,6 +21,8 @@ class StartDestinationProvider(
   private val audiobookFolders: AudiobookFolders,
   @CurrentBookStore
   private val currentBookStore: DataStore<BookId?>,
+  @OpenLastBookOnStartupStore
+  private val openLastBookOnStartupStore: DataStore<Boolean>,
   private val playerController: PlayerController,
 ) {
 
@@ -29,8 +32,9 @@ class StartDestinationProvider(
       return listOf(Destination.OnboardingWelcome)
     }
 
+    val openLastBookOnStartup = runBlocking { openLastBookOnStartupStore.data.first() }
     val goToBook = intent.getBooleanExtra(MainActivity.Companion.NI_GO_TO_BOOK, false)
-    if (goToBook) {
+    if (goToBook || (openLastBookOnStartup && intent.action == Intent.ACTION_MAIN)) {
       val bookId = runBlocking { currentBookStore.data.first() }
       if (bookId != null) {
         return listOf(Destination.BookOverview, Destination.Playback(bookId))

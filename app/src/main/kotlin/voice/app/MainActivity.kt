@@ -5,18 +5,27 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.core.net.toUri
+import androidx.core.view.WindowCompat
 import androidx.datastore.core.DataStore
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.scene.DialogSceneStrategy
@@ -29,10 +38,14 @@ import voice.app.navigation.NavEntryResolver
 import voice.app.navigation.StartDestinationProvider
 import voice.core.analytics.api.Analytics
 import voice.core.common.rootGraphAs
-import voice.core.data.ThemeColorScheme
+import voice.core.data.ThemeColor
 import voice.core.data.ThemeMode
-import voice.core.data.store.ThemeColorSchemeStore
+import voice.core.data.store.ThemeColorStore
 import voice.core.data.store.ThemeModeStore
+import kotlinx.coroutines.async
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import voice.core.logging.api.Logger
 import voice.core.ui.LocalSharedTransitionScope
 import voice.core.ui.VoiceTheme
@@ -65,15 +78,27 @@ class MainActivity : AppCompatActivity() {
   private lateinit var themeModeStore: DataStore<ThemeMode>
 
   @Inject
-  @ThemeColorSchemeStore
-  private lateinit var themeColorSchemeStore: DataStore<ThemeColorScheme>
+  @ThemeColorStore
+  private lateinit var themeColorStore: DataStore<ThemeColor>
 
   @OptIn(ExperimentalSharedTransitionApi::class)
   override fun onCreate(savedInstanceState: Bundle?) {
     rootGraphAs<MainActivityGraph>().inject(this)
     super.onCreate(savedInstanceState)
 
-    enableEdgeToEdge()
+    enableEdgeToEdge(
+      statusBarStyle = SystemBarStyle.auto(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT),
+      navigationBarStyle = SystemBarStyle.auto(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT),
+    )
+    if (android.os.Build.VERSION.SDK_INT >= 29) {
+      window.isNavigationBarContrastEnforced = false
+    }
+
+    val (initialThemeMode, initialThemeColor) = runBlocking {
+      val modeDeferred = async(Dispatchers.IO) { themeModeStore.data.first() }
+      val colorDeferred = async(Dispatchers.IO) { themeColorStore.data.first() }
+      modeDeferred.await() to colorDeferred.await()
+    }
 
     setContent {
       @Suppress("UNCHECKED_CAST")
@@ -81,86 +106,142 @@ class MainActivity : AppCompatActivity() {
       LaunchedEffect(backStack.last()) {
         analytics.screenView(backStack.last().trackingName)
       }
-      val themeMode = themeModeStore.data.collectAsState(initial = null).value
-        ?: return@setContent
-      val themeColorScheme = themeColorSchemeStore.data.collectAsState(initial = null).value
-        ?: return@setContent
+      val themeMode = themeModeStore.data.collectAsState(initial = initialThemeMode).value
+      val themeColor = themeColorStore.data.collectAsState(initial = initialThemeColor).value
+      val isCustomDark = remember(themeColor) {
+        val baseColor = Color(themeColor.parseColor())
+        (0.299f * baseColor.red + 0.587f * baseColor.green + 0.114f * baseColor.blue) < 0.45f
+      }
+      val isDarkTheme = when (themeMode) {
+        ThemeMode.Light -> false
+        ThemeMode.FollowSystem, ThemeMode.Dynamic -> isSystemInDarkTheme()
+        ThemeMode.Custom -> isCustomDark
+        else -> true
+      }
+      val currentNavColor = when (themeMode) {
+        ThemeMode.Light -> android.graphics.Color.WHITE
+        ThemeMode.Dark -> 0xFF181C24.toInt()
+        ThemeMode.Amoled -> android.graphics.Color.BLACK
+        ThemeMode.CatppuccinMocha -> 0xFF11111B.toInt()
+        ThemeMode.DarkGray, ThemeMode.ClassicYouTube -> 0xFF212121.toInt()
+        ThemeMode.DarkPink -> 0xFF381537.toInt()
+        ThemeMode.DarkBlue -> 0xFF0A224A.toInt()
+        ThemeMode.DarkGreen -> 0xFF0B3B14.toInt()
+        ThemeMode.DarkYellow -> 0xFF453C05.toInt()
+        ThemeMode.DarkOrange -> 0xFF4A2305.toInt()
+        ThemeMode.DarkRed -> 0xFF4D0707.toInt()
+        ThemeMode.Custom -> themeColor.parseColor().toInt()
+        ThemeMode.Dynamic, ThemeMode.FollowSystem -> android.graphics.Color.TRANSPARENT
+      }
+
+      DisposableEffect(themeMode, themeColor, isDarkTheme) {
+        val insetsController = WindowCompat.getInsetsController(window, window.decorView)
+        insetsController.isAppearanceLightStatusBars = !isDarkTheme
+        insetsController.isAppearanceLightNavigationBars = !isDarkTheme
+        enableEdgeToEdge(
+          statusBarStyle = if (isDarkTheme) {
+            SystemBarStyle.dark(android.graphics.Color.TRANSPARENT)
+          } else {
+            SystemBarStyle.light(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT)
+          },
+          navigationBarStyle = if (isDarkTheme) {
+            SystemBarStyle.dark(android.graphics.Color.TRANSPARENT)
+          } else {
+            SystemBarStyle.light(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT)
+          },
+        )
+        if (android.os.Build.VERSION.SDK_INT >= 29) {
+          window.isNavigationBarContrastEnforced = false
+        }
+        if (android.os.Build.VERSION.SDK_INT < 35 && currentNavColor != android.graphics.Color.TRANSPARENT) {
+          @Suppress("DEPRECATION")
+          window.navigationBarColor = currentNavColor
+        }
+        onDispose {}
+      }
+
+
       VoiceTheme(
         themeMode = themeMode,
-        themeColorScheme = themeColorScheme,
+        themeColor = themeColor,
       ) {
-        val bottomSheetStrategy = remember { BottomSheetSceneStrategy<Destination.Compose>() }
-        val dialogStrategy = remember { DialogSceneStrategy<Destination.Compose>() }
-        val density = LocalDensity.current
+        Surface(
+          modifier = Modifier.fillMaxSize(),
+          color = MaterialTheme.colorScheme.background,
+        ) {
+          val bottomSheetStrategy = remember { BottomSheetSceneStrategy<Destination.Compose>() }
+          val dialogStrategy = remember { DialogSceneStrategy<Destination.Compose>() }
+          val density = LocalDensity.current
 
-        SharedTransitionLayout {
-          CompositionLocalProvider(LocalSharedTransitionScope provides this) {
-            NavDisplay(
-              backStack = backStack,
-              sceneStrategies = listOf(bottomSheetStrategy, dialogStrategy),
-              sharedTransitionScope = this,
-              transitionSpec = {
-                if (isBookOverviewPlaybackTransition(initialState.destination(), targetState.destination())) {
+          SharedTransitionLayout {
+            CompositionLocalProvider(LocalSharedTransitionScope provides this) {
+              NavDisplay(
+                backStack = backStack,
+                sceneStrategies = listOf(bottomSheetStrategy, dialogStrategy),
+                sharedTransitionScope = this,
+                transitionSpec = {
+                  if (isBookOverviewPlaybackTransition(initialState.destination(), targetState.destination())) {
+                    SharedZAxisEnterTransition togetherWith SharedZAxisExitTransition
+                  } else {
+                    SharedXAxisEnterTransition(density) togetherWith SharedXAxisExitTransition(density)
+                  }
+                },
+                popTransitionSpec = {
                   SharedZAxisEnterTransition togetherWith SharedZAxisExitTransition
-                } else {
-                  SharedXAxisEnterTransition(density) togetherWith SharedXAxisExitTransition(density)
-                }
-              },
-              popTransitionSpec = {
-                SharedZAxisEnterTransition togetherWith SharedZAxisExitTransition
-              },
-              predictivePopTransitionSpec = {
-                SharedZAxisEnterTransition togetherWith SharedZAxisExitTransition
-              },
-              onBack = {
-                if (backStack.size > 1) {
-                  backStack.removeLastOrNull()
-                }
-              },
-              entryProvider = { key ->
-                navEntryResolver.create(key)
-              },
-            )
+                },
+                predictivePopTransitionSpec = {
+                  SharedZAxisEnterTransition togetherWith SharedZAxisExitTransition
+                },
+                onBack = {
+                  if (backStack.size > 1) {
+                    backStack.removeLastOrNull()
+                  }
+                },
+                entryProvider = { key ->
+                  navEntryResolver.create(key)
+                },
+              )
+            }
           }
-        }
 
-        LaunchedEffect(navigator) {
-          navigator.navigationCommands.collect { command ->
-            when (command) {
-              is NavigationCommand.GoTo -> {
-                when (val destination = command.destination) {
-                  is Destination.Compose -> {
-                    backStack += destination
-                  }
-                  is Destination.Activity -> {
-                    startActivity(destination.intent)
-                  }
-                  Destination.BatteryOptimization -> {
-                    toBatteryOptimizations()
-                  }
-                  is Destination.Website -> {
-                    try {
-                      startActivity(Intent(Intent.ACTION_VIEW, destination.url.toUri()))
-                    } catch (exception: ActivityNotFoundException) {
-                      Logger.w(exception)
+          LaunchedEffect(navigator) {
+            navigator.navigationCommands.collect { command ->
+              when (command) {
+                is NavigationCommand.GoTo -> {
+                  when (val destination = command.destination) {
+                    is Destination.Compose -> {
+                      backStack += destination
+                    }
+                    is Destination.Activity -> {
+                      startActivity(destination.intent)
+                    }
+                    Destination.BatteryOptimization -> {
+                      toBatteryOptimizations()
+                    }
+                    is Destination.Website -> {
+                      try {
+                        startActivity(Intent(Intent.ACTION_VIEW, destination.url.toUri()))
+                      } catch (exception: ActivityNotFoundException) {
+                        Logger.w(exception)
+                      }
                     }
                   }
                 }
-              }
-              NavigationCommand.GoBack -> {
-                if (backStack.size > 1) {
-                  backStack.removeLastOrNull()
+                NavigationCommand.GoBack -> {
+                  if (backStack.size > 1) {
+                    backStack.removeLastOrNull()
+                  }
                 }
-              }
-              is NavigationCommand.SetRoot -> {
-                backStack.clear()
-                backStack.add(command.root)
+                is NavigationCommand.SetRoot -> {
+                  backStack.clear()
+                  backStack.add(command.root)
+                }
               }
             }
           }
-        }
 
-        ReviewFeature()
+          ReviewFeature()
+        }
       }
     }
   }

@@ -1,6 +1,12 @@
 package voice.features.settings.views
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -75,11 +81,19 @@ private fun Settings(
             },
           ) {
             Icon(
-              imageVector = VoiceIcons.Close,
+              imageVector = VoiceIcons.ArrowBack,
               contentDescription = stringResource(StringsR.string.common_action_close),
             )
           }
         },
+      )
+    },
+    bottomBar = {
+      Spacer(
+        Modifier
+          .fillMaxWidth()
+          .windowInsetsBottomHeight(WindowInsets.navigationBars)
+          .background(MaterialTheme.colorScheme.surface),
       )
     },
   ) { contentPadding ->
@@ -110,10 +124,8 @@ private fun Settings(
       item {
         ThemeModeRow(viewState.themeMode, listener::onThemeModeRowClick)
       }
-      if (viewState.showThemeColorSchemePref) {
-        item {
-          ThemeColorSchemeRow(viewState.themeColorScheme, listener::onThemeColorSchemeRowClick)
-        }
+      item {
+        PlaybackBackgroundStyleRow(viewState.playbackBackgroundStyle, listener::onPlaybackBackgroundStyleRowClick)
       }
       if (viewState.showAnalyticSetting && !viewState.kioskMode) {
         item {
@@ -148,8 +160,22 @@ private fun Settings(
       }
 
       item {
-        SeekTimeRow(viewState.seekTimeInSeconds) {
-          listener.onSeekAmountRowClick()
+        SeekTimeRow(
+          title = stringResource(StringsR.string.playback_action_rewind),
+          icon = VoiceIcons.FastRewind,
+          seconds = viewState.rewindTimeInSeconds,
+        ) {
+          listener.onRewindRowClick()
+        }
+      }
+
+      item {
+        SeekTimeRow(
+          title = stringResource(StringsR.string.playback_action_fast_forward),
+          icon = VoiceIcons.FastForward,
+          seconds = viewState.fastForwardTimeInSeconds,
+        ) {
+          listener.onFastForwardRowClick()
         }
       }
 
@@ -157,6 +183,13 @@ private fun Settings(
         AutoRewindRow(viewState.autoRewindInSeconds) {
           listener.onAutoRewindRowClick()
         }
+      }
+
+      item {
+        OpenLastBookOnStartupRow(
+          enabled = viewState.openLastBookOnStartup,
+          toggle = listener::toggleOpenLastBookOnStartup,
+        )
       }
 
       item {
@@ -185,34 +218,6 @@ private fun Settings(
 
       item {
         ListItem(
-          modifier = Modifier.clickable { listener.suggestIdea() },
-          leadingContent = {
-            Icon(
-              imageVector = VoiceIcons.Lightbulb,
-              contentDescription = stringResource(StringsR.string.settings_support_suggest_idea_title),
-            )
-          },
-        ) {
-          Text(stringResource(StringsR.string.settings_support_suggest_idea_title))
-        }
-      }
-
-      item {
-        ListItem(
-          modifier = Modifier.clickable { listener.getSupport() },
-          leadingContent = {
-            Icon(
-              imageVector = VoiceIcons.Help,
-              contentDescription = stringResource(StringsR.string.settings_support_get_support_title),
-            )
-          },
-        ) {
-          Text(stringResource(StringsR.string.settings_support_get_support_title))
-        }
-      }
-
-      item {
-        ListItem(
           modifier = Modifier.clickable { listener.openBugReport() },
           leadingContent = {
             Icon(
@@ -222,32 +227,6 @@ private fun Settings(
           },
         ) {
           Text(stringResource(StringsR.string.settings_support_report_issue_title))
-        }
-      }
-      item {
-        ListItem(
-          modifier = Modifier.clickable { listener.openTranslations() },
-          leadingContent = {
-            Icon(
-              imageVector = VoiceIcons.Language,
-              contentDescription = stringResource(StringsR.string.settings_support_help_translating_title),
-            )
-          },
-        ) {
-          Text(stringResource(StringsR.string.settings_support_help_translating_title))
-        }
-      }
-      item {
-        ListItem(
-          modifier = Modifier.clickable { listener.openFaq() },
-          leadingContent = {
-            Icon(
-              imageVector = VoiceIcons.Help,
-              contentDescription = stringResource(StringsR.string.settings_support_faq_title),
-            )
-          },
-        ) {
-          Text(stringResource(StringsR.string.settings_support_faq_title))
         }
       }
       item {
@@ -272,6 +251,33 @@ private fun Settings(
       }
     }
     Dialog(viewState, listener)
+  }
+}
+
+@Composable
+private fun OpenLastBookOnStartupRow(
+  enabled: Boolean,
+  toggle: () -> Unit,
+) {
+  ListItem(
+    modifier = Modifier.clickable { toggle() },
+    leadingContent = {
+      Icon(
+        imageVector = VoiceIcons.Undo, // Or find a better icon, history/undo seems okay for "last"
+        contentDescription = null,
+      )
+    },
+    supportingContent = {
+      Text(text = stringResource(StringsR.string.settings_playback_open_last_book_on_startup_summary))
+    },
+    trailingContent = {
+      Switch(
+        checked = enabled,
+        onCheckedChange = { toggle() },
+      )
+    },
+  ) {
+    Text(text = stringResource(StringsR.string.settings_playback_open_last_book_on_startup_title))
   }
 }
 
@@ -351,24 +357,35 @@ private fun Dialog(
         onDismiss = listener::dismissDialog,
       )
     }
-    SettingsViewState.Dialog.SeekTime -> {
+    SettingsViewState.Dialog.RewindTime -> {
       SeekAmountDialog(
-        currentSeconds = viewState.seekTimeInSeconds,
-        onSecondsConfirm = listener::seekAmountChanged,
+        title = stringResource(StringsR.string.playback_action_rewind),
+        currentSeconds = viewState.rewindTimeInSeconds,
+        onSecondsConfirm = listener::rewindAmountChanged,
+        onDismiss = listener::dismissDialog,
+      )
+    }
+    SettingsViewState.Dialog.FastForwardTime -> {
+      SeekAmountDialog(
+        title = stringResource(StringsR.string.playback_action_fast_forward),
+        currentSeconds = viewState.fastForwardTimeInSeconds,
+        onSecondsConfirm = listener::fastForwardAmountChanged,
         onDismiss = listener::dismissDialog,
       )
     }
     SettingsViewState.Dialog.Theme -> {
       ThemeModeDialog(
         selectedThemeMode = viewState.themeMode,
+        customThemeColor = viewState.customThemeColor,
         onThemeModeSelect = listener::setThemeMode,
+        onCustomThemeSelect = listener::setCustomTheme,
         onDismiss = listener::dismissDialog,
       )
     }
-    SettingsViewState.Dialog.ColorScheme -> {
-      ThemeColorSchemeDialog(
-        selectedThemeColorScheme = viewState.themeColorScheme,
-        onThemeColorSchemeSelect = listener::setThemeColorScheme,
+    SettingsViewState.Dialog.BackgroundStyle -> {
+      PlaybackBackgroundStyleDialog(
+        selectedStyle = viewState.playbackBackgroundStyle,
+        onStyleSelect = listener::setPlaybackBackgroundStyle,
         onDismiss = listener::dismissDialog,
       )
     }

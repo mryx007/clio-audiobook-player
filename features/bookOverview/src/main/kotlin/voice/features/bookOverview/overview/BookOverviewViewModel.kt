@@ -218,7 +218,7 @@ class BookOverviewViewModel(
     return BookOverviewViewState(
       layoutMode = BookOverviewLayoutMode.List,
       books = mapOf(
-        BookOverviewCategory.CURRENT to KioskModeDemoData.demoAudiobooks.associate { book ->
+        BookOverviewCategory.OVERVIEW to KioskModeDemoData.demoAudiobooks.associate { book ->
           book.id to mutableStateOf(
             BookOverviewItemViewState(
               name = book.title,

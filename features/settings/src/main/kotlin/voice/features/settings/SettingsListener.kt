@@ -1,18 +1,22 @@
 package voice.features.settings
 
-import voice.core.data.ThemeColorScheme
+import voice.core.data.PlaybackBackgroundStyle
 import voice.core.data.ThemeMode
 import java.time.LocalTime
 
 interface SettingsListener {
   fun close()
   fun onThemeModeRowClick()
-  fun onThemeColorSchemeRowClick()
+  fun onPlaybackBackgroundStyleRowClick()
   fun setThemeMode(themeMode: ThemeMode)
-  fun setThemeColorScheme(themeColorScheme: ThemeColorScheme)
+  fun setCustomThemeHex(hex: String)
+  fun setCustomTheme(hex: String, hue: Int) = setCustomThemeHex(hex)
+  fun setPlaybackBackgroundStyle(style: PlaybackBackgroundStyle)
   fun toggleGrid()
-  fun seekAmountChanged(seconds: Int)
-  fun onSeekAmountRowClick()
+  fun rewindAmountChanged(seconds: Int)
+  fun onRewindRowClick()
+  fun fastForwardAmountChanged(seconds: Int)
+  fun onFastForwardRowClick()
   fun autoRewindAmountChang(seconds: Int)
   fun onAutoRewindRowClick()
   fun dismissDialog()
@@ -26,6 +30,7 @@ interface SettingsListener {
   fun setAutoSleepTimerStart(time: LocalTime)
   fun setAutoSleepTimerEnd(time: LocalTime)
   fun toggleAnalytics()
+  fun toggleOpenLastBookOnStartup()
   fun openFolderPicker()
   fun onAppVersionClick()
 
@@ -35,12 +40,15 @@ interface SettingsListener {
     fun noop() = object : SettingsListener {
       override fun close() {}
       override fun onThemeModeRowClick() {}
-      override fun onThemeColorSchemeRowClick() {}
+      override fun onPlaybackBackgroundStyleRowClick() {}
       override fun setThemeMode(themeMode: ThemeMode) {}
-      override fun setThemeColorScheme(themeColorScheme: ThemeColorScheme) {}
+      override fun setCustomThemeHex(hex: String) {}
+      override fun setPlaybackBackgroundStyle(style: PlaybackBackgroundStyle) {}
       override fun toggleGrid() {}
-      override fun seekAmountChanged(seconds: Int) {}
-      override fun onSeekAmountRowClick() {}
+      override fun rewindAmountChanged(seconds: Int) {}
+      override fun onRewindRowClick() {}
+      override fun fastForwardAmountChanged(seconds: Int) {}
+      override fun onFastForwardRowClick() {}
       override fun autoRewindAmountChang(seconds: Int) {}
       override fun onAutoRewindRowClick() {}
       override fun dismissDialog() {}
@@ -54,6 +62,7 @@ interface SettingsListener {
       override fun setAutoSleepTimerStart(time: LocalTime) {}
       override fun setAutoSleepTimerEnd(time: LocalTime) {}
       override fun toggleAnalytics() {}
+      override fun toggleOpenLastBookOnStartup() {}
       override fun openFolderPicker() {}
       override fun onAppVersionClick() {}
       override fun openDeveloperMenu() {}

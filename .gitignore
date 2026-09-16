@@ -22,5 +22,12 @@ local.properties
 play_service_account.json
 releases
 reports
-testResults
 /plugins/.idea/workspace.xml
+/.vscode/
+/scratch/
+*sample*
+*Hörbücher*
+*hörbücher*
+*.dm
+
+

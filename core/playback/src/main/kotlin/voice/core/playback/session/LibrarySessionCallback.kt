@@ -214,6 +214,9 @@ class LibrarySessionCallback(
       is CustomCommand.SetGain -> {
         player.setGain(command.gain)
       }
+      is CustomCommand.SetEqualizer -> {
+        player.setEqualizer(command.bands)
+      }
     }
 
     return Futures.immediateFuture(SessionResult(SessionResult.RESULT_SUCCESS))

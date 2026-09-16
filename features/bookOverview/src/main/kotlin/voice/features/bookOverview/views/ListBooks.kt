@@ -96,6 +96,7 @@ internal fun ListBookRow(
     bookId = book.id,
     onBookClick = onBookClick,
     onBookLongClick = onBookLongClick,
+    showNewBadge = book.progress == 0f,
     modifier = modifier,
   ) {
     Column(Modifier.padding()) {
@@ -104,11 +105,12 @@ internal fun ListBookRow(
 
         Column(
           Modifier
-            .padding(start = 12.dp)
+            .padding(start = 12.dp, end = 12.dp)
             .weight(1f),
         ) {
           if (book.author != null) {
             Text(
+              modifier = Modifier.padding(end = if (book.progress == 0f) 40.dp else 0.dp),
               text = book.author.toUpperCase(LocaleList.current),
               style = MaterialTheme.typography.labelSmall,
               color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -117,6 +119,7 @@ internal fun ListBookRow(
           }
 
           Text(
+            modifier = Modifier.padding(end = if (book.progress == 0f) 40.dp else 0.dp),
             text = book.name,
             style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.onSurface,
@@ -124,8 +127,6 @@ internal fun ListBookRow(
           )
 
           BookRemainingProgressRow(
-            modifier = Modifier
-              .padding(end = 12.dp),
             remainingTime = book.remainingTime,
             progress = book.progress,
             remainingTimeMaxLines = 1,
@@ -140,7 +141,7 @@ internal fun ListBookRow(
           progress = book.progress,
           modifier = Modifier
             .fillMaxWidth()
-            .clip(MaterialTheme.shapes.small)
+            .padding(start = 12.dp, end = 12.dp, bottom = 8.dp)
             .height(4.dp),
           color = MaterialTheme.colorScheme.primary,
           trackColor = MaterialTheme.colorScheme.surfaceVariant,
@@ -155,14 +156,13 @@ private fun CoverImage(
   bookId: BookId,
   cover: String?,
 ) {
-  val startPadding = 16.dp
-  val endPadding = 16.dp
+  val cornerRadius = 8.dp
   AsyncImage(
     modifier = Modifier
       .padding(top = 8.dp, start = 8.dp, bottom = 8.dp)
       .size(76.dp)
       .sharedCoverElementModifier(bookId)
-      .clip(RoundedCornerShape(topStart = startPadding, bottomStart = startPadding, topEnd = endPadding, bottomEnd = endPadding)),
+      .clip(RoundedCornerShape(cornerRadius)),
     model = cover,
     placeholder = painterResource(id = UiR.drawable.album_art),
     error = painterResource(id = UiR.drawable.album_art),

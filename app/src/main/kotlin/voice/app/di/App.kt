@@ -4,6 +4,9 @@ import android.app.Application
 import dev.zacsweers.metro.HasMemberInjections
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.createGraphFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import voice.core.common.rootGraph
 import voice.core.initializer.AppInitializer
 
@@ -21,8 +24,10 @@ open class App : Application() {
         graph.inject(this)
       }
 
-    appInitializers.forEach {
-      it.onAppStart(this)
+    CoroutineScope(Dispatchers.Default).launch {
+      appInitializers.forEach {
+        it.onAppStart(this@App)
+      }
     }
   }
 

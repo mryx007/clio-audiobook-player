@@ -93,7 +93,7 @@ class BookOverviewViewModelTest {
       val initial = awaitItem()
       val initialCurrentItem = initial.currentBook(currentBook.id)
       val initialOtherItem = initial.currentBook(otherBook.id)
-      val initialKeys = initial.books.getValue(BookOverviewCategory.CURRENT).keys.toList()
+      val initialKeys = initial.books.getValue(BookOverviewCategory.OVERVIEW).keys.toList()
 
       assertEquals(expected = currentBook.toItemViewState(), actual = initialCurrentItem)
       assertEquals(expected = otherBook.toItemViewState(), actual = initialOtherItem)
@@ -108,7 +108,7 @@ class BookOverviewViewModelTest {
       livePlaybackFlow.value = livePlaybackState
       yield()
 
-      assertEquals(expected = initialKeys, actual = initial.books.getValue(BookOverviewCategory.CURRENT).keys.toList())
+      assertEquals(expected = initialKeys, actual = initial.books.getValue(BookOverviewCategory.OVERVIEW).keys.toList())
       assertEquals(expected = currentBook.overlay(livePlaybackState).toItemViewState(), actual = initial.currentBook(currentBook.id))
       assertEquals(expected = initialOtherItem, actual = initial.currentBook(otherBook.id))
       expectNoEvents()
@@ -159,7 +159,7 @@ class BookOverviewViewModelTest {
         expected = KioskModeDemoData.demoAudiobooks.map {
           it.id
         },
-        actual = state.books.getValue(BookOverviewCategory.CURRENT).keys.toList(),
+        actual = state.books.getValue(BookOverviewCategory.OVERVIEW).keys.toList(),
       )
       assertEquals(expected = "Echoes of Tomorrow", actual = state.currentBook(KioskModeDemoData.currentlyPlaying.id).name)
     }
@@ -280,7 +280,7 @@ class BookOverviewViewModelTest {
   }
 
   private fun BookOverviewViewState.currentBook(bookId: BookId): BookOverviewItemViewState {
-    return books.getValue(BookOverviewCategory.CURRENT).getValue(bookId).value
+    return books.getValue(BookOverviewCategory.OVERVIEW).getValue(bookId).value
   }
 
   private fun viewModel(

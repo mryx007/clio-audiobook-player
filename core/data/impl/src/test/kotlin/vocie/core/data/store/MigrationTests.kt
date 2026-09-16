@@ -17,12 +17,10 @@ import kotlinx.serialization.json.Json
 import org.junit.runner.RunWith
 import voice.core.common.AppInfoProvider
 import voice.core.data.GridMode
-import voice.core.data.ThemeColorScheme
 import voice.core.data.ThemeMode
 import voice.core.data.store.AutoRewindAmountStore
 import voice.core.data.store.GridModeStore
 import voice.core.data.store.SeekTimeStore
-import voice.core.data.store.ThemeColorSchemeStore
 import voice.core.data.store.ThemeModeStore
 import voice.core.data.store.VoiceDataStoreFactory
 import voice.core.data.store.intPrefsDataMigration
@@ -47,9 +45,6 @@ interface MigrationTestGraph {
 
   @ThemeModeStore
   val themeModeStore: DataStore<ThemeMode>
-
-  @ThemeColorSchemeStore
-  val themeColorSchemeStore: DataStore<ThemeColorScheme>
 
   @GridModeStore
   val gridModeStore: DataStore<GridMode>
@@ -150,7 +145,6 @@ class MigrationTests {
     assertEquals(expected = 20, actual = testGraph.seekTimeStore.data.first())
     assertEquals(expected = 2, actual = testGraph.autoRewindAmountStore.data.first())
     assertEquals(expected = ThemeMode.FollowSystem, actual = testGraph.themeModeStore.data.first())
-    assertEquals(expected = ThemeColorScheme.VoiceBlue, actual = testGraph.themeColorSchemeStore.data.first())
   }
 
   @Test

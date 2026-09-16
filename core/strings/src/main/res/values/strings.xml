@@ -93,7 +93,7 @@
     <!-- Title for folder mode where the selected folder is one book. -->
     <string name="folder.mode.single.title">Single Book Mode: One folder equals one book.</string>
     <!-- Empty-state message when no books are detected from selected files. -->
-    <string name="folder.type.book_example.empty">Voice could not detect any books. Are there any audio files?</string>
+    <string name="folder.type.book_example.empty">Clio could not detect any books. Are there any audio files?</string>
     <!-- Header above the preview of books detected from a folder structure. -->
     <string name="folder.type.book_example.header">This would lead to the following books being detected</string>
     <!-- Pluralized file count shown in folder structure previews. -->
@@ -103,6 +103,10 @@
     </plurals>
     <!-- Title for choosing how audiobook files are structured. -->
     <string name="folder.type.title">How are your files structured?</string>
+    <!-- Badge text shown on newly added audiobooks that have not been started yet. -->
+    <string name="book.badge.new">NEU</string>
+    <!-- Library category header for overview of books. -->
+    <string name="library.category.overview.title">Overview</string>
     <!-- Library category header for completed books. -->
     <string name="library.category.completed.title">Completed</string>
     <!-- Library category header for books currently being listened to. -->
@@ -122,7 +126,7 @@
     <!-- Button label for granting the storage permission workaround. -->
     <string name="library.storage_permission_bug.action">Grant permission</string>
     <!-- Message explaining why a storage permission workaround is needed. -->
-    <string name="library.storage_permission_bug.message">For certain devices, a system app is missing the necessary permission to access the external storage. This access is essential for Voice to read your audiobooks.</string>
+    <string name="library.storage_permission_bug.message">For certain devices, a system app is missing the necessary permission to access the external storage. This access is essential for Clio to read your audiobooks.</string>
     <!-- Title for the card explaining a required storage permission workaround. -->
     <string name="library.storage_permission_bug.title">Permission required</string>
     <!-- Media browser title for recently played audiobooks. -->
@@ -140,27 +144,31 @@
     <!-- Description for analytics consent during onboarding. -->
     <string name="onboarding.analytics_consent.description">Allow us to collect anonymous usage data to help improve the app. You can change this later in settings.</string>
     <!-- Title for analytics consent during onboarding. -->
-    <string name="onboarding.analytics_consent.title">Help improve Voice</string>
+    <string name="onboarding.analytics_consent.title">Help improve Clio</string>
     <!-- Button label for leaving onboarding and starting playback. -->
     <string name="onboarding.completion.action.start_listening">Start Listening</string>
     <!-- Subtitle on the onboarding completion screen. -->
-    <string name="onboarding.completion.subtitle">Your first audiobook is ready to play. Enjoy your journey with Voice!</string>
+    <string name="onboarding.completion.subtitle">Your first audiobook is ready to play. Enjoy your journey with Clio!</string>
     <!-- Title on the onboarding completion screen. -->
     <string name="onboarding.completion.title">You\'re All Set!</string>
     <!-- Subtitle explaining file and folder choices in onboarding. -->
-    <string name="onboarding.explanation.subtitle">With Voice, you can add books as individual files or organize them in folders. You choose!</string>
+    <string name="onboarding.explanation.subtitle">With Clio, you can add books as individual files or organize them in folders. You choose!</string>
     <!-- Title on the onboarding explanation screen. -->
     <string name="onboarding.explanation.title">Your Library, Your Way</string>
     <!-- Subtitle on the onboarding welcome screen. -->
     <string name="onboarding.welcome.subtitle">Your personal pocket audiobook player. Let\'s get you set up.</string>
     <!-- Title on the onboarding welcome screen. -->
-    <string name="onboarding.welcome.title">Welcome to Voice!</string>
+    <string name="onboarding.welcome.title">Welcome to Clio!</string>
     <!-- Label for the playback action that skips forward. -->
     <string name="playback.action.fast_forward">Fast forward</string>
     <!-- Content description for a playback button that pauses audio. -->
     <string name="playback.action.pause">Pause</string>
     <!-- Content description for a playback button that starts audio. -->
     <string name="playback.action.play">Play</string>
+    <!-- Content description for a playback button that locks UI interactions. -->
+    <string name="playback.action.lock">Lock playback</string>
+    <!-- Content description for a playback button that unlocks UI interactions. -->
+    <string name="playback.action.unlock">Unlock playback</string>
     <!-- Content description for a control that toggles playback between play and pause. -->
     <string name="playback.action.play_pause">Play / Pause</string>
     <!-- Label for the playback action that skips backward. -->
@@ -179,6 +187,24 @@
     <string name="playback.option.skip_silence">Skip Silence</string>
     <!-- Menu and dialog title for changing volume gain. -->
     <string name="playback.option.volume_boost">Volume boost</string>
+    <!-- Label for remaining playback time. -->
+    <string name="playback.time.remaining">Remaining</string>
+    <!-- Title for the playback background style setting. -->
+    <string name="settings.playback.background_style.title">Background style</string>
+    <!-- Label for the Solid background style. -->
+    <string name="settings.playback.background_style.solid">Solid</string>
+    <!-- Label for the Blurred Cover background style. -->
+    <string name="settings.playback.background_style.blurred_cover">Blurred Cover</string>
+    <!-- Label for the Dimmed Cover background style. -->
+    <string name="settings.playback.background_style.dimmed_cover">Dimmed Cover</string>
+    <!-- Label for the Dynamic Gradient background style. -->
+    <string name="settings.playback.background_style.dynamic_gradient">Dynamic Gradient</string>
+    <!-- Label for the Ambient Colors background style. -->
+    <string name="settings.playback.background_style.ambient_colors">Ambient Colors</string>
+    <!-- Label for the AMOLED Black background style. -->
+    <string name="settings.playback.background_style.amoled_black">AMOLED Black</string>
+    <!-- Label for the Glassmorphism background style. -->
+    <string name="settings.playback.background_style.glassmorphism">Glassmorphism</string>
     <!-- Title and content description for playback-speed controls. -->
     <string name="playback.speed.title">Playback speed</string>
     <!-- Negative button for cancelling feedback. -->
@@ -196,7 +222,7 @@
     <!-- Message for the dialog asking happy users to rate the app. -->
     <string name="review.request.message" tools:ignore="UnusedResources">Your feedback matters to us! If you have a moment, rate us and share your experience. It helps us to make improvements and offer a better listening experience.</string>
     <!-- Title for the dialog asking happy users to rate the app. -->
-    <string name="review.request.title" tools:ignore="UnusedResources">Enjoying Voice?</string>
+    <string name="review.request.title" tools:ignore="UnusedResources">Enjoying Clio?</string>
     <!-- Settings about row showing the app version. -->
     <string name="settings.about.app_version.title">App version</string>
     <!-- Title and content description for opening settings. -->
@@ -206,22 +232,48 @@
     <!-- Settings row title for analytics consent. -->
     <string name="settings.analytics_consent.title">Analytics</string>
     <!-- Title for the dark theme setting. -->
-    <!-- Settings row title for selecting the app color scheme. -->
-    <string name="settings.appearance.color_scheme.title">Color scheme</string>
-    <!-- Label for selecting Android dynamic color as app color scheme. -->
-    <string name="settings.appearance.color_scheme.dynamic">Dynamic color</string>
-    <!-- Description for Android dynamic color. -->
-    <string name="settings.appearance.color_scheme.dynamic.summary">Uses colors from your wallpaper and system theme.</string>
-    <!-- Label for selecting Voice blue as app color scheme. -->
-    <string name="settings.appearance.color_scheme.voice_blue">Voice blue</string>
-    <!-- Label for forcing dark mode. -->
-    <string name="settings.appearance.theme.dark">Dark</string>
+    <!-- Settings title for automatically opening the last book on startup. -->
+    <string name="settings.playback.open_last_book_on_startup.title">Open last book on startup</string>
+    <!-- Settings summary for automatically opening the last book on startup. -->
+    <string name="settings.playback.open_last_book_on_startup.summary">Skip the overview and go directly to the playback screen</string>
+    <!-- Label for using system dynamic colors as the app design. -->
+    <string name="settings.appearance.theme.dynamic">Material You</string>
+    <!-- Label for selecting a custom theme color. -->
+    <string name="settings.appearance.theme.custom">Custom</string>
+    <!-- Dialog title for custom dark background color input. -->
+    <string name="settings.appearance.theme.custom_hex_title">Custom dark background</string>
+    <!-- Label for button that resets custom color to default. -->
+    <string name="settings.appearance.theme.custom_color_reset">Reset color</string>
+    <!-- Hint for custom hex color input. -->
+    <string name="settings.appearance.theme.custom_hex_hint">Hex color (e.g. #0F141C)</string>
+    <!-- Label for app standard dark theme. -->
+    <string name="settings.appearance.theme.dark">App standard</string>
+    <!-- Label for pure black amoled theme. -->
+    <string name="settings.appearance.theme.amoled">Pure black</string>
+    <!-- Label for Catppuccin Mocha theme. -->
+    <string name="settings.appearance.theme.catppuccin_mocha">Catppuccin (Mocha)</string>
+    <!-- Label for Dark gray theme. -->
+    <string name="settings.appearance.theme.dark_gray">Dark gray</string>
+    <!-- Label for Dark pink theme. -->
+    <string name="settings.appearance.theme.dark_pink">Dark pink</string>
+    <!-- Label for Dark blue theme. -->
+    <string name="settings.appearance.theme.dark_blue">Dark blue</string>
+    <!-- Label for Dark green theme. -->
+    <string name="settings.appearance.theme.dark_green">Dark green</string>
+    <!-- Label for Dark yellow theme. -->
+    <string name="settings.appearance.theme.dark_yellow">Dark yellow</string>
+    <!-- Label for Dark orange theme. -->
+    <string name="settings.appearance.theme.dark_orange">Dark orange</string>
+    <!-- Label for Dark red theme. -->
+    <string name="settings.appearance.theme.dark_red">Dark red</string>
     <!-- Label for following the system light or dark setting. -->
     <string name="settings.appearance.theme.follow_system">Follow system</string>
     <!-- Label for forcing light mode. -->
     <string name="settings.appearance.theme.light">Light</string>
     <!-- Settings row title for selecting light or dark mode behavior. -->
     <string name="settings.appearance.theme.title">Theme</string>
+    <!-- Dialog title for selecting theme background. -->
+    <string name="settings.appearance.theme.dialog_title">Dark theme background</string>
     <!-- Label for selecting the automatic sleep timer end time. -->
     <string name="settings.auto_sleep_timer.end.label" weblate-flags="max-length:16">Set end time</string>
     <!-- Label for selecting the automatic sleep timer start time. -->
@@ -243,11 +295,11 @@
     <!-- Settings support row for getting help. -->
     <string name="settings.support.get_support.title">Get help</string>
     <!-- Settings support row for helping translate the app. -->
-    <string name="settings.support.help_translating.title">Help translating Voice</string>
+    <string name="settings.support.help_translating.title">Help translating Clio</string>
     <!-- Settings support row for reporting a problem. -->
     <string name="settings.support.report_issue.title">Report a problem</string>
     <!-- Settings row description for opening the donation/support screen. -->
-    <string name="settings.support.support_voice.summary">Donations help keep Voice maintained</string>
+    <string name="settings.support.support_voice.summary">Donations help keep Clio maintained</string>
     <!-- Settings row for opening the donation/support screen. -->
     <string name="settings.support.support_voice.title">Support development</string>
     <!-- Settings support row for suggesting a product idea. -->
@@ -255,7 +307,7 @@
     <!-- Support screen action for donating through Ko-fi. -->
     <string name="support.action.donate_kofi">Donate on Ko-fi</string>
     <!-- Support screen text explaining why support is useful. -->
-    <string name="support.description.maintenance">Voice is free, open source, and maintained by one developer.</string>
+    <string name="support.description.maintenance">Clio is free, open source, and maintained by one developer.</string>
     <!-- Support screen text under the main description. -->
     <string name="support.description.maintenance_subtitle">Donations help fund ongoing maintenance and development.</string>
     <!-- Support screen heading above the list of what donations enable. -->
@@ -264,8 +316,8 @@
     <string name="support.helps.maintenance">Bug fixes and maintenance</string>
     <!-- Support screen list item: new features. -->
     <string name="support.helps.features">New features</string>
-    <!-- Support screen list item: keeping Voice free, open source, and ad-free. -->
-    <string name="support.helps.open_source">Keeping Voice ad-free</string>
+    <!-- Support screen list item: keeping Clio free, open source, and ad-free. -->
+    <string name="support.helps.open_source">Keeping Clio ad-free</string>
     <!-- Title of the support screen. -->
     <string name="support.title">Support development</string>
     <!-- Short label for the launcher shortcut that plays the current book. -->
@@ -280,4 +332,8 @@
     <string name="sleep_timer.dialog.title">Sweet dreams! 🌙</string>
     <!-- Sleep timer option and playback status for stopping at the end of a chapter. -->
     <string name="sleep_timer.end_of_chapter">End of Chapter</string>
+    <!-- Title and content description for equalizer controls. -->
+    <string name="playback.equalizer.title">Equalizer</string>
+    <!-- Action to reset equalizer to flat. -->
+    <string name="playback.equalizer.reset">Reset</string>
 </resources>

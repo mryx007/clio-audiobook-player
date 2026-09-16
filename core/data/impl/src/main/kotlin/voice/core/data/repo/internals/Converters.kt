@@ -24,7 +24,7 @@ internal class Converters {
   fun toMarks(string: String): List<MarkData> = json.decodeFromString(ListSerializer(MarkData.serializer()), string)
 
   @TypeConverter
-  fun fromFile(file: File): String = file.absolutePath
+  fun fromFile(file: File): String = file.path
 
   @TypeConverter
   fun toFile(path: String) = File(path)

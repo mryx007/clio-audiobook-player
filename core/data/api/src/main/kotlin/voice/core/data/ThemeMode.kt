@@ -13,4 +13,42 @@ public enum class ThemeMode {
 
   @SerialName("dark")
   Dark,
+
+  @SerialName("Amoled")
+  Amoled,
+
+  @SerialName("Dynamic")
+  Dynamic,
+
+  @SerialName("CatppuccinMocha")
+  CatppuccinMocha,
+
+  @SerialName("DarkGray")
+  DarkGray,
+
+  @Deprecated("Replaced by DarkGray")
+  @SerialName("ClassicYouTube")
+  ClassicYouTube,
+
+  @SerialName("DarkPink")
+  DarkPink,
+
+  @SerialName("DarkBlue")
+  DarkBlue,
+
+  @SerialName("DarkGreen")
+  DarkGreen,
+
+  @SerialName("DarkYellow")
+  DarkYellow,
+
+  @SerialName("DarkOrange")
+  DarkOrange,
+
+  @SerialName("DarkRed")
+  DarkRed,
+
+  @Deprecated("Replaced by preset themes")
+  @SerialName("Custom")
+  Custom,
 }

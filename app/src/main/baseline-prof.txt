@@ -1,0 +1,74 @@
+# Voice App Startup & DI
+Lvoice/app/MainActivity;
+Lvoice/app/VoiceApp;
+Lvoice/app/di/App;
+Lvoice/app/di/AppKt;
+Lvoice/app/di/AppGraph;
+Lvoice/app/di/MetroAppGraph;
+Lvoice/app/di/AppScope;
+
+# Navigation & Root UI
+Lvoice/navigation/NavigationRootKt;
+Lvoice/navigation/NavGraph;
+
+# Core UI & Theming
+Lvoice/core/ui/theme/ThemeKt;
+Lvoice/core/ui/theme/VoiceThemeKt;
+Lvoice/core/ui/theme/ColorKt;
+Lvoice/core/ui/theme/TypeKt;
+Lvoice/core/ui/theme/VoiceTheme;
+Lvoice/core/ui/theme/VoiceColorScheme;
+Lvoice/core/ui/theme/DarkThemeMode;
+Lvoice/core/ui/components/VoiceAppBarKt;
+Lvoice/core/ui/components/VoiceScaffoldKt;
+
+# Book Overview Screen
+Lvoice/features/bookOverview/BookOverviewScreenKt;
+Lvoice/features/bookOverview/BookOverviewViewModel;
+Lvoice/features/bookOverview/BookOverviewViewState;
+
+# Core Data & Persistence
+Lvoice/core/data/store/VoiceDataStoreFactory;
+Lvoice/core/data/store/VoiceDataStoreFactoryKt;
+Lvoice/core/data/store/KotlinxDataStoreSerializer;
+Lvoice/core/data/repo/internals/AppDb;
+Lvoice/core/data/repo/internals/AppDb_Impl;
+Lvoice/core/data/repo/BookRepository;
+
+# AndroidX ProfileInstaller
+Landroidx/profileinstaller/ProfileInstaller;
+Landroidx/profileinstaller/ProfileInstallerInitializer;
+Landroidx/profileinstaller/ProfileInstallReceiver;
+
+# Compose Runtime Hotpath
+Landroidx/compose/runtime/ComposerImpl;
+Landroidx/compose/runtime/SlotTable;
+Landroidx/compose/runtime/Recomposer;
+Landroidx/compose/runtime/CompositionImpl;
+Landroidx/compose/runtime/SnapshotStateKt;
+Landroidx/compose/runtime/snapshots/Snapshot;
+Landroidx/compose/runtime/snapshots/SnapshotKt;
+
+# Compose UI & Foundation Hotpath
+Landroidx/compose/ui/platform/AndroidComposeView;
+Landroidx/compose/ui/platform/ComposeView;
+Landroidx/compose/ui/platform/WrappedComposition;
+Landroidx/compose/ui/node/LayoutNode;
+Landroidx/compose/ui/node/InnerNodeCoordinator;
+Landroidx/compose/ui/node/NodeCoordinator;
+Landroidx/compose/ui/node/MeasurePassDelegate;
+Landroidx/compose/ui/node/LayoutNodeLayoutDelegate;
+Landroidx/compose/ui/layout/MeasureScope;
+Landroidx/compose/foundation/layout/BoxKt;
+Landroidx/compose/foundation/layout/ColumnKt;
+Landroidx/compose/foundation/layout/RowKt;
+Landroidx/compose/foundation/lazy/LazyListKt;
+Landroidx/compose/foundation/lazy/LazyListState;
+
+# Material 3 Hotpath
+Landroidx/compose/material3/MaterialThemeKt;
+Landroidx/compose/material3/ColorScheme;
+Landroidx/compose/material3/Typography;
+Landroidx/compose/material3/Shapes;
+Landroidx/compose/material3/ScaffoldKt;
+Landroidx/compose/material3/SurfaceKt;

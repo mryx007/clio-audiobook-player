@@ -44,16 +44,14 @@ internal class MediaAnalyzer(
 
   suspend fun analyze(file: CachedDocumentFile): Metadata? {
     val builder = Metadata.Builder(file.nameWithoutExtension())
-    val duration = retrieveDuration(file.uri)
+    val mediaInfo = retrieveMediaInfo(file.uri)
       ?: return null
-    if (duration <= Duration.ZERO) {
+    if (mediaInfo.duration <= Duration.ZERO) {
       Logger.w("Duration is zero or negative for file: ${file.uri}")
       return null
     }
 
-    val trackGroups = retrieveMetadata(file.uri)
-      ?: return null
-
+    val trackGroups = mediaInfo.trackGroups
     repeat(trackGroups.length) { trackGroupsIndex ->
       val trackGroup = trackGroups[trackGroupsIndex]
       if (trackGroup.type == C.TRACK_TYPE_AUDIO) {
@@ -83,7 +81,7 @@ internal class MediaAnalyzer(
       parseMatroskaMetaData(file, builder)
     }
 
-    return builder.build(duration)
+    return builder.build(mediaInfo.duration)
   }
 
   private fun parseMatroskaMetaData(
@@ -99,7 +97,7 @@ internal class MediaAnalyzer(
         builder.title = builder.title ?: mediaInfo.title
       }
     } catch (e: MatroskaParseException) {
-      Logger.w(e, "Error parsing Matroska metadata")
+      Logger.w(e, "Error parsing matroska chapters")
     }
   }
 
@@ -108,7 +106,7 @@ internal class MediaAnalyzer(
     builder: Metadata.Builder,
   ) {
     val chapters = mp4ChapterExtractor.extractChapters(file.uri)
-    builder.chapters += chapters
+    builder.chapters.addAll(chapters)
   }
 
   private fun visitMdta(
@@ -116,15 +114,10 @@ internal class MediaAnalyzer(
     builder: Metadata.Builder,
   ) {
     when (entry.key) {
-      "com.apple.quicktime.title" -> {
-        builder.title = entry.value.toString(Charsets.UTF_8)
-      }
-      "com.apple.quicktime.artist" -> {
-        builder.artist = entry.value.toString(Charsets.UTF_8)
-      }
-      "com.apple.quicktime.album" -> {
-        builder.album = entry.value.toString(Charsets.UTF_8)
-      }
+      "com.apple.quicktime.album" -> builder.album = String(entry.value)
+      "com.apple.quicktime.artist" -> builder.artist = String(entry.value)
+      "com.apple.quicktime.title" -> builder.title = String(entry.value)
+      else -> Logger.d("Unknown mdta entry: ${entry.key}")
     }
   }
 
@@ -195,32 +188,29 @@ internal class MediaAnalyzer(
     }
   }
 
-  private suspend fun retrieveMetadata(uri: Uri): TrackGroupArray? {
-    return try {
-      MetadataRetriever.Builder(context, MediaItem.fromUri(uri))
-        .setMediaSourceFactory(mediaSourceFactory)
-        .build()
-        .use {
-          it.retrieveTrackGroups().await()
-        }
-    } catch (e: Exception) {
-      if (e is CancellationException) currentCoroutineContext().ensureActive()
-      Logger.w(e, "Error retrieving metadata")
-      null
-    }
-  }
+  private data class ExtractedMediaInfo(
+    val duration: Duration,
+    val trackGroups: TrackGroupArray,
+  )
 
-  private suspend fun retrieveDuration(uri: Uri): Duration? {
+  private suspend fun retrieveMediaInfo(uri: Uri): ExtractedMediaInfo? {
     return try {
       MetadataRetriever.Builder(context, MediaItem.fromUri(uri))
         .setMediaSourceFactory(mediaSourceFactory)
         .build()
-        .use {
-          it.retrieveDurationUs().await().microseconds
+        .use { retriever ->
+          val durationUsFuture = retriever.retrieveDurationUs()
+          val trackGroupsFuture = retriever.retrieveTrackGroups()
+          val durationUs = durationUsFuture.await()
+          val trackGroups = trackGroupsFuture.await()
+          ExtractedMediaInfo(
+            duration = durationUs.microseconds,
+            trackGroups = trackGroups,
+          )
         }
     } catch (e: Exception) {
       if (e is CancellationException) currentCoroutineContext().ensureActive()
-      Logger.w(e, "Error retrieving metadata")
+      Logger.w(e, "Error retrieving media info")
       null
     }
   }

@@ -7,8 +7,7 @@ import voice.core.data.repo.BookRepository
 import voice.features.bookOverview.bottomSheet.BottomSheetItem
 import voice.features.bookOverview.bottomSheet.BottomSheetItemViewModel
 import voice.features.bookOverview.di.BookOverviewScope
-import voice.features.bookOverview.overview.BookOverviewCategory
-import voice.features.bookOverview.overview.category
+import java.util.concurrent.TimeUnit.SECONDS
 
 @SingleIn(BookOverviewScope::class)
 @ContributesIntoSet(BookOverviewScope::class)
@@ -16,18 +15,13 @@ class EditBookCategoryViewModel(private val repo: BookRepository) : BottomSheetI
 
   override suspend fun items(bookId: BookId): List<BottomSheetItem> {
     val book = repo.get(bookId) ?: return emptyList()
-    return when (book.category) {
-      BookOverviewCategory.CURRENT -> listOf(
+    val isFinished = book.position >= book.duration - SECONDS.toMillis(5)
+    return when {
+      book.position == 0L -> listOf(BottomSheetItem.BookCategoryMarkAsCompleted)
+      isFinished -> listOf(BottomSheetItem.BookCategoryMarkAsNotStarted)
+      else -> listOf(
         BottomSheetItem.BookCategoryMarkAsNotStarted,
         BottomSheetItem.BookCategoryMarkAsCompleted,
-      )
-      BookOverviewCategory.NOT_STARTED -> listOf(
-        BottomSheetItem.BookCategoryMarkAsCurrent,
-        BottomSheetItem.BookCategoryMarkAsCompleted,
-      )
-      BookOverviewCategory.FINISHED -> listOf(
-        BottomSheetItem.BookCategoryMarkAsCurrent,
-        BottomSheetItem.BookCategoryMarkAsNotStarted,
       )
     }
   }

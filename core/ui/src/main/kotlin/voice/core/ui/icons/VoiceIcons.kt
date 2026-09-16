@@ -1210,6 +1210,44 @@ object VoiceIcons {
       .build()
 
   /*
+   * Source: https://fonts.gstatic.com/render/v1/Material+Symbols+Outlined/24dp/fast_forward.kt?var=opsz,wght,FILL,GRAD,ROND@24,400,0,0,50
+   * Generated: 2026-06-20T11:13:08Z
+   */
+  val FastForward: ImageVector =
+    ImageVector.Builder(
+      name = "FastForward",
+      defaultWidth = 24.dp,
+      defaultHeight = 24.dp,
+      viewportWidth = 24f,
+      viewportHeight = 24f,
+    )
+      .apply {
+        path(
+          fill = SolidColor(Color.Black),
+          fillAlpha = 1f,
+          stroke = null,
+          strokeAlpha = 1f,
+          strokeLineWidth = 1f,
+          strokeLineCap = StrokeCap.Butt,
+          strokeLineJoin = StrokeJoin.Bevel,
+          strokeLineMiter = 1f,
+          pathFillType = PathFillType.NonZero,
+        ) {
+          moveTo(4f, 18f)
+          lineTo(12.5f, 12f)
+          lineTo(4f, 6f)
+          verticalLineTo(18f)
+          close()
+          moveTo(13f, 6f)
+          verticalLineTo(18f)
+          lineTo(21.5f, 12f)
+          lineTo(13f, 6f)
+          close()
+        }
+      }
+      .build()
+
+  /*
    * Source: https://fonts.gstatic.com/render/v1/Material+Symbols+Outlined/24dp/fast_rewind.kt?var=opsz,wght,FILL,GRAD,ROND@24,400,0,0,50
    * Generated: 2026-06-20T11:13:08Z
    */
@@ -1233,29 +1271,93 @@ object VoiceIcons {
           strokeLineMiter = 1f,
           pathFillType = PathFillType.NonZero,
         ) {
-          moveTo(21.5f, 18f)
-          lineToRelative(-9f, -6f)
-          lineToRelative(9f, -6f)
+          moveTo(11f, 18f)
+          verticalLineTo(6f)
+          lineTo(2.5f, 12f)
+          lineTo(11f, 18f)
+          close()
+          moveTo(20f, 18f)
+          verticalLineTo(6f)
+          lineTo(11.5f, 12f)
+          lineTo(20f, 18f)
+          close()
+        }
+      }
+      .build()
+
+  /*
+   * Source: https://fonts.gstatic.com/render/v1/Material+Symbols+Outlined/24dp/skip_next.kt?var=opsz,wght,FILL,GRAD,ROND@24,400,0,0,50
+   * Generated: 2026-06-20T11:13:08Z
+   */
+  val SkipNext: ImageVector =
+    ImageVector.Builder(
+      name = "SkipNext",
+      defaultWidth = 24.dp,
+      defaultHeight = 24.dp,
+      viewportWidth = 24f,
+      viewportHeight = 24f,
+    )
+      .apply {
+        path(
+          fill = SolidColor(Color.Black),
+          fillAlpha = 1f,
+          stroke = null,
+          strokeAlpha = 1f,
+          strokeLineWidth = 1f,
+          strokeLineCap = StrokeCap.Butt,
+          strokeLineJoin = StrokeJoin.Bevel,
+          strokeLineMiter = 1f,
+          pathFillType = PathFillType.NonZero,
+        ) {
+          moveTo(6f, 18f)
+          lineTo(14.5f, 12f)
+          lineTo(6f, 6f)
           verticalLineTo(18f)
           close()
-          moveToRelative(-10f, 0f)
-          lineToRelative(-9f, -6f)
-          lineToRelative(9f, -6f)
+          moveTo(16f, 6f)
+          horizontalLineTo(18f)
           verticalLineTo(18f)
+          horizontalLineTo(16f)
+          verticalLineTo(6f)
           close()
-          moveToRelative(-2f, -6f)
+        }
+      }
+      .build()
+
+  /*
+   * Source: https://fonts.gstatic.com/render/v1/Material+Symbols+Outlined/24dp/skip_previous.kt?var=opsz,wght,FILL,GRAD,ROND@24,400,0,0,50
+   * Generated: 2026-06-20T11:13:08Z
+   */
+  val SkipPrevious: ImageVector =
+    ImageVector.Builder(
+      name = "SkipPrevious",
+      defaultWidth = 24.dp,
+      defaultHeight = 24.dp,
+      viewportWidth = 24f,
+      viewportHeight = 24f,
+    )
+      .apply {
+        path(
+          fill = SolidColor(Color.Black),
+          fillAlpha = 1f,
+          stroke = null,
+          strokeAlpha = 1f,
+          strokeLineWidth = 1f,
+          strokeLineCap = StrokeCap.Butt,
+          strokeLineJoin = StrokeJoin.Bevel,
+          strokeLineMiter = 1f,
+          pathFillType = PathFillType.NonZero,
+        ) {
+          moveTo(6f, 6f)
+          horizontalLineTo(8f)
+          verticalLineTo(18f)
+          horizontalLineTo(6f)
+          verticalLineTo(6f)
           close()
-          moveToRelative(10f, 0f)
-          close()
-          moveToRelative(-10f, 2.25f)
-          verticalLineTo(9.75f)
-          lineTo(6.1f, 12f)
-          lineToRelative(3.4f, 2.25f)
-          close()
-          moveToRelative(10f, 0f)
-          verticalLineTo(9.75f)
-          lineTo(16.1f, 12f)
-          lineToRelative(3.4f, 2.25f)
+          moveTo(18f, 18f)
+          lineTo(9.5f, 12f)
+          lineTo(18f, 6f)
+          verticalLineTo(18f)
           close()
         }
       }
@@ -2085,6 +2187,84 @@ object VoiceIcons {
           reflectiveQuadTo(8.85f, 14f)
           close()
           moveTo(12f, 14f)
+          close()
+        }
+      }
+      .build()
+
+  /*
+   * Source: https://fonts.gstatic.com/render/v1/Material+Symbols+Outlined/24dp/lock.kt?var=opsz,wght,FILL,GRAD,ROND@24,400,0,0,50
+   * Generated: 2026-06-20T11:13:08Z
+   */
+  val Lock: ImageVector =
+    ImageVector.Builder(
+      name = "Lock",
+      defaultWidth = 24.dp,
+      defaultHeight = 24.dp,
+      viewportWidth = 24f,
+      viewportHeight = 24f,
+    )
+      .apply {
+        path(
+          fill = SolidColor(Color.Black),
+          fillAlpha = 1f,
+          stroke = null,
+          strokeAlpha = 1f,
+          strokeLineWidth = 1f,
+          strokeLineCap = StrokeCap.Butt,
+          strokeLineJoin = StrokeJoin.Bevel,
+          strokeLineMiter = 1f,
+          pathFillType = PathFillType.NonZero,
+        ) {
+          moveTo(6f, 22f)
+          quadToRelative(-0.83f, 0f, -1.41f, -0.59f)
+          reflectiveQuadTo(4f, 20f)
+          verticalLineTo(10f)
+          quadToRelative(0f, -0.83f, 0.59f, -1.41f)
+          reflectiveQuadTo(6f, 8f)
+          horizontalLineToRelative(1f)
+          verticalLineTo(6f)
+          quadToRelative(0f, -2.07f, 1.46f, -3.54f)
+          reflectiveQuadTo(12f, 1f)
+          reflectiveQuadToRelative(3.54f, 1.46f)
+          reflectiveQuadTo(17f, 6f)
+          verticalLineTo(8f)
+          horizontalLineToRelative(1f)
+          quadToRelative(0.83f, 0f, 1.41f, 0.59f)
+          reflectiveQuadTo(20f, 10f)
+          verticalLineTo(20f)
+          quadToRelative(0f, 0.83f, -0.59f, 1.41f)
+          reflectiveQuadTo(18f, 22f)
+          horizontalLineTo(6f)
+          close()
+          moveTo(6f, 20f)
+          horizontalLineTo(18f)
+          verticalLineTo(10f)
+          horizontalLineTo(6f)
+          verticalLineTo(20f)
+          close()
+          moveToRelative(6f, -3f)
+          quadToRelative(0.83f, 0f, 1.41f, -0.59f)
+          reflectiveQuadTo(14f, 15f)
+          reflectiveQuadToRelative(-0.59f, -1.41f)
+          reflectiveQuadTo(12f, 13f)
+          reflectiveQuadToRelative(-1.41f, 0.59f)
+          quadTo(10f, 14.17f, 10f, 15f)
+          reflectiveQuadToRelative(0.59f, 1.41f)
+          reflectiveQuadTo(12f, 17f)
+          close()
+          moveTo(9f, 8f)
+          horizontalLineToRelative(6f)
+          verticalLineTo(6f)
+          quadToRelative(0f, -1.25f, -0.87f, -2.12f)
+          reflectiveQuadTo(12f, 3f)
+          reflectiveQuadToRelative(-2.13f, 0.88f)
+          reflectiveQuadTo(9f, 6f)
+          verticalLineTo(8f)
+          close()
+          moveTo(6f, 20f)
+          verticalLineTo(10f)
+          verticalLineTo(20f)
           close()
         }
       }
@@ -3093,6 +3273,113 @@ object VoiceIcons {
           quadToRelative(0f, 0.82f, -0.59f, 1.41f)
           reflectiveQuadTo(20f, 20f)
           horizontalLineTo(4f)
+          close()
+        }
+      }
+      .build()
+
+  val Tune: ImageVector =
+    ImageVector.Builder(
+      name = "Tune",
+      defaultWidth = 24.dp,
+      defaultHeight = 24.dp,
+      viewportWidth = 24f,
+      viewportHeight = 24f,
+    )
+      .apply {
+        path(
+          fill = SolidColor(Color.Black),
+          fillAlpha = 1f,
+          stroke = null,
+          strokeAlpha = 1f,
+          strokeLineWidth = 1f,
+          strokeLineCap = StrokeCap.Butt,
+          strokeLineJoin = StrokeJoin.Bevel,
+          strokeLineMiter = 1f,
+          pathFillType = PathFillType.NonZero,
+        ) {
+          moveTo(3f, 17f)
+          verticalLineToRelative(2f)
+          horizontalLineToRelative(6f)
+          verticalLineToRelative(-2f)
+          horizontalLineTo(3f)
+          close()
+          moveTo(3f, 5f)
+          verticalLineToRelative(2f)
+          horizontalLineToRelative(10f)
+          verticalLineTo(5f)
+          horizontalLineTo(3f)
+          close()
+          moveToRelative(10f, 16f)
+          verticalLineToRelative(-2f)
+          horizontalLineToRelative(8f)
+          verticalLineToRelative(-2f)
+          horizontalLineToRelative(-8f)
+          verticalLineToRelative(-2f)
+          horizontalLineToRelative(-2f)
+          verticalLineToRelative(6f)
+          horizontalLineToRelative(2f)
+          close()
+          moveTo(7f, 9f)
+          verticalLineToRelative(2f)
+          horizontalLineTo(3f)
+          verticalLineToRelative(2f)
+          horizontalLineToRelative(4f)
+          verticalLineToRelative(2f)
+          horizontalLineToRelative(2f)
+          verticalLineTo(9f)
+          horizontalLineTo(7f)
+          close()
+          moveToRelative(14f, 4f)
+          verticalLineToRelative(-2f)
+          horizontalLineTo(11f)
+          verticalLineToRelative(2f)
+          horizontalLineToRelative(10f)
+          close()
+          moveToRelative(-6f, -4f)
+          horizontalLineToRelative(2f)
+          verticalLineTo(7f)
+          horizontalLineToRelative(4f)
+          verticalLineTo(5f)
+          horizontalLineToRelative(-4f)
+          verticalLineTo(3f)
+          horizontalLineToRelative(-2f)
+          verticalLineToRelative(6f)
+          close()
+        }
+      }
+      .build()
+
+  val Star: ImageVector =
+    ImageVector.Builder(
+      name = "Star",
+      defaultWidth = 24.dp,
+      defaultHeight = 24.dp,
+      viewportWidth = 24f,
+      viewportHeight = 24f,
+    )
+      .apply {
+        path(
+          fill = SolidColor(Color.Black),
+          fillAlpha = 1f,
+          stroke = null,
+          strokeAlpha = 1f,
+          strokeLineWidth = 1f,
+          strokeLineCap = StrokeCap.Butt,
+          strokeLineJoin = StrokeJoin.Bevel,
+          strokeLineMiter = 1f,
+          pathFillType = PathFillType.NonZero,
+        ) {
+          moveTo(12f, 17.27f)
+          lineTo(18.18f, 21f)
+          lineToRelative(-1.64f, -7.03f)
+          lineTo(22f, 9.24f)
+          lineToRelative(-7.19f, -0.61f)
+          lineTo(12f, 2f)
+          lineTo(9.19f, 8.63f)
+          lineTo(2f, 9.24f)
+          lineToRelative(5.46f, 4.73f)
+          lineTo(5.82f, 21f)
           close()
         }
       }

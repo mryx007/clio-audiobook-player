@@ -1,14 +1,16 @@
 package voice.features.settings
 
-import voice.core.data.ThemeColorScheme
+import voice.core.data.PlaybackBackgroundStyle
+import voice.core.data.ThemeColor
 import voice.core.data.ThemeMode
 import java.time.LocalTime
 
 data class SettingsViewState(
   val themeMode: ThemeMode,
-  val themeColorScheme: ThemeColorScheme,
-  val showThemeColorSchemePref: Boolean,
-  val seekTimeInSeconds: Int,
+  val customThemeColor: ThemeColor,
+  val playbackBackgroundStyle: PlaybackBackgroundStyle,
+  val rewindTimeInSeconds: Int,
+  val fastForwardTimeInSeconds: Int,
   val autoRewindInSeconds: Int,
   val appVersion: String,
   val dialog: Dialog?,
@@ -16,6 +18,7 @@ data class SettingsViewState(
   val autoSleepTimer: AutoSleepTimerViewState,
   val showAnalyticSetting: Boolean,
   val analyticsEnabled: Boolean,
+  val openLastBookOnStartup: Boolean,
   val showDeveloperMenu: Boolean,
   val showSupportDevelopment: Boolean,
   val kioskMode: Boolean,
@@ -23,24 +26,27 @@ data class SettingsViewState(
 
   enum class Dialog {
     AutoRewindAmount,
-    SeekTime,
+    RewindTime,
+    FastForwardTime,
     Theme,
-    ColorScheme,
+    BackgroundStyle,
   }
 
   companion object {
     fun preview(): SettingsViewState {
       return SettingsViewState(
         themeMode = ThemeMode.FollowSystem,
-        themeColorScheme = ThemeColorScheme.VoiceBlue,
-        showThemeColorSchemePref = true,
-        seekTimeInSeconds = 42,
+        customThemeColor = ThemeColor(),
+        playbackBackgroundStyle = PlaybackBackgroundStyle.Solid,
+        rewindTimeInSeconds = 20,
+        fastForwardTimeInSeconds = 30,
         autoRewindInSeconds = 12,
         dialog = null,
         appVersion = "1.2.3",
         useGrid = true,
         autoSleepTimer = AutoSleepTimerViewState.preview(),
         analyticsEnabled = false,
+        openLastBookOnStartup = false,
         showAnalyticSetting = true,
         showDeveloperMenu = true,
         showSupportDevelopment = true,

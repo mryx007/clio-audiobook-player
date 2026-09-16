@@ -11,8 +11,8 @@ object NaturalOrderComparator {
       lhs: Uri,
       rhs: Uri,
     ): Int {
-      val lhsSegments = lhs.pathSegments.flatMap { it.split("/") }
-      val rhsSegments = rhs.pathSegments.flatMap { it.split("/") }
+      val lhsSegments = lhs.pathSegments.flatMap { it.split('/', '\\') }
+      val rhsSegments = rhs.pathSegments.flatMap { it.split('/', '\\') }
 
       val leftSize = lhsSegments.size
       val rightSize = rhsSegments.size
