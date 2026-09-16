@@ -108,4 +108,5 @@
     <string name="sleep_timer.dialog.action.decrement">Kortere</string>
     <string name="sleep_timer.dialog.action.increment">Længre</string>
     <string name="sleep_timer.dialog.title">Sov godt! 🌙</string>
+    <string name="book.badge.new">NY</string>
 </resources>

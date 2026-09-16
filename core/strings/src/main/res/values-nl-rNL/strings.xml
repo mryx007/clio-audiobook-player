@@ -140,4 +140,5 @@
     <string name="sleep_timer.dialog.action.increment">Langer</string>
     <string name="sleep_timer.dialog.title">Slaapwel! 🌙</string>
     <string name="sleep_timer.end_of_chapter">Einde van hoofdstuk</string>
+    <string name="book.badge.new">NIEUW</string>
 </resources>

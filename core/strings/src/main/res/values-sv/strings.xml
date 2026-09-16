@@ -140,4 +140,5 @@
     <string name="sleep_timer.dialog.action.increment">Längre</string>
     <string name="sleep_timer.dialog.title">Sov gott! 🌙</string>
     <string name="sleep_timer.end_of_chapter">Vid kapitlets slut</string>
+    <string name="book.badge.new">NY</string>
 </resources>
