@@ -104,7 +104,7 @@
     <!-- Title for choosing how audiobook files are structured. -->
     <string name="folder.type.title">How are your files structured?</string>
     <!-- Badge text shown on newly added audiobooks that have not been started yet. -->
-    <string name="book.badge.new">NEU</string>
+    <string name="book.badge.new">NEW</string>
     <!-- Library category header for overview of books. -->
     <string name="library.category.overview.title">Overview</string>
     <!-- Library category header for completed books. -->

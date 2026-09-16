@@ -146,4 +146,5 @@
     <string name="sleep_timer.dialog.action.increment">Довше</string>
     <string name="sleep_timer.dialog.title">На добраніч! 🌙</string>
     <string name="sleep_timer.end_of_chapter">Кінець розділу</string>
+    <string name="book.badge.new">НОВЕ</string>
 </resources>

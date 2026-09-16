@@ -146,4 +146,5 @@
     <string name="sleep_timer.dialog.action.increment">Дольше</string>
     <string name="sleep_timer.dialog.title">Приятных снов! 🌙</string>
     <string name="sleep_timer.end_of_chapter">Конец главы</string>
+    <string name="book.badge.new">НОВОЕ</string>
 </resources>

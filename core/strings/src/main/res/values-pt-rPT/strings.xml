@@ -143,4 +143,5 @@
     <string name="sleep_timer.dialog.action.increment">Mais longo</string>
     <string name="sleep_timer.dialog.title">Bons sonhos! 🌙</string>
     <string name="sleep_timer.end_of_chapter">Fim do capítulo</string>
+    <string name="book.badge.new">NOVO</string>
 </resources>

@@ -137,4 +137,5 @@
     <string name="sleep_timer.dialog.action.increment">長くする</string>
     <string name="sleep_timer.dialog.title">おやすみなさい！ 🌙</string>
     <string name="sleep_timer.end_of_chapter">チャプターの終わり</string>
+    <string name="book.badge.new">新着</string>
 </resources>

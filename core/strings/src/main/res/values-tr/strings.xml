@@ -140,4 +140,5 @@
     <string name="sleep_timer.dialog.action.increment">Daha uzun</string>
     <string name="sleep_timer.dialog.title">Tatlı rüyalar! 🌙</string>
     <string name="sleep_timer.end_of_chapter">Bölüm Sonu</string>
+    <string name="book.badge.new">YENİ</string>
 </resources>
