@@ -189,6 +189,10 @@ class PlayerController(
     controller.sendCustomCommand(CustomCommand.SetGain(gain))
   }
 
+  fun setEqualizer(bands: List<Int>) = executeAfterPrepare { controller ->
+    controller.sendCustomCommand(CustomCommand.SetEqualizer(bands))
+  }
+
   fun setVolume(volume: Float) = executeAfterPrepare {
     require(volume in 0F..1F)
     it.volume = volume

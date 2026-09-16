@@ -43,7 +43,7 @@ android {
     register("free") {
       dimension = distributionFlavor
       buildConfigField(type = "Boolean", name = "INCLUDE_ANALYTICS", value = "false")
-      buildConfigField(type = "Boolean", name = "SUPPORT_DEVELOPMENT_INCLUDED", value = "true")
+      buildConfigField(type = "Boolean", name = "SUPPORT_DEVELOPMENT_INCLUDED", value = "false")
       pluginManager.withPlugin(libs.plugins.crashlytics.get().pluginId) {
         extensions.configure<CrashlyticsExtension>("firebaseCrashlytics") {
           mappingFileUploadEnabled = false
@@ -82,9 +82,7 @@ android {
       isMinifyEnabled = false
     }
     all {
-      if (appSigningConfig != null) {
-        signingConfig = appSigningConfig
-      }
+      signingConfig = appSigningConfig ?: signingConfigs.getByName("debug")
       setProguardFiles(
         listOf(
           getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -181,6 +179,7 @@ dependencies {
   implementation(libs.appCompat)
   implementation(libs.lifecycle.compose)
   implementation(libs.datastore)
+  implementation(libs.profileinstaller)
 
   implementation(libs.navigation3.ui)
 

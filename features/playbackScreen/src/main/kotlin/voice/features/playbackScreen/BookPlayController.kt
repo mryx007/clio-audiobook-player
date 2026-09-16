@@ -63,6 +63,9 @@ fun BookPlayScreen(bookId: BookId) {
     onFastForwardClick = viewModel::fastForward,
     onRewindClick = viewModel::rewind,
     onSeek = viewModel::seekTo,
+    onChapterSeek = viewModel::seekToChapter,
+    onSkipToNext = viewModel::next,
+    onSkipToPrevious = viewModel::previous,
     onBookmarkClick = viewModel::onBookmarkClick,
     onBookmarkLongClick = viewModel::onBookmarkLongClick,
     onSkipSilenceClick = viewModel::toggleSkipSilence,
@@ -70,9 +73,8 @@ fun BookPlayScreen(bookId: BookId) {
     onVolumeBoostClick = viewModel::onVolumeGainIconClick,
     onSpeedChangeClick = viewModel::onPlaybackSpeedIconClick,
     onCloseClick = viewModel::onCloseClick,
-    onSkipToNext = viewModel::next,
-    onSkipToPrevious = viewModel::previous,
-    onCurrentChapterClick = viewModel::onCurrentChapterClick,
+    onEqualizerClick = viewModel::onEqualizerIconClick,
+    onLockClick = viewModel::toggleLock,
     useLandscapeLayout = LocalConfiguration.current.orientation == ORIENTATION_LANDSCAPE,
     snackbarHostState = snackbarHostState,
   )
@@ -96,6 +98,9 @@ fun BookPlayScreen(bookId: BookId) {
           onAcceptSleepTime = viewModel::onAcceptSleepTime,
           onAcceptSleepAtEndOfChapter = viewModel::onAcceptSleepAtEndOfChapter,
         )
+      }
+      is BookPlayDialogViewState.EqualizerDialog -> {
+        EqualizerDialog(dialogState, viewModel)
       }
     }
   }

@@ -11,17 +11,18 @@ import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import voice.core.common.AppInfoProvider
 import voice.core.common.DispatcherProvider
 import voice.core.data.GridMode
-import voice.core.data.ThemeColorScheme
+import voice.core.data.PlaybackBackgroundStyle
+import voice.core.data.ThemeColor
 import voice.core.data.ThemeMode
 import voice.core.data.sleeptimer.SleepTimerPreference
 import voice.core.featureflag.MemoryFeatureFlag
-import voice.core.ui.DynamicColorAvailability
 import voice.core.ui.GridCount
 import voice.navigation.Destination
 import voice.navigation.Navigator
@@ -34,13 +35,16 @@ class SettingsViewModelTest {
 
   private val scope = TestScope()
   private val themeModeStore = MemoryDataStore(ThemeMode.FollowSystem)
-  private val themeColorSchemeStore = MemoryDataStore(ThemeColorScheme.VoiceBlue)
+  private val themeColorStore = MemoryDataStore(ThemeColor())
   private val autoRewindAmountStore = MemoryDataStore(10)
-  private val seekTimeStore = MemoryDataStore(30)
+  private val rewindTimeStore = MemoryDataStore(20)
+  private val fastForwardTimeStore = MemoryDataStore(30)
   private val gridModeStore = MemoryDataStore(GridMode.GRID)
   private val sleepTimerPreferenceStore = MemoryDataStore(SleepTimerPreference.Default)
   private val analyticsConsentStore = MemoryDataStore(false)
   private val developerMenuUnlockedStore = MemoryDataStore(false)
+  private val openLastBookOnStartupStore = MemoryDataStore(false)
+  private val playbackBackgroundStyleStore = MemoryDataStore(PlaybackBackgroundStyle.Solid)
   private val navigator = mockk<Navigator> {
     every { goTo(any()) } just Runs
   }
@@ -54,15 +58,13 @@ class SettingsViewModelTest {
     every { useGridAsDefault() } returns true
   }
   private val kioskModeFeatureFlag = MemoryFeatureFlag(false)
-  private val dynamicColorAvailability = mockk<DynamicColorAvailability> {
-    every { isSupported() } returns true
-  }
 
   private val viewModel = SettingsViewModel(
     themeModeStore = themeModeStore,
-    themeColorSchemeStore = themeColorSchemeStore,
+    themeColorStore = themeColorStore,
     autoRewindAmountStore = autoRewindAmountStore,
-    seekTimeStore = seekTimeStore,
+    rewindTimeStore = rewindTimeStore,
+    fastForwardTimeStore = fastForwardTimeStore,
     navigator = navigator,
     appInfoProvider = appInfoProvider,
     gridModeStore = gridModeStore,
@@ -71,7 +73,8 @@ class SettingsViewModelTest {
     gridCount = gridCount,
     kioskModeFeatureFlag = kioskModeFeatureFlag,
     developerMenuUnlockedStore = developerMenuUnlockedStore,
-    dynamicColorAvailability = dynamicColorAvailability,
+    openLastBookOnStartupStore = openLastBookOnStartupStore,
+    playbackBackgroundStyleStore = playbackBackgroundStyleStore,
     dispatcherProvider = DispatcherProvider(scope.coroutineContext, scope.coroutineContext, scope.coroutineContext),
   )
 
@@ -82,7 +85,6 @@ class SettingsViewModelTest {
     }.test {
       awaitItem().let {
         assertEquals(expected = ThemeMode.FollowSystem, actual = it.themeMode)
-        assertEquals(expected = ThemeColorScheme.VoiceBlue, actual = it.themeColorScheme)
       }
     }
   }
@@ -100,44 +102,32 @@ class SettingsViewModelTest {
       viewModel.setThemeMode(ThemeMode.Light)
       assertEquals(expected = ThemeMode.Light, actual = awaitItem().themeMode)
 
+      viewModel.setThemeMode(ThemeMode.Amoled)
+      assertEquals(expected = ThemeMode.Amoled, actual = awaitItem().themeMode)
+
+      viewModel.setThemeMode(ThemeMode.CatppuccinMocha)
+      assertEquals(expected = ThemeMode.CatppuccinMocha, actual = awaitItem().themeMode)
+
       viewModel.setThemeMode(ThemeMode.FollowSystem)
       assertEquals(expected = ThemeMode.FollowSystem, actual = awaitItem().themeMode)
     }
   }
 
   @Test
-  fun `color scheme setting is visible when dynamic color is supported`() = scope.runTest {
-    every { dynamicColorAvailability.isSupported() } returns true
+  fun `theme presets store correctly`() = scope.runTest {
+    viewModel.setThemeMode(ThemeMode.CatppuccinMocha)
+    testScheduler.advanceUntilIdle()
 
-    backgroundScope.launchMolecule(RecompositionMode.Immediate) {
-      viewModel.viewState()
-    }.test {
-      assertEquals(expected = true, actual = awaitItem().showThemeColorSchemePref)
-    }
+    assertEquals(expected = ThemeMode.CatppuccinMocha, actual = themeModeStore.data.first())
   }
 
   @Test
-  fun `color scheme setting is hidden when dynamic color is unsupported`() = scope.runTest {
-    every { dynamicColorAvailability.isSupported() } returns false
+  fun `setCustomThemeHex updates themeColorStore and sets theme mode to custom`() = scope.runTest {
+    viewModel.setCustomThemeHex("#123456")
+    testScheduler.advanceUntilIdle()
 
-    backgroundScope.launchMolecule(RecompositionMode.Immediate) {
-      viewModel.viewState()
-    }.test {
-      assertEquals(expected = false, actual = awaitItem().showThemeColorSchemePref)
-    }
-  }
-
-  @Test
-  fun `selecting dynamic color updates view state`() = scope.runTest {
-    backgroundScope.launchMolecule(RecompositionMode.Immediate) {
-      viewModel.viewState()
-    }.test {
-      assertEquals(expected = ThemeColorScheme.VoiceBlue, actual = awaitItem().themeColorScheme)
-
-      viewModel.setThemeColorScheme(ThemeColorScheme.Dynamic)
-
-      assertEquals(expected = ThemeColorScheme.Dynamic, actual = awaitItem().themeColorScheme)
-    }
+    assertEquals(expected = "#123456", actual = themeColorStore.data.first().hex)
+    assertEquals(expected = ThemeMode.Custom, actual = themeModeStore.data.first())
   }
 
   @Test
@@ -225,6 +215,36 @@ class SettingsViewModelTest {
       awaitItem().let {
         assertEquals(expected = true, actual = it.kioskMode)
       }
+    }
+  }
+
+  @Test
+  fun `rewind amount changes and row click`() = scope.runTest {
+    backgroundScope.launchMolecule(RecompositionMode.Immediate) {
+      viewModel.viewState()
+    }.test {
+      assertEquals(expected = 20, actual = awaitItem().rewindTimeInSeconds)
+
+      viewModel.rewindAmountChanged(15)
+      assertEquals(expected = 15, actual = awaitItem().rewindTimeInSeconds)
+
+      viewModel.onRewindRowClick()
+      assertEquals(expected = SettingsViewState.Dialog.RewindTime, actual = awaitItem().dialog)
+    }
+  }
+
+  @Test
+  fun `fast forward amount changes and row click`() = scope.runTest {
+    backgroundScope.launchMolecule(RecompositionMode.Immediate) {
+      viewModel.viewState()
+    }.test {
+      assertEquals(expected = 30, actual = awaitItem().fastForwardTimeInSeconds)
+
+      viewModel.fastForwardAmountChanged(45)
+      assertEquals(expected = 45, actual = awaitItem().fastForwardTimeInSeconds)
+
+      viewModel.onFastForwardRowClick()
+      assertEquals(expected = SettingsViewState.Dialog.FastForwardTime, actual = awaitItem().dialog)
     }
   }
 }

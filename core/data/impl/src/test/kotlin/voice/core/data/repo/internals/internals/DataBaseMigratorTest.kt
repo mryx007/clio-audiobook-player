@@ -29,9 +29,11 @@ class DataBaseMigratorTest {
     AppDb::class.java,
   )
 
+  private val dbName: String
+    get() = InstrumentationRegistry.getInstrumentation().targetContext.getDatabasePath("testDb").absolutePath
+
   @Test
   fun emptyTableLeadsToCorrectSchema() {
-    val dbName = "testDb"
     val db = helper.createDatabase(dbName, 43)
     db.execSQL(BookTable.CREATE_TABLE)
     db.execSQL(ChapterTable.CREATE_TABLE)
@@ -47,7 +49,6 @@ class DataBaseMigratorTest {
 
   @Test
   fun migrate44() {
-    val dbName = "testDb"
     val db = helper.createDatabase(dbName, 44)
 
     data class BookSetting(
@@ -117,7 +118,6 @@ class DataBaseMigratorTest {
 
   @Test
   fun migrate43() {
-    val dbName = "testDb"
     val db = helper.createDatabase(dbName, 43)
     db.execSQL(BookTable.CREATE_TABLE)
     db.execSQL(ChapterTable.CREATE_TABLE)

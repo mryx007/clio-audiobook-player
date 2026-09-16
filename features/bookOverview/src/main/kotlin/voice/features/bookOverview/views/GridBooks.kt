@@ -104,6 +104,7 @@ internal fun GridBook(
     bookId = book.id,
     onBookClick = onBookClick,
     onBookLongClick = onBookLongClick,
+    showNewBadge = book.progress == 0f,
   ) {
     Column(
       modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 12.dp),
@@ -113,7 +114,7 @@ internal fun GridBook(
           .fillMaxWidth()
           .aspectRatio(4f / 3f)
           .sharedCoverElementModifier(book.id)
-          .clip(MaterialTheme.shapes.large)
+          .clip(MaterialTheme.shapes.medium)
           .background(MaterialTheme.colorScheme.surfaceVariant),
         contentAlignment = Alignment.Center,
       ) {

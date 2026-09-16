@@ -30,6 +30,7 @@ import voice.core.data.MarkData
 import voice.core.logging.api.LogWriter
 import voice.core.logging.api.Logger
 import voice.core.playback.MemoryDataStore
+import voice.core.playback.audio.EqualizerAudioProcessor
 import voice.core.playback.session.MediaItemProvider
 import voice.core.playback.session.realChapterId
 import voice.core.playback.session.search.book
@@ -62,7 +63,8 @@ class VoicePlayerTest {
     )
   }
 
-  private val seekTimeStore = MemoryDataStore(2)
+  private val rewindTimeStore = MemoryDataStore(2)
+  private val fastForwardTimeStore = MemoryDataStore(2)
   private val autoRewindAmountStore = MemoryDataStore(2)
 
   private val internalPlayer = TestExoPlayerBuilder(ApplicationProvider.getApplicationContext())
@@ -103,11 +105,13 @@ class VoicePlayerTest {
     currentBookStoreId = mockk {
       every { data } returns flowOf(bookId)
     },
-    seekTimeStore = seekTimeStore,
+    rewindTimeStore = rewindTimeStore,
+    fastForwardTimeStore = fastForwardTimeStore,
     autoRewindAmountStore = autoRewindAmountStore,
     scope = scope,
     mediaItemProvider = mediaItemProvider,
     volumeGain = mockk(relaxed = true),
+    equalizerAudioProcessor = EqualizerAudioProcessor(),
     sleepTimer = sleepTimer,
     analytics = mockk(relaxed = true),
   )
@@ -127,7 +131,7 @@ class VoicePlayerTest {
       ),
     )
 
-    seekTimeStore.updateData { 7 }
+    fastForwardTimeStore.updateData { 7 }
 
     player.prepare()
     awaitReady()
@@ -167,7 +171,7 @@ class VoicePlayerTest {
       ),
     )
 
-    seekTimeStore.updateData { 5 }
+    rewindTimeStore.updateData { 5 }
 
     player.seekTo(1, 12_000)
     player.prepare()

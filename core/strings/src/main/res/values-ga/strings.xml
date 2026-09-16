@@ -55,7 +55,7 @@
     <string name="folder.mode.author.title">Mód Údair-Leabhar: Is údair iad fofhillteáin, is leabhair iad fo-fhillteáin.</string>
     <string name="folder.mode.root.title">Mód Leabhar Barrleibhéil: Is leabhair iad fofhillteáin</string>
     <string name="folder.mode.single.title">Mód Leabhar Aonair: Is ionann fillteán amháin agus leabhar amháin.</string>
-    <string name="folder.type.book_example.empty">Níorbh fhéidir le Voice aon leabhar a bhrath. An bhfuil aon chomhaid fuaime ann?</string>
+    <string name="folder.type.book_example.empty">Níorbh fhéidir le Clio aon leabhar a bhrath. An bhfuil aon chomhaid fuaime ann?</string>
     <string name="folder.type.book_example.header">D’fhágfadh sin go mbraithfí na leabhair seo a leanas</string>
     <plurals name="folder.type.file_count">
         <item quantity="one">%d comhad fuaime</item>
@@ -74,7 +74,7 @@
     <string name="library.folders.moved.dialog.message">Is féidir leat fillteáin closleabhar a bhainistiú anois sna Sainroghanna.</string>
     <string name="library.search.hint">Cad atá tú ag féachaint faoi?</string>
     <string name="library.storage_permission_bug.action">Cead a dheonú</string>
-    <string name="library.storage_permission_bug.message">I gcás feistí áirithe, tá an cead riachtanach chun rochtain a fháil ar an stóras seachtrach in easnamh ar aip córais. Tá an rochtain seo riachtanach do Voice chun do chlosleabhair a léamh.</string>
+    <string name="library.storage_permission_bug.message">I gcás feistí áirithe, tá an cead riachtanach chun rochtain a fháil ar an stóras seachtrach in easnamh ar aip córais. Tá an rochtain seo riachtanach do Clio chun do chlosleabhair a léamh.</string>
     <string name="library.storage_permission_bug.title">Cead ag teastáil</string>
     <string name="media_session.library.recent">le déanaí</string>
     <string name="media_session.library.root">Gach closleabhair</string>
@@ -85,7 +85,7 @@
     <string name="onboarding.analytics_consent.description">Lig dúinn sonraí úsáide gan ainm a bhailiú chun cabhrú leis an aip a fheabhsú. Is féidir leat é seo a athrú níos déanaí sna socruithe.</string>
     <string name="onboarding.analytics_consent.title">Cabhraigh le Guth a fheabhsú</string>
     <string name="onboarding.completion.action.start_listening">Tosaigh Éisteacht</string>
-    <string name="onboarding.completion.subtitle">Tá do chéad chlosleabhar réidh le himirt. Bain sult as do thuras le Voice!</string>
+    <string name="onboarding.completion.subtitle">Tá do chéad chlosleabhar réidh le himirt. Bain sult as do thuras le Clio!</string>
     <string name="onboarding.completion.title">Tá tú Socraithe go léir!</string>
     <string name="onboarding.explanation.subtitle">Le Guth, is féidir leat leabhair a chur leis mar chomhaid aonair nó iad a eagrú i bhfillteáin. Roghnaíonn tú!</string>
     <string name="onboarding.explanation.title">Do Leabharlann, Do Bhealach Féin</string>
@@ -116,10 +116,6 @@
     <string name="settings.action.open">Socruithe</string>
     <string name="settings.analytics_consent.description">Ceadaigh bailiú sonraí úsáide gan ainm chun cabhrú le feabhas a chur ar an aip</string>
     <string name="settings.analytics_consent.title">Anailísíocht</string>
-    <string name="settings.appearance.color_scheme.title">Scéim dathanna</string>
-    <string name="settings.appearance.color_scheme.dynamic">Dath dinimiciúil</string>
-    <string name="settings.appearance.color_scheme.dynamic.summary">Úsáideann sé dathanna ó do pháipéar balla agus ó théama an chórais.</string>
-    <string name="settings.appearance.color_scheme.voice_blue">Gorm Voice</string>
     <string name="settings.appearance.theme.dark">Dorcha</string>
     <string name="settings.appearance.theme.follow_system">Lean an córas</string>
     <string name="settings.appearance.theme.light">Geal</string>
@@ -137,15 +133,15 @@
     <string name="settings.support.help_translating.title">Cabhrú le Guth a aistriú</string>
     <string name="settings.support.report_issue.title">Tuairiscigh fadhb</string>
     <string name="settings.support.suggest_idea.title">Mol smaoineamh</string>
-    <string name="settings.support.support_voice.summary">Cuidíonn síntiúis le Voice a chothabháil</string>
+    <string name="settings.support.support_voice.summary">Cuidíonn síntiúis le Clio a chothabháil</string>
     <string name="settings.support.support_voice.title">Tacaigh leis an bhforbairt</string>
     <string name="support.action.donate_kofi">Tabhair síntiús ar Ko-fi</string>
-    <string name="support.description.maintenance">Tá Voice saor in aisce, foinse oscailte, agus á chothabháil ag forbróir amháin.</string>
+    <string name="support.description.maintenance">Tá Clio saor in aisce, foinse oscailte, agus á chothabháil ag forbróir amháin.</string>
     <string name="support.description.maintenance_subtitle">Cuidíonn síntiúis le cothabháil agus forbairt leanúnach a mhaoiniú.</string>
     <string name="support.helps.title">Cabhraíonn tacaíocht le</string>
     <string name="support.helps.maintenance">Ceartúcháin fabhtanna agus cothabháil</string>
     <string name="support.helps.features">Gnéithe nua</string>
-    <string name="support.helps.open_source">Voice a choinneáil saor ó fhógraí</string>
+    <string name="support.helps.open_source">Clio a choinneáil saor ó fhógraí</string>
     <string name="support.title">Tacaigh leis an bhforbairt</string>
     <string name="shortcut.play_current.short_label">Seinn reatha</string>
     <string name="sleep_timer.action.open">Orláiste codalta</string>

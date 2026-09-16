@@ -28,12 +28,16 @@ public data class BookContent(
   val narrator: String?,
   val series: String?,
   val part: String?,
+  @ColumnInfo(defaultValue = "")
+  public val equalizer: String = "",
 ) {
 
   @Ignore
-  val currentChapterIndex: Int = chapters.indexOf(currentChapter)
+  public val currentChapterIndex: Int = chapters.indexOf(currentChapter)
 
-  val coverUrl: String? get() = cover?.toURI()?.toString()
+  public val coverUrl: String? get() = cover?.toURI()?.toString()
+
+  public val equalizerSetting: EqualizerSetting get() = EqualizerSetting.fromString(equalizer)
 
   init {
     require(currentChapter in chapters && positionInChapter >= 0) {

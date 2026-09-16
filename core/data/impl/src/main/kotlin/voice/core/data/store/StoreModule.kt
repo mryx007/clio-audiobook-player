@@ -15,7 +15,8 @@ import kotlinx.serialization.builtins.nullable
 import kotlinx.serialization.builtins.serializer
 import voice.core.data.BookId
 import voice.core.data.GridMode
-import voice.core.data.ThemeColorScheme
+import voice.core.data.PlaybackBackgroundStyle
+import voice.core.data.ThemeColor
 import voice.core.data.ThemeMode
 import voice.core.data.sleeptimer.SleepTimerPreference
 import voice.core.featureflag.FeatureFlagOverride
@@ -55,12 +56,12 @@ public interface StoreModule {
 
   @Provides
   @SingleIn(AppScope::class)
-  @ThemeColorSchemeStore
-  private fun themeColorScheme(factory: VoiceDataStoreFactory): DataStore<ThemeColorScheme> {
+  @ThemeColorStore
+  private fun themeColor(factory: VoiceDataStoreFactory): DataStore<ThemeColor> {
     return factory.create(
-      serializer = ThemeColorScheme.serializer(),
-      fileName = "themeColorScheme",
-      defaultValue = ThemeColorScheme.VoiceBlue,
+      serializer = ThemeColor.serializer(),
+      fileName = "themeColor",
+      defaultValue = ThemeColor(),
     )
   }
 
@@ -91,8 +92,8 @@ public interface StoreModule {
 
   @Provides
   @SingleIn(AppScope::class)
-  @SeekTimeStore
-  private fun seekTime(
+  @RewindTimeStore
+  private fun rewindTime(
     factory: VoiceDataStoreFactory,
     sharedPreferences: SharedPreferences,
   ): DataStore<Int> {
@@ -100,6 +101,25 @@ public interface StoreModule {
       fileName = "seekTime",
       defaultValue = 20,
       migrations = listOf(intPrefsDataMigration(sharedPreferences, "SEEK_TIME")),
+    )
+  }
+
+  @Provides
+  @SingleIn(AppScope::class)
+  @SeekTimeStore
+  private fun seekTime(
+    @RewindTimeStore rewindTimeStore: DataStore<Int>,
+  ): DataStore<Int> = rewindTimeStore
+
+  @Provides
+  @SingleIn(AppScope::class)
+  @FastForwardTimeStore
+  private fun fastForwardTime(
+    factory: VoiceDataStoreFactory,
+  ): DataStore<Int> {
+    return factory.int(
+      fileName = "fastForwardTime",
+      defaultValue = 30,
     )
   }
 
@@ -204,6 +224,25 @@ public interface StoreModule {
       fileName = "featureFlagOverrides",
     )
   }
+
+  @Provides
+  @SingleIn(AppScope::class)
+  @OpenLastBookOnStartupStore
+  private fun openLastBookOnStartup(factory: VoiceDataStoreFactory): DataStore<Boolean> {
+    return factory.boolean("openLastBookOnStartup", defaultValue = false)
+  }
+
+  @Provides
+  @SingleIn(AppScope::class)
+  @PlaybackBackgroundStyleStore
+  private fun playbackBackgroundStyle(factory: VoiceDataStoreFactory): DataStore<PlaybackBackgroundStyle> {
+    return factory.create(
+      serializer = PlaybackBackgroundStyle.serializer(),
+      fileName = "playbackBackgroundStyle",
+      defaultValue = PlaybackBackgroundStyle.Solid,
+    )
+  }
+
 }
 
 private class LegacyDarkThemeMigration(

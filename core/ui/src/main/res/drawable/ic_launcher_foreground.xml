@@ -4,15 +4,92 @@
   android:height="108dp"
   android:viewportWidth="108"
   android:viewportHeight="108">
+
+  <!-- Headband -->
   <path
-    android:fillColor="@color/gradient_launcher_shadow"
-    android:pathData="M89.05 39.17a12.59 12.59 0 0 0-7.7-3.64S71.08 38.44 68.89 44L61 64a11.93 11.93 0 0 1-19.52 4L41 67.79l-0.11-0.37a12.15 12.15 0 0 1-2-3.4l-0.93 0.37a13 13 0 0 0 3.25 4.79L80 108h28V58.11z" />
+    android:pathData="M 37 46 C 37 34 44.5 28 54 28 C 63.5 28 71 34 71 46"
+    android:strokeWidth="3.2"
+    android:strokeColor="#ffffff"
+    android:strokeLineCap="round" />
+
+  <!-- Left Earpad -->
   <path
-    android:pathData="M-21.26 64a11.9 11.9 0 0 0 22.13 0l7.92-20a11.9 11.9 0 0 1 22.12 0l7.92 20A11.9 11.9 0 0 0 61 64l7.93-20A11.9 11.9 0 0 1 91 44l7.93 20a11.9 11.9 0 0 0 22.12 0"
-    android:strokeWidth="2"
-    android:strokeColor="#fff"
-    android:strokeMiterLimit="10" />
+    android:pathData="M 34 46 C 34 43.5 35.5 42 37.5 42 C 39.5 42 41 43.5 41 46 L 41 53 C 41 55.5 39.5 57 37.5 57 C 35.5 57 34 55.5 34 53 Z"
+    android:fillColor="#ffffff" />
+
+  <!-- Right Earpad -->
   <path
-    android:fillColor="@color/gradient_launcher_finish"
-    android:pathData="M0 0h108v108H0V0z" />
+    android:pathData="M 67 46 C 67 43.5 68.5 42 70.5 42 C 72.5 42 74 43.5 74 46 L 74 53 C 74 55.5 72.5 57 70.5 57 C 68.5 57 67 55.5 67 53 Z"
+    android:fillColor="#ffffff" />
+
+  <!-- Inner Soundwaves -->
+  <path
+    android:pathData="M 47.5 47 C 48.5 43.5 50.8 40.5 52.8 38.5"
+    android:strokeWidth="2.4"
+    android:strokeColor="#ffffff"
+    android:strokeLineCap="round" />
+  <path
+    android:pathData="M 60.5 47 C 59.5 43.5 57.2 40.5 55.2 38.5"
+    android:strokeWidth="2.4"
+    android:strokeColor="#ffffff"
+    android:strokeLineCap="round" />
+
+  <!-- Outer Soundwaves -->
+  <path
+    android:pathData="M 43.5 46 C 45 40 48.5 35.5 52 33.5"
+    android:strokeWidth="2.4"
+    android:strokeColor="#ffffff"
+    android:strokeLineCap="round" />
+  <path
+    android:pathData="M 64.5 46 C 63 40 59.5 35.5 56 33.5"
+    android:strokeWidth="2.4"
+    android:strokeColor="#ffffff"
+    android:strokeLineCap="round" />
+
+  <!-- Open Book Pages (Top/Main) -->
+  <path
+    android:pathData="M 54 59 C 46 55.5 38.5 57 33.5 61 L 33.5 69 C 38.5 65 46 63.5 54 67 Z"
+    android:strokeWidth="2.8"
+    android:strokeColor="#ffffff"
+    android:strokeLineCap="round"
+    android:strokeLineJoin="round" />
+
+  <path
+    android:pathData="M 54 59 C 62 55.5 69.5 57 74.5 61 L 74.5 69 C 69.5 65 62 63.5 54 67 Z"
+    android:strokeWidth="2.8"
+    android:strokeColor="#ffffff"
+    android:strokeLineCap="round"
+    android:strokeLineJoin="round" />
+
+  <!-- Open Book Pages (Lower Lines) -->
+  <path
+    android:pathData="M 34.5 73.5 C 39.5 69.8 46.5 68.8 54 72"
+    android:strokeWidth="2.5"
+    android:strokeColor="#ffffff"
+    android:strokeLineCap="round" />
+
+  <path
+    android:pathData="M 73.5 73.5 C 68.5 69.8 61.5 68.8 54 72"
+    android:strokeWidth="2.5"
+    android:strokeColor="#ffffff"
+    android:strokeLineCap="round" />
+
+  <path
+    android:pathData="M 36.5 77.5 C 41 74.5 47 73.8 54 76.5"
+    android:strokeWidth="2.5"
+    android:strokeColor="#ffffff"
+    android:strokeLineCap="round" />
+
+  <path
+    android:pathData="M 71.5 77.5 C 67 74.5 61 73.8 54 76.5"
+    android:strokeWidth="2.5"
+    android:strokeColor="#ffffff"
+    android:strokeLineCap="round" />
+
+  <!-- Center Spine -->
+  <path
+    android:pathData="M 54 59 L 54 77"
+    android:strokeWidth="2.8"
+    android:strokeColor="#ffffff"
+    android:strokeLineCap="round" />
 </vector>

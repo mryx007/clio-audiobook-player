@@ -15,6 +15,12 @@ public annotation class AutoRewindAmountStore
 public annotation class SeekTimeStore
 
 @Qualifier
+public annotation class RewindTimeStore
+
+@Qualifier
+public annotation class FastForwardTimeStore
+
+@Qualifier
 public annotation class SleepTimerPreferenceStore
 
 @Qualifier
@@ -24,7 +30,7 @@ public annotation class GridModeStore
 public annotation class ThemeModeStore
 
 @Qualifier
-public annotation class ThemeColorSchemeStore
+public annotation class ThemeColorStore
 
 @Qualifier
 public annotation class FadeOutStore
@@ -46,3 +52,9 @@ public annotation class DeveloperMenuUnlockedStore
 
 @Qualifier
 public annotation class FeatureFlagOverridesStore
+
+@Qualifier
+public annotation class OpenLastBookOnStartupStore
+
+@Qualifier
+public annotation class PlaybackBackgroundStyleStore

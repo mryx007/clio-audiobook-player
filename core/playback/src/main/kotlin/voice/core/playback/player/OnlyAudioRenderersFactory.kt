@@ -5,14 +5,31 @@ import android.os.Handler
 import android.os.Looper
 import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.Renderer
+import androidx.media3.exoplayer.audio.AudioSink
+import androidx.media3.exoplayer.audio.DefaultAudioSink
 import androidx.media3.exoplayer.mediacodec.MediaCodecSelector
 import androidx.media3.exoplayer.metadata.MetadataOutput
 import androidx.media3.exoplayer.text.TextOutput
 import androidx.media3.exoplayer.video.VideoRendererEventListener
 import dev.zacsweers.metro.Inject
+import voice.core.playback.audio.EqualizerAudioProcessor
 
 @Inject
-class OnlyAudioRenderersFactory(context: Context) : DefaultRenderersFactory(context) {
+class OnlyAudioRenderersFactory(
+  context: Context,
+  private val equalizerAudioProcessor: EqualizerAudioProcessor,
+) : DefaultRenderersFactory(context) {
+
+  override fun buildAudioSink(
+    context: Context,
+    enableFloatOutput: Boolean,
+    enableAudioTrackPlaybackParams: Boolean,
+  ): AudioSink {
+    return DefaultAudioSink.Builder(context)
+      .setEnableFloatOutput(enableFloatOutput)
+      .setAudioProcessors(arrayOf(equalizerAudioProcessor))
+      .build()
+  }
 
   override fun buildVideoRenderers(
     context: Context,

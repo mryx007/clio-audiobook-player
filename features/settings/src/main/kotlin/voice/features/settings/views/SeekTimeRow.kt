@@ -7,50 +7,53 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
-import voice.core.ui.icons.VoiceIcons
 import voice.core.strings.R as StringsR
 
 @Composable
 internal fun SeekTimeRow(
-  seekTimeInSeconds: Int,
-  openSeekTimeDialog: () -> Unit,
+  title: String,
+  icon: ImageVector,
+  seconds: Int,
+  onClick: () -> Unit,
 ) {
   ListItem(
     modifier = Modifier
       .clickable {
-        openSeekTimeDialog()
+        onClick()
       }
       .fillMaxWidth(),
     leadingContent = {
       Icon(
-        imageVector = VoiceIcons.Timelapse,
-        contentDescription = stringResource(StringsR.string.settings_playback_seek_time_title),
+        imageVector = icon,
+        contentDescription = title,
       )
     },
     supportingContent = {
       Text(
         text = LocalResources.current.getQuantityString(
           StringsR.plurals.duration_seconds,
-          seekTimeInSeconds,
-          seekTimeInSeconds,
+          seconds,
+          seconds,
         ),
       )
     },
   ) {
-    Text(text = stringResource(StringsR.string.settings_playback_seek_time_title))
+    Text(text = title)
   }
 }
 
 @Composable
 internal fun SeekAmountDialog(
+  title: String,
   currentSeconds: Int,
   onSecondsConfirm: (Int) -> Unit,
   onDismiss: () -> Unit,
 ) {
   TimeSettingDialog(
-    title = stringResource(StringsR.string.settings_playback_seek_time_title),
+    title = title,
     currentSeconds = currentSeconds,
     minSeconds = 3,
     maxSeconds = 60,

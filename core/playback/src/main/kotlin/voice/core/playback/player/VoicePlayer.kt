@@ -17,8 +17,12 @@ import voice.core.data.BookId
 import voice.core.data.repo.BookRepository
 import voice.core.data.store.AutoRewindAmountStore
 import voice.core.data.store.CurrentBookStore
+import voice.core.data.store.FastForwardTimeStore
+import voice.core.data.store.RewindTimeStore
 import voice.core.data.store.SeekTimeStore
 import voice.core.logging.api.Logger
+import voice.core.data.EqualizerSetting
+import voice.core.playback.audio.EqualizerAudioProcessor
 import voice.core.playback.misc.Decibel
 import voice.core.playback.misc.VolumeGain
 import voice.core.playback.session.MediaId
@@ -40,13 +44,16 @@ class VoicePlayer(
   private val repo: BookRepository,
   @CurrentBookStore
   private val currentBookStoreId: DataStore<BookId?>,
-  @SeekTimeStore
-  private val seekTimeStore: DataStore<Int>,
+  @RewindTimeStore
+  private val rewindTimeStore: DataStore<Int>,
+  @FastForwardTimeStore
+  private val fastForwardTimeStore: DataStore<Int>,
   @AutoRewindAmountStore
   private val autoRewindAmountStore: DataStore<Int>,
   private val mediaItemProvider: MediaItemProvider,
   private val scope: CoroutineScope,
   private val volumeGain: VolumeGain,
+  private val equalizerAudioProcessor: EqualizerAudioProcessor,
   private val sleepTimer: SleepTimer,
   private val analytics: Analytics,
 ) : ForwardingPlayer(player) {
@@ -141,7 +148,7 @@ class VoicePlayer(
 
   override fun seekBack() {
     scope.launch {
-      seekBackBy(seekTimeStore.data.first().seconds)
+      seekBackBy(rewindTimeStore.data.first().seconds)
     }
   }
 
@@ -184,7 +191,7 @@ class VoicePlayer(
 
   override fun seekForward() {
     scope.launch {
-      val skipAmount = seekTimeStore.data.first().seconds
+      val skipAmount = fastForwardTimeStore.data.first().seconds
 
       val currentPosition = player.currentPosition.takeUnless { it == C.TIME_UNSET }
         ?.milliseconds
@@ -304,6 +311,7 @@ class VoicePlayer(
           player.setPlaybackSpeed(book.content.playbackSpeed)
           setSkipSilenceEnabled(book.content.skipSilence)
           volumeGain.gain = Decibel(book.content.gain)
+          equalizerAudioProcessor.setSetting(book.content.equalizerSetting)
           val currentPlaybackItem = book.playbackItemForPosition(
             chapterId = book.content.currentChapter,
             positionInChapterMs = book.content.positionInChapter,
@@ -341,6 +349,14 @@ class VoicePlayer(
     volumeGain.gain = gain
     scope.launch {
       updateBook { it.copy(gain = gain.value) }
+    }
+  }
+
+  fun setEqualizer(bands: List<Int>) {
+    val setting = EqualizerSetting(bands)
+    equalizerAudioProcessor.setSetting(setting)
+    scope.launch {
+      updateBook { it.copy(equalizer = setting.serialize()) }
     }
   }
 

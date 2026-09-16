@@ -1,58 +1,44 @@
-# Voice
+# Clio Audiobook Player (Beta)
 
-[![CI](https://github.com/PaulWoitaschek/Voice/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/PaulWoitaschek/Voice/actions/workflows/ci.yml)
-[![Translation status](https://hosted.weblate.org/widgets/voice/-/svg-badge.svg)](https://hosted.weblate.org/engage/voice/)
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://voice.woitaschek.de/license/)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.html)
 
-**A minimalistic, user-focused audiobook player for Android, built for reliability and simplicity.**
+**A minimalistic, lightning-fast, and distraction-free local audiobook player for Android.**
 
-Voice turns your own audiobook files into a calm, focused listening library. It remembers where you stopped, keeps playback controls close, and includes the audiobook-specific details that generic music players miss: chapter navigation, sleep timer, bookmarks, playback speed, silence skipping, and auto-rewind after pauses.
+> [!NOTE]  
+> **Status: Beta** — This app is currently under active development. Feedback and issue reports are welcome!
 
-<p align="center">
-  <img alt="Voice library view" width="30%" src="fastlane/metadata/android/en-US/images/phoneScreenshots/1_en-US.png" />
-  <img alt="Voice player view" width="30%" src="fastlane/metadata/android/en-US/images/phoneScreenshots/2_en-US.png" />
-  <img alt="Voice sleep timer" width="30%" src="fastlane/metadata/android/en-US/images/phoneScreenshots/3_en-US.png" />
-</p>
+---
 
-## Why Voice?
+## 🎧 Features & Improvements (vs. Original)
 
-- **Made for your files:** Add a folder once and Voice organizes your local M4B, MP3, M4A, OGG, OGA, and OPUS audiobooks.
-- **Built for listening:** Resume positions, bookmarks, sleep timer fade-out, volume boost, speed control, and Android Auto support are part of the core experience.
-- **Private and uncluttered:** No account, no ads, no forced cloud sync. Your library stays on your device.
+Clio builds upon the solid foundation of [Voice](https://github.com/PaulWoitaschek/Voice) by Paul Woitaschek and introduces modern enhancements:
 
-## Download
+- 🎨 **Refreshed Visual Identity & Adaptive Icon:** Clean, warm orange-red gradient design with custom audiobook vector symbolism and full-bleed adaptive launcher support.
+- 🎚️ **Built-in Graphic Equalizer:** 5-band audio equalizer with optimized presets (Spoken Word, Bass Boost, Treble Boost, Vocal Clarity) and custom frequency tuning.
+- ⚡ **Performance & Startup Boost:** Baseline Profile optimizations, faster cold-start rendering, lean memory footprint, and streamlined UI composables.
+- 🇩🇪 **100% German & English Localization:** Full translation coverage across all screens, dialogs, playback controls, and settings.
+- 🧹 **Zero Bloat & Uncluttered:** Removed external donation banners, clean settings layout, and strictly no analytics or tracking in the free build.
+- 🔒 **100% Offline & Private:** No user accounts, no cloud dependencies, no tracking. Your books stay strictly on your device.
+- 📚 **Comprehensive Format Support:** M4B (with chapters), MP3, M4A, OGG, OGA, OPUS, and FLAC.
+- 🌙 **Smart Audiobook Details:** Sleep timer with gentle audio fade-out, auto-rewind on resume, silence skipper, playback speed controls (0.5x – 3.0x), and bookmarks.
 
-<a href="https://play.google.com/store/apps/details?id=de.ph1b.audiobook">
-  <img alt="Get it on Google Play"
-       height="70"
-       src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" />
-</a>
-<a href="https://f-droid.org/packages/de.ph1b.audiobook/">
-  <img alt="Get it on F-Droid"
-       height="70"
-       src="https://f-droid.org/badge/get-it-on.png" />
-</a>
+---
 
-## Learn more
+## 📥 Download Release
 
-The [documentation website](https://voice.woitaschek.de) covers features, the philosophy behind the app, how to organize your library, and the FAQ.
+Grab the latest pre-compiled APK from the [Releases](https://github.com/mryx007/clio-audiobook-player/releases) page:
 
-## Contributing
+- **`app-free-release.apk`** — Standalone, optimized release build.
 
-Contributions are very welcome: code, translations, bug reports, or ideas. Start with [Development](https://voice.woitaschek.de/development/) and [Architecture](https://voice.woitaschek.de/architecture/), or help translate Voice on [Weblate](https://hosted.weblate.org/engage/voice/).
+---
 
-## Support Voice
+## 💡 Credits & Acknowledgements
 
-Voice is free and built in spare time. If it has been useful to you, consider chipping in. One-time or monthly, no sign-up required:
+Clio Audiobook Player is a specialized fork developed from the wonderful open-source project [Voice](https://github.com/PaulWoitaschek/Voice) created by **Paul Woitaschek**. 
+All original work remains under the **GNU General Public License v3.0 (GPLv3)**.
 
-<a href="https://ko-fi.com/paul_voice">
-  <img alt="Support on Ko-fi"
-       height="50"
-       src="https://storage.ko-fi.com/cdn/brandasset/v2/support_me_on_kofi_dark.png" />
-</a>
+---
 
-You can also [sponsor on GitHub](https://github.com/sponsors/PaulWoitaschek) if you prefer.
+## 📄 License
 
-## License
-
-Voice is licensed under [GNU GPLv3](https://voice.woitaschek.de/license/). By contributing, you agree to license your code under the same terms.
+This project is licensed under the [GNU General Public License v3.0](LICENSE).

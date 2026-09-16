@@ -1,6 +1,10 @@
 package voice.core.scanner
 
 import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import voice.core.data.Chapter
 import voice.core.data.ChapterId
 import voice.core.data.isAudioFile
@@ -20,20 +24,29 @@ internal class ChapterParser(
   private val mediaAnalyzer: MediaAnalyzer,
 ) {
 
-  suspend fun parse(documentFile: CachedDocumentFile): ChapterParseResult {
-    val result = mutableListOf<Chapter>()
-    val analyzedMetadata = mutableMapOf<ChapterId, Metadata>()
+  suspend fun parse(documentFile: CachedDocumentFile): ChapterParseResult = coroutineScope {
+    fun collectAudioFiles(file: CachedDocumentFile): List<CachedDocumentFile> {
+      if (file.isAudioFile()) return listOf(file)
+      if (file.isDirectory) return file.children.flatMap { collectAudioFiles(it) }
+      return emptyList()
+    }
 
-    suspend fun parseChapters(file: CachedDocumentFile) {
-      if (file.isAudioFile()) {
+    val audioFiles = collectAudioFiles(documentFile)
+    if (audioFiles.isEmpty()) {
+      return@coroutineScope ChapterParseResult(emptyList(), null)
+    }
+
+    val parsedList = audioFiles.map { file ->
+      async(Dispatchers.IO) {
         val id = ChapterId(file.uri)
+        var parsedMeta: Metadata? = null
         val chapter = chapterRepo.getOrPut(
           id = id,
           lastModified = Instant.ofEpochMilli(file.lastModified),
           fileSize = file.length,
         ) {
           val metaData = mediaAnalyzer.analyze(file) ?: return@getOrPut null
-          analyzedMetadata[id] = metaData
+          parsedMeta = metaData
           Chapter(
             id = id,
             duration = metaData.duration,
@@ -43,22 +56,18 @@ internal class ChapterParser(
             fileSize = file.length,
           )
         }
-        if (chapter != null) {
-          result.add(chapter)
-        }
-      } else if (file.isDirectory) {
-        file.children
-          .forEach {
-            parseChapters(it)
-          }
+        chapter?.let { it to parsedMeta }
       }
-    }
+    }.awaitAll().filterNotNull()
 
-    parseChapters(file = documentFile)
-    val chapters = result.sorted()
-    return ChapterParseResult(
+    val chapters = parsedList.map { it.first }.sorted()
+    val firstChapterId = chapters.firstOrNull()?.id
+    val firstChapterMetadata = parsedList.firstOrNull { it.first.id == firstChapterId }?.second
+
+    ChapterParseResult(
       chapters = chapters,
-      firstChapterMetadata = chapters.firstOrNull()?.let { analyzedMetadata[it.id] },
+      firstChapterMetadata = firstChapterMetadata,
     )
   }
 }
+

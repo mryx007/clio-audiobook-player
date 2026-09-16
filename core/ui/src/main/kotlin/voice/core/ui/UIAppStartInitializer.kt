@@ -32,9 +32,9 @@ class UIAppStartInitializer(
       .distinctUntilChanged()
       .onEach { themeMode ->
         val nightMode = when (themeMode) {
-          ThemeMode.FollowSystem -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+          ThemeMode.FollowSystem, ThemeMode.Dynamic -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
           ThemeMode.Light -> AppCompatDelegate.MODE_NIGHT_NO
-          ThemeMode.Dark -> AppCompatDelegate.MODE_NIGHT_YES
+          else -> AppCompatDelegate.MODE_NIGHT_YES
         }
         AppCompatDelegate.setDefaultNightMode(nightMode)
       }

@@ -49,7 +49,7 @@
     <string name="folder.mode.author.title">Tekijä-Kirja-tila: Alikansiot ovat tekijöitä, ali-alikansiot ovat kirjoja.</string>
     <string name="folder.mode.root.title">Ylätasokirjatila: Alikansiot ovat kirjoja</string>
     <string name="folder.mode.single.title">Yksittäisten kirjojen tila: Yksi kansio on yhtä kuin yksi kirja.</string>
-    <string name="folder.type.book_example.empty">Voice ei havainnut yhtään kirjaa. Onko äänitiedostoja olemassa?</string>
+    <string name="folder.type.book_example.empty">Clio ei havainnut yhtään kirjaa. Onko äänitiedostoja olemassa?</string>
     <string name="folder.type.book_example.header">Tämä johtaisi seuraavien kirjojen havaitsemiseen</string>
     <plurals name="folder.type.file_count">
         <item quantity="one">%d äänitiedosto</item>
@@ -65,7 +65,7 @@
     <string name="library.folders.moved.dialog.message">Voit nyt hallita äänikirjakansioita asetuksissa.</string>
     <string name="library.search.hint">Mitä etsit?</string>
     <string name="library.storage_permission_bug.action">Anna käyttöoikeus</string>
-    <string name="library.storage_permission_bug.message">Eräillä laitteilla joltakin järjestelmän sovellukselta puuttuu tarvittava käyttöoikeus ulkoiseen tallennustilaan. Tämä oikeus on välttämätön jotta Voice voi lukea äänikirjojasi.</string>
+    <string name="library.storage_permission_bug.message">Eräillä laitteilla joltakin järjestelmän sovellukselta puuttuu tarvittava käyttöoikeus ulkoiseen tallennustilaan. Tämä oikeus on välttämätön jotta Clio voi lukea äänikirjojasi.</string>
     <string name="library.storage_permission_bug.title">Käyttöoikeus tarvitaan</string>
     <string name="media_session.library.recent">Viimeisin</string>
     <string name="media_session.library.root">Kaikki äänikirjat</string>
@@ -107,10 +107,6 @@
     <string name="settings.action.open">Asetukset</string>
     <string name="settings.analytics_consent.description">Salli anonyymien käyttötietojen kerääminen sovelluksen parantamiseksi</string>
     <string name="settings.analytics_consent.title">Analytiikka</string>
-    <string name="settings.appearance.color_scheme.title">Väriteema</string>
-    <string name="settings.appearance.color_scheme.dynamic">Dynaaminen väri</string>
-    <string name="settings.appearance.color_scheme.dynamic.summary">Käyttää taustakuvan ja järjestelmän teeman värejä.</string>
-    <string name="settings.appearance.color_scheme.voice_blue">Voice-sininen</string>
     <string name="settings.appearance.theme.dark">Tumma</string>
     <string name="settings.appearance.theme.follow_system">Seuraa järjestelmää</string>
     <string name="settings.appearance.theme.light">Vaalea</string>
@@ -131,12 +127,12 @@
     <string name="settings.support.support_voice.summary">Lahjoitukset auttavat Voicen ylläpidossa</string>
     <string name="settings.support.support_voice.title">Tue kehitystä</string>
     <string name="support.action.donate_kofi">Lahjoita Ko-fissa</string>
-    <string name="support.description.maintenance">Voice on ilmainen avoimen lähdekoodin sovellus, jota ylläpitää yksi kehittäjä.</string>
+    <string name="support.description.maintenance">Clio on ilmainen avoimen lähdekoodin sovellus, jota ylläpitää yksi kehittäjä.</string>
     <string name="support.description.maintenance_subtitle">Lahjoitukset auttavat rahoittamaan jatkuvaa ylläpitoa ja kehitystä.</string>
     <string name="support.helps.title">Tuki auttaa</string>
     <string name="support.helps.maintenance">Virhekorjaukset ja ylläpito</string>
     <string name="support.helps.features">Uudet ominaisuudet</string>
-    <string name="support.helps.open_source">Pidetään Voice mainoksettomana</string>
+    <string name="support.helps.open_source">Pidetään Clio mainoksettomana</string>
     <string name="support.title">Tue kehitystä</string>
     <string name="shortcut.play_current.short_label">Toista nykyinen</string>
     <string name="sleep_timer.action.open">Uniajastin</string>

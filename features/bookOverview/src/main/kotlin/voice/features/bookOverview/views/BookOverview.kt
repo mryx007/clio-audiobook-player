@@ -2,14 +2,20 @@ package voice.features.bookOverview.views
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetValue.Expanded
@@ -41,10 +47,8 @@ import dev.zacsweers.metro.Provides
 import kotlinx.coroutines.launch
 import voice.core.common.rootGraphAs
 import voice.core.data.BookId
-import voice.core.ui.PlayButton
 import voice.core.ui.VoiceTheme
 import voice.core.ui.icons.VoiceIcons
-import voice.core.ui.playButtonSharedBoundsModifier
 import voice.features.bookOverview.bottomSheet.BottomSheetContent
 import voice.features.bookOverview.bottomSheet.BottomSheetItem
 import voice.features.bookOverview.deleteBook.DeleteBookDialog
@@ -112,7 +116,6 @@ fun BookOverviewScreen(modifier: Modifier = Modifier) {
     },
     onBookFolderClick = bookOverviewViewModel::onBookFolderClick,
     onFolderPickerMovedDialogDismiss = bookOverviewViewModel::onFolderPickerMovedDialogDismiss,
-    onPlayButtonClick = bookOverviewViewModel::playPause,
     onSearchActiveChange = bookOverviewViewModel::onSearchActiveChange,
     onSearchQueryChange = bookOverviewViewModel::onSearchQueryChange,
     onSearchBookClick = bookOverviewViewModel::onSearchBookClick,
@@ -175,7 +178,6 @@ internal fun BookOverview(
   onBookLongClick: (BookId) -> Unit,
   onBookFolderClick: () -> Unit,
   onFolderPickerMovedDialogDismiss: () -> Unit,
-  onPlayButtonClick: () -> Unit,
   onSearchActiveChange: (Boolean) -> Unit,
   onSearchQueryChange: (String) -> Unit,
   onSearchBookClick: (BookId) -> Unit,
@@ -195,17 +197,13 @@ internal fun BookOverview(
         onSearchBookClick = onSearchBookClick,
       )
     },
-    floatingActionButton = {
-      if (viewState.playButtonState != null) {
-        PlayButton(
-          modifier = Modifier.navigationBarsPadding(),
-          playing = viewState.playButtonState == BookOverviewViewState.PlayButtonState.Playing,
-          fabSize = 56.dp,
-          iconSize = 24.dp,
-          onPlayClick = onPlayButtonClick,
-          sharedElementModifier = Modifier.playButtonSharedBoundsModifier(),
-        )
-      }
+    bottomBar = {
+      Spacer(
+        Modifier
+          .fillMaxWidth()
+          .windowInsetsBottomHeight(WindowInsets.navigationBars)
+          .background(MaterialTheme.colorScheme.surface),
+      )
     },
     contentWindowInsets = WindowInsets(0, 0, 0, 0),
   ) { contentPadding ->
@@ -290,7 +288,6 @@ fun BookOverviewPreview(
       onBookLongClick = {},
       onBookFolderClick = {},
       onFolderPickerMovedDialogDismiss = {},
-      onPlayButtonClick = {},
       onSearchActiveChange = {},
       onSearchQueryChange = {},
       onSearchBookClick = {},
@@ -315,16 +312,8 @@ internal class BookOverviewPreviewParameterProvider : PreviewParameterProvider<B
   override val values = sequenceOf(
     BookOverviewViewState(
       books = mapOf(
-        BookOverviewCategory.CURRENT to buildMap {
+        BookOverviewCategory.OVERVIEW to buildMap {
           repeat(10) {
-            put(
-              BookId(Uuid.random().toString()),
-              mutableStateOf(book()),
-            )
-          }
-        },
-        BookOverviewCategory.FINISHED to buildMap {
-          repeat(2) {
             put(
               BookId(Uuid.random().toString()),
               mutableStateOf(book()),
