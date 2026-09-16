@@ -1,10 +1,10 @@
-site_name: Voice
-site_description: "Voice is an open source audiobook player built for simplicity and accessibility. Listen to, organize, and enjoy your audiobooks effortlessly."
-site_author: Paul Woitaschek
-site_url: https://voice.woitaschek.de
+site_name: Clio Audiobook Player
+site_description: "Clio is an open source audiobook player built for simplicity, speed, and privacy."
+site_author: mryx007
+site_url: https://mryx007.github.io/clio-audiobook-player/
 
-repo_url: https://github.com/PaulWoitaschek/Voice
-repo_name: "Voice on GitHub"
+repo_url: https://github.com/mryx007/clio-audiobook-player
+repo_name: "Clio on GitHub"
 
 nav:
   - Home: index.md
@@ -78,4 +78,3 @@ plugins:
         'privacy_policy.md': 'privacy-policy.md'
         'privacy.md': 'privacy-policy.md'
 
-copyright: <a href="https://woitaschek.de/impressum/">Impressum</a>
