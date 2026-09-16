@@ -2,24 +2,33 @@
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.html)
 
-A minimalistic, fast, and distraction-free local audiobook player for Android.
+A minimalistic, lightning-fast, and distraction-free local audiobook player for Android.
 
-> **Status: Beta** — This app is currently under active development. Feedback and issue reports are welcome.
+> **Status: Beta** — This app is currently in beta. Feedback and issue reports are welcome.
 
 ---
 
-## Features & Improvements (vs. Original)
+## What's New & Changelog (vs. Original)
 
-Clio builds upon the foundation of [Voice](https://github.com/PaulWoitaschek/Voice) by Paul Woitaschek and introduces modern enhancements:
+Clio is a specialized fork built upon the open-source foundation of [Voice](https://github.com/PaulWoitaschek/Voice) by Paul Woitaschek, featuring significant UI modernizations, new player capabilities, and comprehensive internal performance optimizations:
 
-- **Refreshed Visual Identity & Adaptive Icon:** Clean orange-red gradient design with custom vector artwork and full-bleed adaptive launcher support across modern Android versions.
-- **Built-in Graphic Equalizer:** 5-band audio equalizer with optimized presets (Spoken Word, Bass Boost, Treble Boost, Vocal Clarity) and manual frequency tuning.
-- **Performance & Startup Boost:** Baseline Profile optimizations, faster cold-start rendering, lean memory footprint, and streamlined UI composables.
-- **100% German & English Localization:** Complete translation coverage across all screens, dialogs, playback controls, and settings.
-- **Zero Bloat & Uncluttered:** Removed external donation banners, clean settings layout, and strictly no analytics or tracking in the free build.
-- **100% Offline & Private:** No user accounts, no cloud dependencies, no tracking. Your books stay strictly on your device.
-- **Comprehensive Format Support:** M4B (with chapters), MP3, M4A, OGG, OGA, OPUS, and FLAC.
-- **Audiobook-Specific Features:** Sleep timer with gentle audio fade-out, auto-rewind on resume, silence skipper, playback speed controls (0.5x – 3.0x), and bookmarks.
+### New Player & UI Features
+- **Playback Screen Lock:** Dedicated lock button to disable touchscreen interactions while playing, preventing accidental skips or pauses in your pocket.
+- **Integrated 5-Band Graphic Equalizer:** Real-time audio equalizer with presets (Spoken Word, Bass Boost, Treble Boost, Vocal Clarity) and custom frequency sliders.
+- **Refined Navigation & Controls:** Sleek collapse arrow buttons instead of the generic close "X" icon.
+- **Modernized UI & Adaptive Icon:** Refreshed Material You layout with a custom warm orange-red gradient adaptive icon.
+- **"NEW" Badge Indicator:** Clear visual badge on freshly added and unplayed audiobooks in the library.
+- **Percentage Progress Indicator:** Exact listening progress percentage displayed across book cards, chapter rows, and player views.
+- **Auto-Open Last Audiobook on Startup:** Option to automatically launch straight into the last played audiobook when opening the app.
+- **Independent Skip & Rewind Durations:** Skip-forward and rewind times can now be configured separately (e.g., 30s forward, 10s backward).
+- **Customizable Playback Backgrounds:** Choose between cover art blur, dynamic theme colors, and solid dark backgrounds.
+
+### Performance & Engine Improvements
+- **Instant Cold Start:** Near-instant application startup powered by Android Baseline Profiles and lean composable initialization.
+- **Optimized Audio Rendering Pipeline:** Custom audio-only renderers factory with reduced playback latency and minimal CPU overhead.
+- **Faster Library Scanning & Database:** Streamlined Room database queries and multi-threaded chapter/metadata parsing.
+- **Zero Telemetry & Bloat:** Completely free of background analytics, ads, and external donation prompts.
+- **100% German & English Localization:** Full translation coverage for all settings, dialogs, and controls.
 
 ---
 
