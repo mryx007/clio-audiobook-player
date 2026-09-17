@@ -38,18 +38,16 @@ package voice.app
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.CubicBezierEasing
+import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.PathEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.TransformOrigin
-import androidx.compose.ui.unit.Density
-import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.get
 import androidx.navigation3.scene.Scene
 import voice.app.navigation.DestinationMetadataKey
@@ -76,27 +74,13 @@ private const val DurationLong2 = 500
 private val EmphasizedEasing = PathEasing(pathForAnimation)
 private val EmphasizedAccelerateEasing = CubicBezierEasing(0.3f, 0f, 0.8f, 0.15f)
 
-val SharedXAxisEnterTransition: (Density) -> EnterTransition = {
-  fadeIn(
-    animationSpec = tween(durationMillis = DurationLong1, easing = EmphasizedEasing),
-  ) +
-    slideInHorizontally(
-      animationSpec = tween(durationMillis = DurationLong2, easing = EmphasizedEasing),
-    ) {
-      it / 2
-    }
-}
+val CrossfadeEnterTransition: EnterTransition = fadeIn(
+  animationSpec = tween(durationMillis = 200, easing = LinearOutSlowInEasing),
+)
 
-val SharedXAxisExitTransition: (Density) -> ExitTransition = { density ->
-  fadeOut(
-    animationSpec = tween(durationMillis = DurationMedium1, easing = EmphasizedAccelerateEasing),
-  ) +
-    slideOutHorizontally(
-      animationSpec = tween(durationMillis = DurationMedium2, easing = EmphasizedAccelerateEasing),
-    ) {
-      with(density) { -30.dp.roundToPx() }
-    }
-}
+val CrossfadeExitTransition: ExitTransition = fadeOut(
+  animationSpec = tween(durationMillis = 150, easing = FastOutLinearInEasing),
+)
 
 val SharedZAxisEnterTransition =
   fadeIn(animationSpec = tween(durationMillis = DurationLong1, easing = EmphasizedEasing)) +

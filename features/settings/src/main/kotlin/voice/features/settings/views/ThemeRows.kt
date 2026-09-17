@@ -45,6 +45,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
@@ -119,9 +120,6 @@ internal fun ThemeModeDialog(
 
   AlertDialog(
     onDismissRequest = onDismiss,
-    title = {
-      Text(stringResource(StringsR.string.settings_appearance_theme_dialog_title))
-    },
     text = {
       Column(
         modifier = Modifier.verticalScroll(rememberScrollState()),
@@ -530,23 +528,48 @@ private fun ThemeModeDialogItem(
       onClick = null,
     )
     Spacer(Modifier.width(12.dp))
-    Box(
-      modifier = Modifier
-        .size(36.dp)
-        .clip(CircleShape)
-        .background(previewColor)
-        .then(
-          if (themeMode == ThemeMode.Amoled || themeMode == ThemeMode.Light) {
-            Modifier.border(
-              width = 1.dp,
-              color = MaterialTheme.colorScheme.outlineVariant,
-              shape = CircleShape,
-            )
-          } else {
-            Modifier
-          }
-        ),
-    )
+    if (themeMode == ThemeMode.FollowSystem) {
+      Box(
+        modifier = Modifier
+          .size(36.dp)
+          .clip(CircleShape)
+          .border(
+            width = 1.dp,
+            color = MaterialTheme.colorScheme.outlineVariant,
+            shape = CircleShape,
+          ),
+      ) {
+        Canvas(modifier = Modifier.matchParentSize()) {
+          drawRect(
+            color = Color(0xFFF5F5F5),
+            size = Size(size.width / 2f, size.height),
+          )
+          drawRect(
+            color = Color(0xFF181C24),
+            topLeft = Offset(size.width / 2f, 0f),
+            size = Size(size.width / 2f, size.height),
+          )
+        }
+      }
+    } else {
+      Box(
+        modifier = Modifier
+          .size(36.dp)
+          .clip(CircleShape)
+          .background(previewColor)
+          .then(
+            if (themeMode == ThemeMode.Amoled || themeMode == ThemeMode.Light) {
+              Modifier.border(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.outlineVariant,
+                shape = CircleShape,
+              )
+            } else {
+              Modifier
+            }
+          ),
+      )
+    }
     Spacer(Modifier.width(16.dp))
     Text(
       text = themeMode.label(),

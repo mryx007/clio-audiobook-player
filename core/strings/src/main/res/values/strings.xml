@@ -249,27 +249,27 @@
     <!-- Hint for custom hex color input. -->
     <string name="settings.appearance.theme.custom_hex_hint">Hex color (e.g. #0F141C)</string>
     <!-- Label for app standard dark theme. -->
-    <string name="settings.appearance.theme.dark">App standard</string>
+    <string name="settings.appearance.theme.dark">Night Gray</string>
     <!-- Label for pure black amoled theme. -->
-    <string name="settings.appearance.theme.amoled">Pure black</string>
+    <string name="settings.appearance.theme.amoled">OLED Black</string>
     <!-- Label for Catppuccin Mocha theme. -->
-    <string name="settings.appearance.theme.catppuccin_mocha">Catppuccin (Mocha)</string>
+    <string name="settings.appearance.theme.catppuccin_mocha">Mocha</string>
     <!-- Label for Dark gray theme. -->
-    <string name="settings.appearance.theme.dark_gray">Dark gray</string>
+    <string name="settings.appearance.theme.dark_gray">Anthracite</string>
     <!-- Label for Dark pink theme. -->
-    <string name="settings.appearance.theme.dark_pink">Dark pink</string>
+    <string name="settings.appearance.theme.dark_pink">Plum</string>
     <!-- Label for Dark blue theme. -->
-    <string name="settings.appearance.theme.dark_blue">Dark blue</string>
+    <string name="settings.appearance.theme.dark_blue">Midnight Blue</string>
     <!-- Label for Dark green theme. -->
-    <string name="settings.appearance.theme.dark_green">Dark green</string>
+    <string name="settings.appearance.theme.dark_green">Pine Green</string>
     <!-- Label for Dark yellow theme. -->
-    <string name="settings.appearance.theme.dark_yellow">Dark yellow</string>
+    <string name="settings.appearance.theme.dark_yellow">Amber</string>
     <!-- Label for Dark orange theme. -->
-    <string name="settings.appearance.theme.dark_orange">Dark orange</string>
+    <string name="settings.appearance.theme.dark_orange">Terracotta</string>
     <!-- Label for Dark red theme. -->
-    <string name="settings.appearance.theme.dark_red">Dark red</string>
+    <string name="settings.appearance.theme.dark_red">Bordeaux</string>
     <!-- Label for following the system light or dark setting. -->
-    <string name="settings.appearance.theme.follow_system">Follow system</string>
+    <string name="settings.appearance.theme.follow_system">Automatic</string>
     <!-- Label for forcing light mode. -->
     <string name="settings.appearance.theme.light">Light</string>
     <!-- Settings row title for selecting light or dark mode behavior. -->

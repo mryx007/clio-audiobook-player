@@ -65,7 +65,7 @@ internal fun ListBooks(
 ) {
   LazyColumn(
     verticalArrangement = Arrangement.spacedBy(12.dp),
-    contentPadding = PaddingValues(top = 24.dp, start = 8.dp, end = 8.dp, bottom = 16.dp),
+    contentPadding = PaddingValues(top = 24.dp, start = 12.dp, end = 12.dp, bottom = 16.dp),
   ) {
     if (showPermissionBugCard) {
       item {
@@ -81,8 +81,8 @@ internal fun ListBooks(
         Header(
           modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surface)
-            .padding(vertical = 8.dp, horizontal = 8.dp),
+            .background(MaterialTheme.colorScheme.background)
+            .padding(vertical = 8.dp, horizontal = 4.dp),
           category = category,
         )
       }

@@ -207,14 +207,22 @@ class MainActivity : AppCompatActivity() {
                   if (isBookOverviewPlaybackTransition(initialState.destination(), targetState.destination())) {
                     SharedZAxisEnterTransition togetherWith SharedZAxisExitTransition
                   } else {
-                    SharedXAxisEnterTransition(density) togetherWith SharedXAxisExitTransition(density)
+                    CrossfadeEnterTransition togetherWith CrossfadeExitTransition
                   }
                 },
                 popTransitionSpec = {
-                  SharedZAxisEnterTransition togetherWith SharedZAxisExitTransition
+                  if (isBookOverviewPlaybackTransition(initialState.destination(), targetState.destination())) {
+                    SharedZAxisEnterTransition togetherWith SharedZAxisExitTransition
+                  } else {
+                    CrossfadeEnterTransition togetherWith CrossfadeExitTransition
+                  }
                 },
                 predictivePopTransitionSpec = {
-                  SharedZAxisEnterTransition togetherWith SharedZAxisExitTransition
+                  if (isBookOverviewPlaybackTransition(initialState.destination(), targetState.destination())) {
+                    SharedZAxisEnterTransition togetherWith SharedZAxisExitTransition
+                  } else {
+                    CrossfadeEnterTransition togetherWith CrossfadeExitTransition
+                  }
                 },
                 onBack = {
                   if (backStack.size > 1) {
