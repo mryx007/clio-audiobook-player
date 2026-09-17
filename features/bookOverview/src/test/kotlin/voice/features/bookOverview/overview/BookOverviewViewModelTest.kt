@@ -5,7 +5,6 @@ import app.cash.molecule.RecompositionMode
 import app.cash.molecule.launchMolecule
 import app.cash.turbine.test
 import io.mockk.Runs
-import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
@@ -21,9 +20,7 @@ import voice.core.common.DispatcherProvider
 import voice.core.data.BookId
 import voice.core.data.GridMode
 import voice.core.data.KioskModeDemoData
-import voice.core.data.repo.BookContentRepo
 import voice.core.data.repo.BookRepository
-import voice.core.data.repo.internals.dao.RecentBookSearchDao
 import voice.core.featureflag.MemoryFeatureFlag
 import voice.core.playback.LivePlaybackState
 import voice.core.playback.PlayerController
@@ -31,7 +28,6 @@ import voice.core.playback.overlay
 import voice.core.playback.playstate.PlayStateManager
 import voice.core.scanner.DeviceHasStoragePermissionBug
 import voice.core.scanner.MediaScanTrigger
-import voice.core.search.BookSearch
 import voice.core.ui.GridCount
 import voice.features.bookOverview.book
 import voice.navigation.Destination
@@ -70,13 +66,6 @@ class BookOverviewViewModelTest {
       },
       navigator = mockk<Navigator>(),
       appInfoProvider = appInfoProvider(),
-      recentBookSearchDao = mockk<RecentBookSearchDao> {
-        every { recentBookSearches() } returns MutableStateFlow(emptyList())
-      },
-      search = mockk<BookSearch> {
-        coEvery { search(any()) } returns emptyList()
-      },
-      contentRepo = mockk<BookContentRepo>(),
       deviceHasStoragePermissionBug = mockk<DeviceHasStoragePermissionBug> {
         every { hasBug } returns MutableStateFlow(false)
       },
@@ -116,6 +105,55 @@ class BookOverviewViewModelTest {
   }
 
   @Test
+  fun `onSearchQueryChange filters books in-place`() = runTest {
+    val book1 = book(name = "Harry Potter", time = 1_000)
+    val book2 = book(name = "Lord of the Rings", time = 2_000)
+    val viewModel = BookOverviewViewModel(
+      repo = mockk<BookRepository> {
+        every { flow() } returns MutableStateFlow(listOf(book1, book2))
+      },
+      mediaScanner = mockk<MediaScanTrigger> {
+        every { scannerActive } returns MutableStateFlow(false)
+        every { scan(any()) } just Runs
+      },
+      playStateManager = PlayStateManager(),
+      playerController = mockk(),
+      currentBookStoreDataStore = MemoryDataStore(null),
+      folderPickerMovedDialogShownStore = MemoryDataStore(false),
+      gridModeStore = MemoryDataStore(GridMode.LIST),
+      gridCount = mockk<GridCount> {
+        every { useGridAsDefault() } returns false
+      },
+      navigator = mockk<Navigator>(),
+      appInfoProvider = appInfoProvider(),
+      deviceHasStoragePermissionBug = mockk<DeviceHasStoragePermissionBug> {
+        every { hasBug } returns MutableStateFlow(false)
+      },
+      folderPickerInSettingsFeatureFlag = MemoryFeatureFlag(false),
+      experimentalPlaybackPersistenceFeatureFlag = MemoryFeatureFlag(false),
+      kioskModeFeatureFlag = MemoryFeatureFlag(false),
+      dispatcherProvider = dispatcherProvider,
+    )
+
+    backgroundScope.launchMolecule(RecompositionMode.Immediate) {
+      viewModel.state()
+    }.test {
+      assertEquals(expected = BookOverviewViewState.Loading, actual = awaitItem())
+      val initial = awaitItem()
+      assertEquals(expected = listOf(book1.id, book2.id), actual = initial.books.getValue(BookOverviewCategory.OVERVIEW).keys.toList())
+
+      viewModel.onSearchQueryChange("potter")
+      val filtered = awaitItem()
+      assertEquals(expected = "potter", actual = filtered.searchQuery)
+      assertEquals(expected = listOf(book1.id), actual = filtered.books.getValue(BookOverviewCategory.OVERVIEW).keys.toList())
+
+      viewModel.onSearchQueryChange("")
+      val reset = awaitItem()
+      assertEquals(expected = listOf(book1.id, book2.id), actual = reset.books.getValue(BookOverviewCategory.OVERVIEW).keys.toList())
+    }
+  }
+
+  @Test
   fun `state uses demo books in kiosk mode`() = runTest {
     val viewModel = BookOverviewViewModel(
       repo = mockk<BookRepository> {
@@ -135,13 +173,6 @@ class BookOverviewViewModelTest {
       },
       navigator = mockk<Navigator>(),
       appInfoProvider = appInfoProvider(),
-      recentBookSearchDao = mockk<RecentBookSearchDao> {
-        every { recentBookSearches() } returns MutableStateFlow(emptyList())
-      },
-      search = mockk<BookSearch> {
-        coEvery { search(any()) } returns emptyList()
-      },
-      contentRepo = mockk<BookContentRepo>(),
       deviceHasStoragePermissionBug = mockk<DeviceHasStoragePermissionBug> {
         every { hasBug } returns MutableStateFlow(false)
       },
@@ -307,13 +338,6 @@ class BookOverviewViewModelTest {
       },
       navigator = navigator,
       appInfoProvider = appInfoProvider,
-      recentBookSearchDao = mockk<RecentBookSearchDao> {
-        every { recentBookSearches() } returns MutableStateFlow(emptyList())
-      },
-      search = mockk<BookSearch> {
-        coEvery { search(any()) } returns emptyList()
-      },
-      contentRepo = mockk<BookContentRepo>(),
       deviceHasStoragePermissionBug = mockk<DeviceHasStoragePermissionBug> {
         every { hasBug } returns MutableStateFlow(false)
       },

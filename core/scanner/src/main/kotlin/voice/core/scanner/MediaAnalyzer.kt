@@ -1,6 +1,7 @@
 package voice.core.scanner
 
 import android.content.Context
+import android.media.MediaMetadataRetriever as AndroidMediaMetadataRetriever
 import android.net.Uri
 import androidx.media3.common.C
 import androidx.media3.common.FileTypes
@@ -81,6 +82,10 @@ internal class MediaAnalyzer(
       parseMatroskaMetaData(file, builder)
     }
 
+    if (builder.artist.isNullOrBlank() || builder.album.isNullOrBlank()) {
+      fillWithNativeRetriever(file.uri, builder)
+    }
+
     return builder.build(mediaInfo.duration)
   }
 
@@ -129,6 +134,7 @@ internal class MediaAnalyzer(
     val value = entry.value
     when {
       key == "ARTIST" -> builder.artist = value
+      key == "ALBUMARTIST" || key == "ALBUM_ARTIST" -> if (builder.artist.isNullOrBlank()) builder.artist = value
       key == "ALBUM" -> builder.album = value
       key == "TITLE" -> builder.title = value
       key.startsWith("CHAPTER") -> {
@@ -173,6 +179,7 @@ internal class MediaAnalyzer(
     when (entry.id) {
       "TIT2" -> builder.title = value
       "TPE1" -> builder.artist = value
+      "TPE2" -> if (builder.artist.isNullOrBlank()) builder.artist = value
       "TALB" -> builder.album = value
       "TCON" -> builder.genre = value
       "TCOM" -> builder.narrator = value
@@ -212,6 +219,36 @@ internal class MediaAnalyzer(
       if (e is CancellationException) currentCoroutineContext().ensureActive()
       Logger.w(e, "Error retrieving media info")
       null
+    }
+  }
+
+  private fun fillWithNativeRetriever(uri: Uri, builder: Metadata.Builder) {
+    val retriever = AndroidMediaMetadataRetriever()
+    try {
+      retriever.setDataSource(context, uri)
+      if (builder.artist.isNullOrBlank()) {
+        builder.artist = retriever.extractMetadata(AndroidMediaMetadataRetriever.METADATA_KEY_ARTIST)
+          ?: retriever.extractMetadata(AndroidMediaMetadataRetriever.METADATA_KEY_ALBUMARTIST)
+          ?: retriever.extractMetadata(AndroidMediaMetadataRetriever.METADATA_KEY_AUTHOR)
+          ?: retriever.extractMetadata(AndroidMediaMetadataRetriever.METADATA_KEY_COMPOSER)
+      }
+      if (builder.album.isNullOrBlank()) {
+        builder.album = retriever.extractMetadata(AndroidMediaMetadataRetriever.METADATA_KEY_ALBUM)
+      }
+      if (builder.title.isNullOrBlank()) {
+        builder.title = retriever.extractMetadata(AndroidMediaMetadataRetriever.METADATA_KEY_TITLE)
+      }
+      if (builder.genre.isNullOrBlank()) {
+        builder.genre = retriever.extractMetadata(AndroidMediaMetadataRetriever.METADATA_KEY_GENRE)
+      }
+    } catch (e: Exception) {
+      Logger.d("AndroidMediaMetadataRetriever fallback failed for $uri: ${e.message}")
+    } finally {
+      try {
+        retriever.release()
+      } catch (e: Exception) {
+        Logger.v("Failed to release AndroidMediaMetadataRetriever: ${e.message}")
+      }
     }
   }
 }

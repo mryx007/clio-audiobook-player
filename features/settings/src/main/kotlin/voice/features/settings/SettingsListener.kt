@@ -36,6 +36,7 @@ interface SettingsListener {
 
   fun openDeveloperMenu()
   fun openStatistics()
+  fun openPlayerControlsSettings()
 
   companion object {
     fun noop() = object : SettingsListener {
@@ -68,6 +69,7 @@ interface SettingsListener {
       override fun onAppVersionClick() {}
       override fun openDeveloperMenu() {}
       override fun openStatistics() {}
+      override fun openPlayerControlsSettings() {}
     }
   }
 }

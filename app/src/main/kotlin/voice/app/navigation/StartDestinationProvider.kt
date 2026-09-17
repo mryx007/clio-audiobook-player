@@ -3,6 +3,8 @@ package voice.app.navigation
 import android.content.Intent
 import androidx.datastore.core.DataStore
 import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import voice.app.MainActivity
@@ -27,25 +29,32 @@ class StartDestinationProvider(
 ) {
 
   operator fun invoke(intent: Intent): List<Destination.Compose> {
-    val showOnboarding = runBlocking { showOnboarding() }
+    val (showOnboarding, openLastBookOnStartup, currentBookId) = runBlocking(Dispatchers.IO) {
+      val onboardingDeferred = async { showOnboarding() }
+      val openLastBookDeferred = async { openLastBookOnStartupStore.data.first() }
+      val currentBookDeferred = async { currentBookStore.data.first() }
+      Triple(
+        onboardingDeferred.await(),
+        openLastBookDeferred.await(),
+        currentBookDeferred.await(),
+      )
+    }
+
     if (showOnboarding) {
       return listOf(Destination.OnboardingWelcome)
     }
 
-    val openLastBookOnStartup = runBlocking { openLastBookOnStartupStore.data.first() }
     val goToBook = intent.getBooleanExtra(MainActivity.Companion.NI_GO_TO_BOOK, false)
     if (goToBook || (openLastBookOnStartup && intent.action == Intent.ACTION_MAIN)) {
-      val bookId = runBlocking { currentBookStore.data.first() }
-      if (bookId != null) {
-        return listOf(Destination.BookOverview, Destination.Playback(bookId))
+      if (currentBookId != null) {
+        return listOf(Destination.BookOverview, Destination.Playback(currentBookId))
       }
     }
 
     if (intent.action == "playCurrent") {
-      val bookId = runBlocking { currentBookStore.data.first() }
-      if (bookId != null) {
+      if (currentBookId != null) {
         playerController.play()
-        return listOf(Destination.BookOverview, Destination.Playback(bookId))
+        return listOf(Destination.BookOverview, Destination.Playback(currentBookId))
       }
     }
     return listOf(Destination.BookOverview)

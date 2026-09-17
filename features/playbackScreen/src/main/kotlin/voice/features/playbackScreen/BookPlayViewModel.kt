@@ -22,6 +22,7 @@ import voice.core.data.BookId
 import voice.core.data.EqualizerSetting
 import voice.core.data.KioskModeDemoData
 import voice.core.data.PlaybackBackgroundStyle
+import voice.core.data.PlayerButtonVisibility
 import voice.core.data.durationMs
 import voice.core.data.markForPosition
 import voice.core.data.repo.BookRepository
@@ -30,6 +31,7 @@ import voice.core.data.sleeptimer.SleepTimerPreference
 import voice.core.data.store.CurrentBookStore
 import voice.core.data.store.FastForwardTimeStore
 import voice.core.data.store.PlaybackBackgroundStyleStore
+import voice.core.data.store.PlayerButtonVisibilityStore
 import voice.core.data.store.RewindTimeStore
 import voice.core.data.store.SleepTimerPreferenceStore
 import voice.core.featureflag.ExperimentalPlaybackPersistenceQualifier
@@ -78,6 +80,8 @@ class BookPlayViewModel(
   dispatcherProvider: DispatcherProvider,
   @SleepTimerPreferenceStore
   private val sleepTimerPreferenceStore: DataStore<SleepTimerPreference>,
+  @PlayerButtonVisibilityStore
+  private val playerButtonVisibilityStore: DataStore<PlayerButtonVisibility>,
   @ExperimentalPlaybackPersistenceQualifier
   private val experimentalPlaybackPersistenceFeatureFlag: FeatureFlag<Boolean>,
   @KioskModeFeatureFlagQualifier
@@ -140,9 +144,11 @@ class BookPlayViewModel(
 
     val sleepTime = remember { sleepTimer.state }.collectAsState().value
     val backgroundStyle = remember { playbackBackgroundStyleStore.data }
-      .collectAsState(initial = null).value ?: return null
+      .collectAsState(initial = PlaybackBackgroundStyle.Solid).value
     val rewindTime = remember { rewindTimeStore.data }.collectAsState(initial = 20).value
     val fastForwardTime = remember { fastForwardTimeStore.data }.collectAsState(initial = 30).value
+    val playerButtonVisibility = remember { playerButtonVisibilityStore.data }
+      .collectAsState(initial = PlayerButtonVisibility()).value
     val hasMoreThanOneChapter = book.chapters.sumOf { it.chapterMarks.count() } > 1
     return BookPlayViewState(
       sleepTimerState = sleepTime.toViewState(),
@@ -160,6 +166,7 @@ class BookPlayViewModel(
       skipSilence = book.content.skipSilence,
       rewindTimeInSeconds = rewindTime,
       fastForwardTimeInSeconds = fastForwardTime,
+      playerButtonVisibility = playerButtonVisibility,
     )
   }
 

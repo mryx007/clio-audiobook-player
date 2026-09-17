@@ -2,6 +2,7 @@ package voice.features.playbackScreen
 
 import androidx.compose.runtime.Immutable
 import voice.core.data.PlaybackBackgroundStyle
+import voice.core.data.PlayerButtonVisibility
 import voice.core.playback.misc.Decibel
 import voice.features.sleepTimer.SleepTimerViewState
 import kotlin.time.Duration
@@ -23,6 +24,7 @@ data class BookPlayViewState(
   val skipSilence: Boolean,
   val rewindTimeInSeconds: Int = 20,
   val fastForwardTimeInSeconds: Int = 30,
+  val playerButtonVisibility: PlayerButtonVisibility = PlayerButtonVisibility(),
 ) {
 
   sealed interface SleepTimerViewState {

@@ -102,7 +102,7 @@ val SharedZAxisEnterTransition =
   fadeIn(animationSpec = tween(durationMillis = DurationLong1, easing = EmphasizedEasing)) +
     scaleIn(
       initialScale = 0.8f,
-      transformOrigin = TransformOrigin(0.5f, 1f),
+      transformOrigin = TransformOrigin.Center,
       animationSpec = tween(durationMillis = DurationLong2, easing = EmphasizedEasing),
     )
 
@@ -110,7 +110,7 @@ val SharedZAxisExitTransition =
   fadeOut(animationSpec = tween(durationMillis = DurationMedium1, easing = EmphasizedAccelerateEasing)) +
     scaleOut(
       targetScale = 0.8f,
-      transformOrigin = TransformOrigin(0.5f, 1f),
+      transformOrigin = TransformOrigin.Center,
       animationSpec = tween(durationMillis = DurationMedium2, easing = EmphasizedAccelerateEasing),
     )
 

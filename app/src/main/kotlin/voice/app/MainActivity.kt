@@ -47,6 +47,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import voice.core.logging.api.Logger
+import voice.core.ui.LocalAppReady
 import voice.core.ui.LocalSharedTransitionScope
 import voice.core.ui.VoiceTheme
 import voice.features.review.ReviewFeature
@@ -81,6 +82,8 @@ class MainActivity : AppCompatActivity() {
   @ThemeColorStore
   private lateinit var themeColorStore: DataStore<ThemeColor>
 
+  private var isAppReady = false
+
   @OptIn(ExperimentalSharedTransitionApi::class)
   override fun onCreate(savedInstanceState: Bundle?) {
     rootGraphAs<MainActivityGraph>().inject(this)
@@ -93,6 +96,24 @@ class MainActivity : AppCompatActivity() {
     if (android.os.Build.VERSION.SDK_INT >= 29) {
       window.isNavigationBarContrastEnforced = false
     }
+
+    val content: android.view.View = findViewById(android.R.id.content)
+    val splashStartTime = android.os.SystemClock.uptimeMillis()
+    val minSplashDuration = 100L
+    val maxSplashDuration = 1500L
+    content.viewTreeObserver.addOnPreDrawListener(
+      object : android.view.ViewTreeObserver.OnPreDrawListener {
+        override fun onPreDraw(): Boolean {
+          val elapsed = android.os.SystemClock.uptimeMillis() - splashStartTime
+          return if ((isAppReady && elapsed >= minSplashDuration) || elapsed >= maxSplashDuration) {
+            content.viewTreeObserver.removeOnPreDrawListener(this)
+            true
+          } else {
+            false
+          }
+        }
+      },
+    )
 
     val (initialThemeMode, initialThemeColor) = runBlocking {
       val modeDeferred = async(Dispatchers.IO) { themeModeStore.data.first() }
@@ -174,7 +195,10 @@ class MainActivity : AppCompatActivity() {
           val density = LocalDensity.current
 
           SharedTransitionLayout {
-            CompositionLocalProvider(LocalSharedTransitionScope provides this) {
+            CompositionLocalProvider(
+              LocalSharedTransitionScope provides this,
+              LocalAppReady provides { isAppReady = true },
+            ) {
               NavDisplay(
                 backStack = backStack,
                 sceneStrategies = listOf(bottomSheetStrategy, dialogStrategy),

@@ -1,5 +1,6 @@
 package voice.features.bookOverview.views
 
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -8,9 +9,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.material3.AlertDialog
@@ -24,9 +25,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.retain.retain
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -48,7 +51,6 @@ import voice.features.bookOverview.overview.BookOverviewCategory
 import voice.features.bookOverview.overview.BookOverviewItemViewState
 import voice.features.bookOverview.overview.BookOverviewLayoutMode
 import voice.features.bookOverview.overview.BookOverviewViewState
-import voice.features.bookOverview.search.BookSearchViewState
 import voice.features.bookOverview.views.topbar.BookOverviewTopBar
 import voice.navigation.Destination
 import voice.navigation.NavEntryProvider
@@ -84,6 +86,10 @@ fun BookOverviewScreen(modifier: Modifier = Modifier) {
   }
   val viewState = bookOverviewViewModel.state()
 
+  BackHandler(enabled = viewState.searchQuery.isNotEmpty()) {
+    bookOverviewViewModel.onSearchQueryChange("")
+  }
+
   val getContentLauncher = rememberLauncherForActivityResult(
     contract = ActivityResultContracts.GetContent(),
     onResult = { uri ->
@@ -108,9 +114,7 @@ fun BookOverviewScreen(modifier: Modifier = Modifier) {
     },
     onBookFolderClick = bookOverviewViewModel::onBookFolderClick,
     onFolderPickerMovedDialogDismiss = bookOverviewViewModel::onFolderPickerMovedDialogDismiss,
-    onSearchActiveChange = bookOverviewViewModel::onSearchActiveChange,
     onSearchQueryChange = bookOverviewViewModel::onSearchQueryChange,
-    onSearchBookClick = bookOverviewViewModel::onSearchBookClick,
     onPermissionBugCardClick = bookOverviewViewModel::onPermissionBugCardClick,
     modifier = modifier,
   )
@@ -145,9 +149,7 @@ internal fun BookOverview(
   onMenuItemClick: (BookId, BottomSheetItem) -> Unit,
   onBookFolderClick: () -> Unit,
   onFolderPickerMovedDialogDismiss: () -> Unit,
-  onSearchActiveChange: (Boolean) -> Unit,
   onSearchQueryChange: (String) -> Unit,
-  onSearchBookClick: (BookId) -> Unit,
   onPermissionBugCardClick: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
@@ -159,9 +161,7 @@ internal fun BookOverview(
         viewState = viewState,
         onBookFolderClick = onBookFolderClick,
         onSettingsClick = onSettingsClick,
-        onActiveChange = onSearchActiveChange,
         onQueryChange = onSearchQueryChange,
-        onSearchBookClick = onSearchBookClick,
       )
     },
     bottomBar = {
@@ -179,26 +179,43 @@ internal fun BookOverview(
         .padding(contentPadding)
         .consumeWindowInsets(contentPadding),
     ) {
-      when (viewState.layoutMode) {
-        BookOverviewLayoutMode.List -> {
-          ListBooks(
-            books = viewState.books,
-            onBookClick = onBookClick,
-            onBookMoreClick = onBookMoreClick,
-            selectedBookId = selectedBookId,
-            menuItems = menuItems,
-            onMenuItemClick = onMenuItemClick,
-            showPermissionBugCard = viewState.showStoragePermissionBugCard,
-            onPermissionBugCardClick = onPermissionBugCardClick,
+      val hasBooks = viewState.books.values.any { it.isNotEmpty() }
+      if (!hasBooks && viewState.searchQuery.isNotBlank()) {
+        Box(
+          modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 32.dp, vertical = 64.dp),
+          contentAlignment = Alignment.TopCenter,
+        ) {
+          Text(
+            text = stringResource(StringsR.string.search_no_results, viewState.searchQuery),
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center,
           )
         }
-        BookOverviewLayoutMode.Grid -> {
-          GridBooks(
-            books = viewState.books,
-            onBookClick = onBookClick,
-            showPermissionBugCard = viewState.showStoragePermissionBugCard,
-            onPermissionBugCardClick = onPermissionBugCardClick,
-          )
+      } else {
+        when (viewState.layoutMode) {
+          BookOverviewLayoutMode.List -> {
+            ListBooks(
+              books = viewState.books,
+              onBookClick = onBookClick,
+              onBookMoreClick = onBookMoreClick,
+              selectedBookId = selectedBookId,
+              menuItems = menuItems,
+              onMenuItemClick = onMenuItemClick,
+              showPermissionBugCard = viewState.showStoragePermissionBugCard,
+              onPermissionBugCardClick = onPermissionBugCardClick,
+            )
+          }
+          BookOverviewLayoutMode.Grid -> {
+            GridBooks(
+              books = viewState.books,
+              onBookClick = onBookClick,
+              showPermissionBugCard = viewState.showStoragePermissionBugCard,
+              onPermissionBugCardClick = onPermissionBugCardClick,
+            )
+          }
         }
       }
     }
@@ -260,9 +277,7 @@ fun BookOverviewPreview(
       onMenuItemClick = { _, _ -> },
       onBookFolderClick = {},
       onFolderPickerMovedDialogDismiss = {},
-      onSearchActiveChange = {},
       onSearchQueryChange = {},
-      onSearchBookClick = {},
       onPermissionBugCardClick = {},
     )
   }
@@ -298,15 +313,11 @@ internal class BookOverviewPreviewParameterProvider : PreviewParameterProvider<B
       showAddBookHint = false,
       showSearchIcon = true,
       isLoading = true,
-      searchActive = true,
-      searchViewState = BookSearchViewState.EmptySearch(
-        suggestedAuthors = emptyList(),
-        recentQueries = emptyList(),
-        query = "",
-      ),
+      searchQuery = "",
       showStoragePermissionBugCard = false,
       showFolderPickerIcon = true,
       dialog = null,
     ),
   )
 }
+

@@ -58,6 +58,7 @@
     <string name="folder.type.title">Wie sind Deine Dateien organisiert?</string>
     <string name="book.badge.new">NEU</string>
     <string name="library.category.overview.title">Übersicht</string>
+    <string name="search.no_results">Keine Hörbücher gefunden für „%s“</string>
     <string name="library.category.completed.title">Abgeschlossen</string>
     <string name="library.category.current.title">Aktuell</string>
     <string name="library.category.not_started.title">Neu</string>
@@ -191,4 +192,21 @@
     <string name="statistics.empty">Noch keine Hörstatistiken vorhanden. Starte die Wiedergabe, um deine Historie aufzubauen!</string>
     <string name="statistics.clear_all">Statistiken zurücksetzen</string>
     <string name="statistics.clear_confirm">Möchtest du wirklich alle aufgezeichneten Hörstatistiken löschen?</string>
+    <string name="statistics.tab_yearly_overview">Jahresübersicht</string>
+    <string name="statistics.tab_audiobooks">Hörbücher</string>
+    <string name="statistics.hours_format">%.1f Stunden</string>
+    <string name="settings.player_controls.title">Player-Steuerung</string>
+    <string name="settings.player_controls.summary">Sichtbare Buttons im Player anpassen</string>
+    <string name="settings.player_controls.lock">Sperr-Button</string>
+    <string name="settings.player_controls.lock_summary">Verhindert versehentliche Eingaben</string>
+    <string name="settings.player_controls.equalizer">Equalizer &amp; Ton</string>
+    <string name="settings.player_controls.equalizer_summary">Schnellzugriff auf Ton- und Frequenzeinstellungen</string>
+    <string name="settings.player_controls.sleep_timer">Einschlaf-Timer</string>
+    <string name="settings.player_controls.sleep_timer_summary">Timer zum automatischen Pausieren</string>
+    <string name="settings.player_controls.bookmark">Lesezeichen</string>
+    <string name="settings.player_controls.bookmark_summary">Lesezeichen setzen und aufrufen</string>
+    <string name="settings.player_controls.speed">Wiedergabegeschwindigkeit</string>
+    <string name="settings.player_controls.speed_summary">Geschwindigkeit des Hörbuchs regeln</string>
+    <string name="settings.player_controls.category.buttons">Sichtbare Buttons</string>
+    <string name="settings.player_controls.category.seeking">Sprungzeiten</string>
 </resources>

@@ -1,6 +1,7 @@
 package voice.core.data.repo
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import voice.core.data.BookId
 import voice.core.data.BookStatistic
 import voice.core.data.ImportResult
@@ -15,7 +16,7 @@ public interface ListeningStatisticRepository {
 
   public fun getTotalListeningTimeSeconds(): Flow<Long>
 
-  public fun getStatisticsSummary(): Flow<StatisticsSummary>
+  public fun getStatisticsSummary(): StateFlow<StatisticsSummary?>
 
   public suspend fun recordListeningTime(
     bookId: BookId?,

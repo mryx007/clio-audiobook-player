@@ -13,6 +13,8 @@ import voice.core.data.BookId
 @OptIn(ExperimentalSharedTransitionApi::class)
 val LocalSharedTransitionScope = staticCompositionLocalOf<SharedTransitionScope?> { null }
 
+val LocalAppReady = staticCompositionLocalOf<() -> Unit> { {} }
+
 fun sharedCoverKey(bookId: BookId): String = "book-cover-${bookId.value}"
 
 @OptIn(ExperimentalSharedTransitionApi::class)

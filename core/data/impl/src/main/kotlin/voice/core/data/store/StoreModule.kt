@@ -16,6 +16,7 @@ import kotlinx.serialization.builtins.serializer
 import voice.core.data.BookId
 import voice.core.data.GridMode
 import voice.core.data.PlaybackBackgroundStyle
+import voice.core.data.PlayerButtonVisibility
 import voice.core.data.ThemeColor
 import voice.core.data.ThemeMode
 import voice.core.data.sleeptimer.SleepTimerPreference
@@ -240,6 +241,17 @@ public interface StoreModule {
       serializer = PlaybackBackgroundStyle.serializer(),
       fileName = "playbackBackgroundStyle",
       defaultValue = PlaybackBackgroundStyle.Solid,
+    )
+  }
+
+  @Provides
+  @SingleIn(AppScope::class)
+  @PlayerButtonVisibilityStore
+  private fun playerButtonVisibility(factory: VoiceDataStoreFactory): DataStore<PlayerButtonVisibility> {
+    return factory.create(
+      serializer = PlayerButtonVisibility.serializer(),
+      fileName = "playerButtonVisibility",
+      defaultValue = PlayerButtonVisibility(),
     )
   }
 

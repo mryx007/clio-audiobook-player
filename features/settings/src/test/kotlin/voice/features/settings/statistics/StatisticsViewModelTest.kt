@@ -67,9 +67,6 @@ class StatisticsViewModelTest {
     backgroundScope.launchMolecule(RecompositionMode.Immediate) {
       viewModel.viewState()
     }.test {
-      val initial = awaitItem()
-      assertEquals("0 Min.", initial.totalFormattedTime)
-
       val state = awaitItem()
       assertEquals("2 Std.", state.totalFormattedTime)
       assertEquals("1 Std.", state.thisMonthFormattedTime)

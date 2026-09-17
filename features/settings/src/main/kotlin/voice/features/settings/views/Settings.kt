@@ -127,6 +127,22 @@ private fun Settings(
       item {
         PlaybackBackgroundStyleRow(viewState.playbackBackgroundStyle, listener::onPlaybackBackgroundStyleRowClick)
       }
+      item {
+        ListItem(
+          modifier = Modifier.clickable { listener.openPlayerControlsSettings() },
+          leadingContent = {
+            Icon(
+              imageVector = VoiceIcons.Tune,
+              contentDescription = stringResource(StringsR.string.settings_player_controls_title),
+            )
+          },
+          supportingContent = {
+            Text(stringResource(StringsR.string.settings_player_controls_summary))
+          },
+        ) {
+          Text(stringResource(StringsR.string.settings_player_controls_title))
+        }
+      }
       if (viewState.showAnalyticSetting && !viewState.kioskMode) {
         item {
           AnalyticsRow(analyticsEnabled = viewState.analyticsEnabled, toggle = listener::toggleAnalytics)
@@ -159,31 +175,7 @@ private fun Settings(
         }
       }
 
-      item {
-        SeekTimeRow(
-          title = stringResource(StringsR.string.playback_action_rewind),
-          icon = VoiceIcons.FastRewind,
-          seconds = viewState.rewindTimeInSeconds,
-        ) {
-          listener.onRewindRowClick()
-        }
-      }
 
-      item {
-        SeekTimeRow(
-          title = stringResource(StringsR.string.playback_action_fast_forward),
-          icon = VoiceIcons.FastForward,
-          seconds = viewState.fastForwardTimeInSeconds,
-        ) {
-          listener.onFastForwardRowClick()
-        }
-      }
-
-      item {
-        AutoRewindRow(viewState.autoRewindInSeconds) {
-          listener.onAutoRewindRowClick()
-        }
-      }
 
       item {
         OpenLastBookOnStartupRow(
@@ -347,7 +339,7 @@ interface SettingsProvider {
 fun Settings() {
   val viewModel = retain<SettingsViewModel> { rootGraphAs<SettingsGraph>().settingsViewModel }
   val snackbarHostState = remember { SnackbarHostState() }
-  val viewState = viewModel.viewState()
+  val viewState = viewModel.viewState() ?: return
   val currentDeveloperMenuUnlockedMessage = rememberUpdatedState("Developer Menu unlocked")
   LaunchedEffect(viewModel) {
     viewModel.viewEffects.collect { viewEffect ->

@@ -42,58 +42,68 @@ internal fun BookPlayAppBar(
   val contentColor = if (isCustomBackground) Color.White else MaterialTheme.colorScheme.onSurface
 
   val appBarActions: @Composable RowScope.() -> Unit = {
-    val lockTint = if (viewState.isLocked) Color(0xFFE57373) else contentColor
-    IconButton(onClick = onLockClick) {
-      Icon(
-        imageVector = if (viewState.isLocked) VoiceIcons.Lock else VoiceIcons.LockOpen,
-        tint = lockTint,
-        contentDescription = stringResource(
-          id = if (viewState.isLocked) R.string.playback_action_unlock else R.string.playback_action_lock,
-        ),
-      )
-    }
-    IconButton(onClick = onEqualizerClick) {
-      Icon(
-        imageVector = VoiceIcons.Tune,
-        tint = contentColor,
-        contentDescription = stringResource(id = R.string.playback_equalizer_title),
-      )
-    }
-    IconButton(onClick = onSleepTimerClick) {
-      val sleepTimerIcon = if (viewState.sleepTimerState is BookPlayViewState.SleepTimerViewState.Disabled) {
-        VoiceIcons.Bedtime
-      } else {
-        VoiceIcons.BedtimeOff
+    if (viewState.playerButtonVisibility.showLock) {
+      val lockTint = if (viewState.isLocked) Color(0xFFE57373) else contentColor
+      IconButton(onClick = onLockClick) {
+        Icon(
+          imageVector = if (viewState.isLocked) VoiceIcons.Lock else VoiceIcons.LockOpen,
+          tint = lockTint,
+          contentDescription = stringResource(
+            id = if (viewState.isLocked) R.string.playback_action_unlock else R.string.playback_action_lock,
+          ),
+        )
       }
-      Icon(
-        imageVector = sleepTimerIcon,
-        tint = contentColor,
-        contentDescription = stringResource(id = R.string.sleep_timer_action_open),
-      )
     }
-    Box(
-      modifier = Modifier
-        .size(40.dp)
-        .combinedClickable(
-          onClick = onBookmarkClick,
-          onLongClick = onBookmarkLongClick,
-          indication = ripple(bounded = false, radius = 20.dp),
-          interactionSource = remember { MutableInteractionSource() },
-        ),
-      contentAlignment = Alignment.Center,
-    ) {
-      Icon(
-        imageVector = VoiceIcons.CollectionsBookmark,
-        tint = contentColor,
-        contentDescription = stringResource(id = R.string.bookmark_title),
-      )
+    if (viewState.playerButtonVisibility.showEqualizer) {
+      IconButton(onClick = onEqualizerClick) {
+        Icon(
+          imageVector = VoiceIcons.Tune,
+          tint = contentColor,
+          contentDescription = stringResource(id = R.string.playback_equalizer_title),
+        )
+      }
     }
-    IconButton(onClick = onSpeedChangeClick) {
-      Icon(
-        imageVector = VoiceIcons.Speed,
-        tint = contentColor,
-        contentDescription = stringResource(id = R.string.playback_speed_title),
-      )
+    if (viewState.playerButtonVisibility.showSleepTimer) {
+      IconButton(onClick = onSleepTimerClick) {
+        val sleepTimerIcon = if (viewState.sleepTimerState is BookPlayViewState.SleepTimerViewState.Disabled) {
+          VoiceIcons.Bedtime
+        } else {
+          VoiceIcons.BedtimeOff
+        }
+        Icon(
+          imageVector = sleepTimerIcon,
+          tint = contentColor,
+          contentDescription = stringResource(id = R.string.sleep_timer_action_open),
+        )
+      }
+    }
+    if (viewState.playerButtonVisibility.showBookmark) {
+      Box(
+        modifier = Modifier
+          .size(40.dp)
+          .combinedClickable(
+            onClick = onBookmarkClick,
+            onLongClick = onBookmarkLongClick,
+            indication = ripple(bounded = false, radius = 20.dp),
+            interactionSource = remember { MutableInteractionSource() },
+          ),
+        contentAlignment = Alignment.Center,
+      ) {
+        Icon(
+          imageVector = VoiceIcons.CollectionsBookmark,
+          tint = contentColor,
+          contentDescription = stringResource(id = R.string.bookmark_title),
+        )
+      }
+    }
+    if (viewState.playerButtonVisibility.showSpeed) {
+      IconButton(onClick = onSpeedChangeClick) {
+        Icon(
+          imageVector = VoiceIcons.Speed,
+          tint = contentColor,
+          contentDescription = stringResource(id = R.string.playback_speed_title),
+        )
+      }
     }
     OverflowMenu(
       skipSilence = viewState.skipSilence,

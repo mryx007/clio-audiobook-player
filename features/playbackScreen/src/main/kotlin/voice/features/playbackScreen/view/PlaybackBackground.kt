@@ -92,18 +92,37 @@ internal fun PlaybackBackground(
           PlaybackBackgroundStyle.Glassmorphism -> 0.3f
         }
 
-        AsyncImage(
-          model = cover,
-          contentDescription = null,
-          contentScale = ContentScale.Crop,
+        Box(
           modifier = Modifier
             .fillMaxSize()
-            .blur(blurRadius)
-            .drawWithContent {
-              drawContent()
-              drawRect(Color.Black.copy(alpha = dimAlpha))
+            .background(Color(0xFF121212))
+        ) {
+          if (cover != null) {
+            val imageModel = remember(cover, style) {
+              if (style == PlaybackBackgroundStyle.DimmedCover) {
+                cover
+              } else {
+                coil.request.ImageRequest.Builder(context)
+                  .data(cover)
+                  .size(240, 240)
+                  .crossfade(false)
+                  .build()
+              }
             }
-        )
+            AsyncImage(
+              model = imageModel,
+              contentDescription = null,
+              contentScale = ContentScale.Crop,
+              modifier = Modifier
+                .fillMaxSize()
+                .blur(blurRadius)
+                .drawWithContent {
+                  drawContent()
+                  drawRect(Color.Black.copy(alpha = dimAlpha))
+                }
+            )
+          }
+        }
       }
       PlaybackBackgroundStyle.DynamicGradient -> {
         val defaultDarkSurface = Color(0xFF1E1E1E)

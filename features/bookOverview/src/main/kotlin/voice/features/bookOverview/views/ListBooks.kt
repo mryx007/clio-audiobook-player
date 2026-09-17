@@ -98,6 +98,7 @@ internal fun ListBooks(
           selectedBookId = selectedBookId,
           menuItems = menuItems,
           onMenuItemClick = onMenuItemClick,
+          modifier = Modifier.animateItem(),
         )
       }
       item {
@@ -271,7 +272,7 @@ private fun CoverImage(
   bookId: BookId,
   cover: String?,
 ) {
-  val cornerRadius = 8.dp
+  val cornerRadius = 4.dp
   AsyncImage(
     modifier = Modifier
       .padding(top = 8.dp, start = 8.dp, bottom = 8.dp)

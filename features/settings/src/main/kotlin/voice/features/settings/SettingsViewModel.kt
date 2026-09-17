@@ -78,13 +78,13 @@ class SettingsViewModel(
   private var appVersionTapCount = 0
 
   @Composable
-  fun viewState(): SettingsViewState {
+  fun viewState(): SettingsViewState? {
     val themeMode by remember { themeModeStore.data }.collectAsState(initial = ThemeMode.FollowSystem)
     val customThemeColor by remember { themeColorStore.data }.collectAsState(initial = ThemeColor())
-    val autoRewindAmount by remember { autoRewindAmountStore.data }.collectAsState(initial = 0)
+    val autoRewindAmount by remember { autoRewindAmountStore.data }.collectAsState(initial = 2)
     val rewindTime by remember { rewindTimeStore.data }.collectAsState(initial = 20)
     val fastForwardTime by remember { fastForwardTimeStore.data }.collectAsState(initial = 30)
-    val gridMode by remember { gridModeStore.data }.collectAsState(initial = GridMode.GRID)
+    val gridMode = remember { gridModeStore.data }.collectAsState(initial = null).value ?: return null
     val autoSleepTimer by remember { sleepTimerPreferenceStore.data }.collectAsState(
       initial = SleepTimerPreference.Default,
     )
@@ -311,5 +311,9 @@ class SettingsViewModel(
 
   override fun openDeveloperMenu() {
     navigator.goTo(Destination.DeveloperSettings)
+  }
+
+  override fun openPlayerControlsSettings() {
+    navigator.goTo(Destination.PlayerControlsSettings)
   }
 }

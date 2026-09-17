@@ -59,7 +59,7 @@
       android:name=".MainActivity"
       android:icon="@mipmap/ic_launcher"
       android:roundIcon="@mipmap/ic_launcher_round"
-      android:windowSoftInputMode="adjustResize"
+      android:windowSoftInputMode="stateAlwaysHidden"
       android:exported="true">
 
       <intent-filter>

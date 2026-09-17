@@ -11,6 +11,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.test.TestScope
@@ -78,11 +79,14 @@ class SettingsViewModelTest {
     dispatcherProvider = DispatcherProvider(scope.coroutineContext, scope.coroutineContext, scope.coroutineContext),
   )
 
-  @Test
-  fun `view state defaults to follow system and voice blue`() = scope.runTest {
+  private fun TestScope.viewStateFlow(): Flow<SettingsViewState> =
     backgroundScope.launchMolecule(RecompositionMode.Immediate) {
       viewModel.viewState()
-    }.test {
+    }.filterNotNull()
+
+  @Test
+  fun `view state defaults to follow system and voice blue`() = scope.runTest {
+    viewStateFlow().test {
       awaitItem().let {
         assertEquals(expected = ThemeMode.FollowSystem, actual = it.themeMode)
       }
@@ -91,9 +95,7 @@ class SettingsViewModelTest {
 
   @Test
   fun `theme mode changes update view state`() = scope.runTest {
-    backgroundScope.launchMolecule(RecompositionMode.Immediate) {
-      viewModel.viewState()
-    }.test {
+    viewStateFlow().test {
       assertEquals(expected = ThemeMode.FollowSystem, actual = awaitItem().themeMode)
 
       viewModel.setThemeMode(ThemeMode.Dark)
@@ -132,9 +134,7 @@ class SettingsViewModelTest {
 
   @Test
   fun `developer menu is hidden until app version tapped 13 times`() = scope.runTest {
-    backgroundScope.launchMolecule(RecompositionMode.Immediate) {
-      viewModel.viewState()
-    }.test {
+    viewStateFlow().test {
       assertEquals(expected = false, actual = awaitItem().showDeveloperMenu)
 
       repeat(13) {
@@ -187,9 +187,7 @@ class SettingsViewModelTest {
   fun `view state shows support development when included`() = scope.runTest {
     every { appInfoProvider.supportDevelopmentIncluded } returns true
 
-    backgroundScope.launchMolecule(RecompositionMode.Immediate) {
-      viewModel.viewState()
-    }.test {
+    viewStateFlow().test {
       assertEquals(expected = true, actual = awaitItem().showSupportDevelopment)
     }
   }
@@ -198,9 +196,7 @@ class SettingsViewModelTest {
   fun `view state hides support development when not included`() = scope.runTest {
     every { appInfoProvider.supportDevelopmentIncluded } returns false
 
-    backgroundScope.launchMolecule(RecompositionMode.Immediate) {
-      viewModel.viewState()
-    }.test {
+    viewStateFlow().test {
       assertEquals(expected = false, actual = awaitItem().showSupportDevelopment)
     }
   }
@@ -209,9 +205,7 @@ class SettingsViewModelTest {
   fun `view state exposes kiosk mode`() = scope.runTest {
     kioskModeFeatureFlag.value = true
 
-    backgroundScope.launchMolecule(RecompositionMode.Immediate) {
-      viewModel.viewState()
-    }.test {
+    viewStateFlow().test {
       awaitItem().let {
         assertEquals(expected = true, actual = it.kioskMode)
       }
@@ -220,9 +214,7 @@ class SettingsViewModelTest {
 
   @Test
   fun `rewind amount changes and row click`() = scope.runTest {
-    backgroundScope.launchMolecule(RecompositionMode.Immediate) {
-      viewModel.viewState()
-    }.test {
+    viewStateFlow().test {
       assertEquals(expected = 20, actual = awaitItem().rewindTimeInSeconds)
 
       viewModel.rewindAmountChanged(15)
@@ -235,9 +227,7 @@ class SettingsViewModelTest {
 
   @Test
   fun `fast forward amount changes and row click`() = scope.runTest {
-    backgroundScope.launchMolecule(RecompositionMode.Immediate) {
-      viewModel.viewState()
-    }.test {
+    viewStateFlow().test {
       assertEquals(expected = 30, actual = awaitItem().fastForwardTimeInSeconds)
 
       viewModel.fastForwardAmountChanged(45)

@@ -27,6 +27,18 @@ Lvoice/features/bookOverview/BookOverviewScreenKt;
 Lvoice/features/bookOverview/BookOverviewViewModel;
 Lvoice/features/bookOverview/BookOverviewViewState;
 
+# Playback Screen
+Lvoice/features/playbackScreen/BookPlayScreenKt;
+Lvoice/features/playbackScreen/BookPlayControllerKt;
+Lvoice/features/playbackScreen/BookPlayViewModel;
+Lvoice/features/playbackScreen/BookPlayViewState;
+Lvoice/features/playbackScreen/view/BookPlayViewKt;
+Lvoice/features/playbackScreen/view/BookPlayContentKt;
+Lvoice/features/playbackScreen/view/BookPlayAppBarKt;
+Lvoice/features/playbackScreen/view/CoverKt;
+Lvoice/features/playbackScreen/view/PlaybackBackgroundKt;
+Lvoice/features/playbackScreen/view/PlaybackControlsKt;
+
 # Core Data & Persistence
 Lvoice/core/data/store/VoiceDataStoreFactory;
 Lvoice/core/data/store/VoiceDataStoreFactoryKt;

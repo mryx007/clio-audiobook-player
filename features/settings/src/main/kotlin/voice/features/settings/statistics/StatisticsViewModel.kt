@@ -20,8 +20,10 @@ import voice.core.logging.api.Logger
 import voice.navigation.Navigator
 import androidx.documentfile.provider.DocumentFile
 import java.io.InputStream
+import java.time.Month
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
+import java.time.format.TextStyle
 import java.util.Locale
 
 @Inject
@@ -38,12 +40,33 @@ public class StatisticsViewModel(
 
   private var showClearDialogState by mutableStateOf(false)
   private var isImportingState by mutableStateOf(false)
+  private var selectedTabState by mutableStateOf(StatisticsTab.YEARS)
+  private var selectedYearState by mutableStateOf<String?>(null)
+  private var selectedMonthIndexState by mutableStateOf<Int?>(null)
+
+  public fun selectTab(tab: StatisticsTab) {
+    selectedTabState = tab
+  }
+
+  public fun onYearClick(year: String) {
+    selectedYearState = if (selectedYearState == year) null else year
+    selectedMonthIndexState = null
+  }
+
+  public fun onMonthClick(monthIndex: Int) {
+    selectedMonthIndexState = if (selectedMonthIndexState == monthIndex) null else monthIndex
+  }
+
+  public fun clearSelectedYear() {
+    selectedYearState = null
+    selectedMonthIndexState = null
+  }
 
   @Composable
   public fun viewState(): StatisticsViewState {
     val summary: StatisticsSummary? by remember {
       statisticRepo.getStatisticsSummary()
-    }.collectAsState(null)
+    }.collectAsState()
 
     val currentSummary = summary ?: StatisticsSummary(
       totalSeconds = 0L,
@@ -55,6 +78,80 @@ public class StatisticsViewModel(
 
     val maxMonthlySeconds = currentSummary.monthlyStats.maxOfOrNull { it.totalSeconds }?.coerceAtLeast(1L) ?: 1L
     val maxBookSeconds = currentSummary.bookStats.maxOfOrNull { it.totalSeconds }?.coerceAtLeast(1L) ?: 1L
+
+    val selectedYear = selectedYearState
+    val selectedYearData = if (selectedYear != null) {
+      val yearMonths = currentSummary.monthlyStats.filter { it.yearMonth.startsWith("$selectedYear-") }
+      val totalYearSecs = yearMonths.sumOf { it.totalSeconds }
+      val maxMonthSecs = yearMonths.maxOfOrNull { it.totalSeconds }?.coerceAtLeast(1L) ?: 1L
+      val monthMap = yearMonths.associateBy { it.yearMonth.substringAfter('-').toIntOrNull() ?: 0 }
+
+      val maxHoursDouble = maxMonthSecs / 3600.0
+      val (chartCeilingHours, yLevels) = calculateChartScale(maxHoursDouble)
+      val chartCeilingSecs = (chartCeilingHours * 3600.0).coerceAtLeast(1.0)
+
+      val hourUnit = if (Locale.getDefault().language == "de") "Std." else "h"
+      val minUnit = if (Locale.getDefault().language == "de") "Min." else "min"
+
+      val yAxisLabels = yLevels.map { level ->
+        if (level % 1.0 == 0.0) {
+          "${level.toInt()} $hourUnit"
+        } else {
+          String.format(Locale.getDefault(), "%.1f %s", level, hourUnit)
+        }
+      }
+
+      val bars = (1..12).map { m ->
+        val secs = monthMap[m]?.totalSeconds ?: 0L
+        val heightFraction = if (secs > 0L) (secs.toFloat() / chartCeilingSecs.toFloat()).coerceIn(0.08f, 1f) else 0f
+        val hours = secs / 3600.0
+        val formatted = if (secs >= 3600L) {
+          String.format(Locale.getDefault(), "%.1f %s", hours, hourUnit)
+        } else if (secs > 0L) {
+          "${(secs / 60).coerceAtLeast(1)} $minUnit"
+        } else {
+          "0 $hourUnit"
+        }
+        val label = Month.of(m).getDisplayName(TextStyle.SHORT, Locale.getDefault())
+        val fullLabel = Month.of(m).getDisplayName(TextStyle.FULL, Locale.getDefault())
+        StatisticsViewState.MonthBarData(
+          month = m,
+          label = label,
+          fullLabel = fullLabel,
+          totalSeconds = secs,
+          formattedDuration = formatted,
+          heightFraction = heightFraction,
+        )
+      }
+
+      val hours = totalYearSecs / 3600.0
+      val suffix = if (Locale.getDefault().language == "de") "Stunden" else "hours"
+      StatisticsViewState.SelectedYearData(
+        year = selectedYear,
+        formattedDuration = String.format(Locale.getDefault(), "%.1f %s", hours, suffix),
+        yAxisLabels = yAxisLabels,
+        bars = bars,
+      )
+    } else {
+      null
+    }
+
+    val yearlyItems = currentSummary.monthlyStats
+      .groupBy { it.yearMonth.substringBefore('-', missingDelimiterValue = "") }
+      .filterKeys { it.length == 4 }
+      .map { (year, stats) ->
+        val totalSecs = stats.sumOf { it.totalSeconds }
+        val hours = totalSecs / 3600.0
+        val suffix = if (Locale.getDefault().language == "de") "Stunden" else "hours"
+        val formatted = String.format(Locale.getDefault(), "%.1f %s", hours, suffix)
+        StatisticsViewState.YearlyStatItem(
+          year = year,
+          formattedDuration = formatted,
+          totalSeconds = totalSecs,
+          isSelected = (year == selectedYear),
+        )
+      }
+      .sortedByDescending { it.year }
 
     val monthlyItems = currentSummary.monthlyStats.map { month ->
       val displayMonth = formatMonthLabel(month.yearMonth)
@@ -78,9 +175,15 @@ public class StatisticsViewModel(
     }
 
     return StatisticsViewState(
+      isLoading = summary == null,
       totalFormattedTime = formatDuration(currentSummary.totalSeconds),
       thisMonthFormattedTime = formatDuration(currentSummary.thisMonthSeconds),
       booksListenedCount = currentSummary.booksCount,
+      selectedTab = selectedTabState,
+      selectedYear = selectedYear,
+      selectedYearData = selectedYearData,
+      selectedMonthIndex = selectedMonthIndexState,
+      yearlyStats = yearlyItems,
       monthlyStats = monthlyItems,
       bookStats = bookItems,
       isImporting = isImportingState,
@@ -253,5 +356,28 @@ public class StatisticsViewModel(
       hours > 0 -> "${hours} Std."
       else -> "${minutes.coerceAtLeast(1)} Min."
     }
+  }
+
+  private fun calculateChartScale(maxHours: Double): Pair<Double, List<Double>> {
+    val rawMax = maxHours.coerceAtLeast(0.1)
+    val rawStep = rawMax / 4.0
+    val step = when {
+      rawStep <= 0.25 -> 0.25
+      rawStep <= 0.5 -> 0.5
+      rawStep <= 1.0 -> 1.0
+      rawStep <= 2.0 -> 2.0
+      rawStep <= 2.5 -> 2.5
+      rawStep <= 5.0 -> 5.0
+      rawStep <= 10.0 -> 10.0
+      rawStep <= 15.0 -> 15.0
+      rawStep <= 20.0 -> 20.0
+      rawStep <= 25.0 -> 25.0
+      rawStep <= 50.0 -> 50.0
+      else -> kotlin.math.ceil(rawStep / 25.0) * 25.0
+    }
+    val count = kotlin.math.ceil(rawMax / step).toInt().coerceIn(3, 5)
+    val ceiling = step * count
+    val levels = (count downTo 0).map { it * step }
+    return ceiling to levels
   }
 }

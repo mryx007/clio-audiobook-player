@@ -6,8 +6,10 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.retain.retain
+import voice.core.ui.LocalAppReady
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.navigation3.runtime.NavEntry
@@ -34,6 +36,12 @@ fun BookPlayScreen(bookId: BookId) {
   val dialogState = viewModel.dialogState.value
   val viewState = viewModel.viewState()
     ?: return
+
+  val onAppReady = LocalAppReady.current
+  SideEffect {
+    onAppReady()
+  }
+
   val bookmarkAddedMessage = stringResource(StringsR.string.bookmark_added_snackbar)
   val batteryOptimizationMessage = stringResource(StringsR.string.playback_battery_optimization_rationale)
   val batteryOptimizationAction = stringResource(StringsR.string.playback_battery_optimization_action)

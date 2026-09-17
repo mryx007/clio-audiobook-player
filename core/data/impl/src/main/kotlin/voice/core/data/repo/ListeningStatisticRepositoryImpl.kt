@@ -6,11 +6,18 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.withContext
 import voice.core.data.BookId
 import voice.core.data.BookStatistic
@@ -40,6 +47,47 @@ public class ListeningStatisticRepositoryImpl(
 
   private val yearMonthFormatter = DateTimeFormatter.ofPattern("yyyy-MM")
   private val dayFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+  private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
+  private val summaryStateFlow: StateFlow<StatisticsSummary?> = flow {
+    val currentYearMonth = LocalDate.now().format(yearMonthFormatter)
+    emitAll(
+      combine(
+        dao.getTotalSecondsFlow(),
+        dao.getMonthSecondsFlow(currentYearMonth),
+        dao.getDistinctBooksCountFlow(),
+        dao.getMonthlyStatisticsFlow(),
+        dao.getBookStatisticsFlow(),
+      ) { totalSeconds, thisMonthSeconds, booksCount, monthlyStats, bookStats ->
+        val resolvedBookStats = bookStats.map { book ->
+          if (book.coverUrl.isNullOrEmpty()) {
+            val matchingBook = book.bookId?.let { bookRepository.get(it) }
+              ?: bookRepository.all().firstOrNull { it.content.name == book.bookTitle }
+            val coverUrl = getOrPersistCover(book.bookTitle, matchingBook?.content?.cover)
+            if (coverUrl != null) {
+              dao.updateCoverForBook(book.bookTitle, coverUrl)
+              book.copy(coverUrl = coverUrl)
+            } else {
+              book
+            }
+          } else {
+            book
+          }
+        }
+        StatisticsSummary(
+          totalSeconds = totalSeconds,
+          thisMonthSeconds = thisMonthSeconds,
+          booksCount = booksCount,
+          monthlyStats = monthlyStats,
+          bookStats = resolvedBookStats,
+        )
+      },
+    )
+  }.stateIn(
+    scope = scope,
+    started = SharingStarted.Eagerly,
+    initialValue = null,
+  )
 
   override fun getMonthlyStatistics(): Flow<List<MonthlyStatistic>> {
     return dao.getMonthlyStatisticsFlow().flowOn(Dispatchers.IO)
@@ -53,38 +101,8 @@ public class ListeningStatisticRepositoryImpl(
     return dao.getTotalSecondsFlow().flowOn(Dispatchers.IO)
   }
 
-  override fun getStatisticsSummary(): Flow<StatisticsSummary> {
-    val currentYearMonth = LocalDate.now().format(yearMonthFormatter)
-    return combine(
-      dao.getTotalSecondsFlow(),
-      dao.getMonthSecondsFlow(currentYearMonth),
-      dao.getDistinctBooksCountFlow(),
-      dao.getMonthlyStatisticsFlow(),
-      dao.getBookStatisticsFlow(),
-    ) { totalSeconds, thisMonthSeconds, booksCount, monthlyStats, bookStats ->
-      val resolvedBookStats = bookStats.map { book ->
-        if (book.coverUrl.isNullOrEmpty()) {
-          val matchingBook = book.bookId?.let { bookRepository.get(it) }
-            ?: bookRepository.all().firstOrNull { it.content.name == book.bookTitle }
-          val coverUrl = getOrPersistCover(book.bookTitle, matchingBook?.content?.cover)
-          if (coverUrl != null) {
-            dao.updateCoverForBook(book.bookTitle, coverUrl)
-            book.copy(coverUrl = coverUrl)
-          } else {
-            book
-          }
-        } else {
-          book
-        }
-      }
-      StatisticsSummary(
-        totalSeconds = totalSeconds,
-        thisMonthSeconds = thisMonthSeconds,
-        booksCount = booksCount,
-        monthlyStats = monthlyStats,
-        bookStats = resolvedBookStats,
-      )
-    }.flowOn(Dispatchers.IO)
+  override fun getStatisticsSummary(): StateFlow<StatisticsSummary?> {
+    return summaryStateFlow
   }
 
   override suspend fun recordListeningTime(

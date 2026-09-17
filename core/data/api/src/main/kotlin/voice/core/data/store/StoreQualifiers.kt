@@ -58,3 +58,7 @@ public annotation class OpenLastBookOnStartupStore
 
 @Qualifier
 public annotation class PlaybackBackgroundStyleStore
+
+@Qualifier
+public annotation class PlayerButtonVisibilityStore
+

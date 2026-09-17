@@ -111,6 +111,91 @@ class BookParserTest {
     assertEquals(expected = "Fallback Folder", actual = content.name)
   }
 
+  @Test
+  fun folderBookWithAuthorAndTitleInFolderNameParsesBoth() {
+    val bookFolder = testFolder.newFolder("Franz Kafka - Die Verwandlung")
+    val chapters = listOf(chapter(File(bookFolder, "1.mp3").apply { createNewFile() }))
+
+    val content = parser.parse(
+      chapters = chapters,
+      id = BookId(bookFolder.toUri()),
+      analyzed = null,
+      file = FileBasedDocumentFile(bookFolder),
+    )
+
+    assertEquals(expected = "Franz Kafka", actual = content.author)
+    assertEquals(expected = "Die Verwandlung", actual = content.name)
+  }
+
+  @Test
+  fun folderBookWithTrackPrefixDoesNotParseTrackAsAuthor() {
+    val bookFolder = testFolder.newFolder("01 - Chapter One")
+    val chapters = listOf(chapter(File(bookFolder, "1.mp3").apply { createNewFile() }))
+
+    val content = parser.parse(
+      chapters = chapters,
+      id = BookId(bookFolder.toUri()),
+      analyzed = null,
+      file = FileBasedDocumentFile(bookFolder),
+    )
+
+    assertEquals(expected = null, actual = content.author)
+    assertEquals(expected = "01 - Chapter One", actual = content.name)
+  }
+
+  @Test
+  fun folderBookWithUnderscoreDelimiterParsesBoth() {
+    val bookFolder = testFolder.newFolder("Stephen_King_-_Die_Arena")
+    val chapters = listOf(chapter(File(bookFolder, "1.mp3").apply { createNewFile() }))
+
+    val content = parser.parse(
+      chapters = chapters,
+      id = BookId(bookFolder.toUri()),
+      analyzed = null,
+      file = FileBasedDocumentFile(bookFolder),
+    )
+
+    assertEquals(expected = "Stephen King", actual = content.author)
+    assertEquals(expected = "Die Arena", actual = content.name)
+  }
+
+  @Test
+  fun titleWithNarratorInParenthesesIsCleanedAndNarratorExtracted() {
+    val (title, narrator) = cleanTitleAndExtractNarrator("Die Arena (gelesen von David Nathan)")
+    assertEquals(expected = "Die Arena", actual = title)
+    assertEquals(expected = "David Nathan", actual = narrator)
+  }
+
+  @Test
+  fun titleWithUnabridgedNarratorIsCleaned() {
+    val (title, narrator) = cleanTitleAndExtractNarrator("Die Arena (Ungekürzt, gelesen von David Nathan)")
+    assertEquals(expected = "Die Arena", actual = title)
+    assertEquals(expected = "David Nathan", actual = narrator)
+  }
+
+  @Test
+  fun titleWithReadByIsCleaned() {
+    val (title, narrator) = cleanTitleAndExtractNarrator("Harry Potter (read by Stephen Fry)")
+    assertEquals(expected = "Harry Potter", actual = title)
+    assertEquals(expected = "Stephen Fry", actual = narrator)
+  }
+
+  @Test
+  fun parseFiltersNarratorFromAlbum() {
+    val bookFolder = testFolder.newFolder("Stephen King - Die Arena")
+    val chapters = listOf(chapter(File(bookFolder, "1.mp3").apply { createNewFile() }))
+
+    val content = parser.parse(
+      chapters = chapters,
+      id = BookId(bookFolder.toUri()),
+      analyzed = metadata(album = "Die Arena (gelesen von David Nathan)", title = "Track 1"),
+      file = FileBasedDocumentFile(bookFolder),
+    )
+
+    assertEquals(expected = "Die Arena", actual = content.name)
+    assertEquals(expected = "David Nathan", actual = content.narrator)
+  }
+
   private fun chapter(file: File): Chapter = Chapter(
     id = ChapterId(file.toUri()),
     name = "Chapter",

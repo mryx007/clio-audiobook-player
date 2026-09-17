@@ -123,6 +123,8 @@
     <string name="library.folders.moved.dialog.message">You can now manage audiobook folders in Preferences.</string>
     <!-- Hint text for searching books in the library. -->
     <string name="library.search.hint">What are you looking for?</string>
+    <!-- Message shown in library overview when search query yields no books. -->
+    <string name="search.no_results">No audiobooks found for \"%s\"</string>
     <!-- Button label for granting the storage permission workaround. -->
     <string name="library.storage_permission_bug.action">Grant permission</string>
     <!-- Message explaining why a storage permission workaround is needed. -->
@@ -374,4 +376,21 @@
     <string name="statistics.clear_all">Clear statistics</string>
     <!-- Confirmation dialog message before deleting all statistics. -->
     <string name="statistics.clear_confirm">Are you sure you want to delete all listening statistics?</string>
+    <string name="statistics.tab_yearly_overview">Yearly overview</string>
+    <string name="statistics.tab_audiobooks">Audiobooks</string>
+    <string name="statistics.hours_format">%.1f hours</string>
+    <string name="settings.player_controls.title">Player controls</string>
+    <string name="settings.player_controls.summary">Customize visible buttons in player</string>
+    <string name="settings.player_controls.lock">Lock button</string>
+    <string name="settings.player_controls.lock_summary">Prevent accidental touches during playback</string>
+    <string name="settings.player_controls.equalizer">Equalizer &amp; sound</string>
+    <string name="settings.player_controls.equalizer_summary">Quick access to sound settings</string>
+    <string name="settings.player_controls.sleep_timer">Sleep timer</string>
+    <string name="settings.player_controls.sleep_timer_summary">Timer to pause playback automatically</string>
+    <string name="settings.player_controls.bookmark">Bookmarks</string>
+    <string name="settings.player_controls.bookmark_summary">Create and view bookmarks</string>
+    <string name="settings.player_controls.speed">Playback speed</string>
+    <string name="settings.player_controls.speed_summary">Adjust playback tempo</string>
+    <string name="settings.player_controls.category.buttons">Visible buttons</string>
+    <string name="settings.player_controls.category.seeking">Skip duration</string>
 </resources>

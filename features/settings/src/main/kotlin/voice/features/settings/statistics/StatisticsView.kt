@@ -2,13 +2,16 @@ package voice.features.settings.statistics
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -29,9 +32,11 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -43,11 +48,13 @@ import androidx.compose.runtime.retain.retain
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -134,7 +141,16 @@ internal fun StatisticsView(
       )
     },
   ) { paddingValues ->
-    if (viewState.monthlyStats.isEmpty() && viewState.bookStats.isEmpty()) {
+    if (viewState.isLoading) {
+      Box(
+        modifier = Modifier
+          .fillMaxSize()
+          .padding(paddingValues),
+        contentAlignment = Alignment.Center,
+      ) {
+        CircularProgressIndicator()
+      }
+    } else if (viewState.monthlyStats.isEmpty() && viewState.bookStats.isEmpty()) {
       EmptyStatisticsView(
         paddingValues = paddingValues,
         isImporting = viewState.isImporting,
@@ -150,56 +166,87 @@ internal fun StatisticsView(
       ) {
         // Summary Cards
         item {
-          SummarySection(viewState)
+          SummarySection(viewState, viewModel)
         }
 
-        // Import Banner / Button
+        // Tabs: Jahresübersicht & Hörbücher
         item {
-          OutlinedButton(
-            onClick = { openFolderLauncher.launch(null) },
+          PrimaryTabRow(
+            selectedTabIndex = viewState.selectedTab.ordinal,
             modifier = Modifier.fillMaxWidth(),
-            enabled = !viewState.isImporting,
+            containerColor = Color.Transparent,
           ) {
-            Icon(
-              imageVector = VoiceIcons.Add,
-              contentDescription = null,
-              modifier = Modifier.size(18.dp),
+            Tab(
+              selected = viewState.selectedTab == StatisticsTab.YEARS,
+              onClick = { viewModel.selectTab(StatisticsTab.YEARS) },
+              text = {
+                Text(
+                  text = stringResource(StringsR.string.statistics_tab_yearly_overview),
+                  fontWeight = FontWeight.SemiBold,
+                )
+              },
             )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(stringResource(StringsR.string.statistics_import_button))
+            Tab(
+              selected = viewState.selectedTab == StatisticsTab.BOOKS,
+              onClick = { viewModel.selectTab(StatisticsTab.BOOKS) },
+              text = {
+                Text(
+                  text = stringResource(StringsR.string.statistics_tab_audiobooks),
+                  fontWeight = FontWeight.SemiBold,
+                )
+              },
+            )
           }
         }
 
-        // Monthly Breakdown
-        if (viewState.monthlyStats.isNotEmpty()) {
-          item {
-            Text(
-              text = stringResource(StringsR.string.statistics_monthly_history),
-              style = MaterialTheme.typography.titleMedium,
-              fontWeight = FontWeight.Bold,
-              color = MaterialTheme.colorScheme.primary,
-            )
+        when (viewState.selectedTab) {
+          StatisticsTab.YEARS -> {
+            items(viewState.yearlyStats.chunked(3), key = { it.first().year }) { rowItems ->
+              Row(
+                modifier = Modifier
+                  .fillMaxWidth()
+                  .padding(vertical = 4.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+              ) {
+                for (item in rowItems) {
+                  val isSelected = item.isSelected
+                  Column(
+                    modifier = Modifier
+                      .weight(1f)
+                      .clip(RoundedCornerShape(10.dp))
+                      .background(
+                        if (isSelected) MaterialTheme.colorScheme.primaryContainer
+                        else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                      )
+                      .clickable { viewModel.onYearClick(item.year) }
+                      .padding(horizontal = 8.dp, vertical = 8.dp),
+                  ) {
+                    Text(
+                      text = item.year,
+                      style = MaterialTheme.typography.titleMedium,
+                      fontWeight = if (isSelected) FontWeight.Bold else FontWeight.SemiBold,
+                      color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface,
+                    )
+                    Spacer(modifier = Modifier.height(2.dp))
+                    Text(
+                      text = item.formattedDuration,
+                      style = MaterialTheme.typography.bodySmall,
+                      color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f) else MaterialTheme.colorScheme.onSurfaceVariant,
+                      maxLines = 1,
+                    )
+                  }
+                }
+                repeat(3 - rowItems.size) {
+                  Spacer(modifier = Modifier.weight(1f))
+                }
+              }
+            }
           }
 
-          items(viewState.monthlyStats, key = { it.yearMonth }) { month ->
-            MonthlyStatCard(month)
-          }
-        }
-
-        // Books Breakdown
-        if (viewState.bookStats.isNotEmpty()) {
-          item {
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-              text = stringResource(StringsR.string.statistics_book_history),
-              style = MaterialTheme.typography.titleMedium,
-              fontWeight = FontWeight.Bold,
-              color = MaterialTheme.colorScheme.primary,
-            )
-          }
-
-          items(viewState.bookStats, key = { it.bookTitle }) { book ->
-            BookStatCard(book)
+          StatisticsTab.BOOKS -> {
+            items(viewState.bookStats, key = { it.bookTitle }) { book ->
+              BookStatCard(book)
+            }
           }
         }
       }
@@ -226,77 +273,268 @@ internal fun StatisticsView(
 }
 
 @Composable
-private fun SummarySection(viewState: StatisticsViewState) {
-  ElevatedCard(
+private fun SummarySection(
+  viewState: StatisticsViewState,
+  viewModel: StatisticsViewModel,
+) {
+  val selectedYearData = viewState.selectedYearData
+
+  Card(
     shape = RoundedCornerShape(16.dp),
-    modifier = Modifier.fillMaxWidth(),
-    colors = CardDefaults.elevatedCardColors(
-      containerColor = MaterialTheme.colorScheme.primaryContainer,
+    modifier = Modifier
+      .fillMaxWidth()
+      .height(150.dp),
+    colors = CardDefaults.cardColors(
+      containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f),
     ),
+    border = null,
+    elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
   ) {
-    Column(
+    if (selectedYearData != null) {
+      YearDiagramContent(
+        yearData = selectedYearData,
+        selectedMonthIndex = viewState.selectedMonthIndex,
+        onMonthClick = viewModel::onMonthClick,
+      )
+    } else {
+      OverallSummaryContent(viewState = viewState)
+    }
+  }
+}
+
+@Composable
+private fun YearDiagramContent(
+  yearData: StatisticsViewState.SelectedYearData,
+  selectedMonthIndex: Int?,
+  onMonthClick: (Int) -> Unit,
+) {
+  val activeBar = selectedMonthIndex?.let { idx -> yearData.bars.getOrNull(idx - 1) }
+  val baseColor = MaterialTheme.colorScheme.primary
+
+  Column(
+    modifier = Modifier
+      .fillMaxSize()
+      .padding(horizontal = 14.dp, vertical = 12.dp),
+  ) {
+    Text(
+      text = if (activeBar != null) {
+        "${activeBar.fullLabel} ${yearData.year}: ${activeBar.formattedDuration}"
+      } else {
+        yearData.year
+      },
+      style = MaterialTheme.typography.titleMedium,
+      fontWeight = FontWeight.Bold,
+      color = MaterialTheme.colorScheme.onSurface,
+      maxLines = 1,
+      overflow = TextOverflow.Ellipsis,
+      modifier = Modifier.fillMaxWidth(),
+    )
+
+    Spacer(modifier = Modifier.height(4.dp))
+
+    Row(
       modifier = Modifier
         .fillMaxWidth()
-        .padding(20.dp),
+        .weight(1f),
+      verticalAlignment = Alignment.Bottom,
     ) {
-      Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
-        modifier = Modifier.fillMaxWidth(),
+      // Y-Axis labels (Numbers)
+      Column(
+        modifier = Modifier
+          .width(36.dp)
+          .fillMaxHeight(),
+        verticalArrangement = Arrangement.SpaceBetween,
       ) {
-        Column {
+        yearData.yAxisLabels.forEachIndexed { index, label ->
+          val isLast = (index == yearData.yAxisLabels.lastIndex)
           Text(
-            text = stringResource(StringsR.string.statistics_total_time),
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f),
-          )
-          Text(
-            text = viewState.totalFormattedTime,
-            style = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onPrimaryContainer,
+            text = label,
+            style = MaterialTheme.typography.labelSmall.copy(fontSize = 8.sp),
+            color = if (index == 0 || isLast) {
+              MaterialTheme.colorScheme.onSurfaceVariant
+            } else {
+              MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+            },
+            textAlign = TextAlign.End,
+            modifier = Modifier
+              .fillMaxWidth()
+              .then(
+                if (isLast) {
+                  Modifier.padding(bottom = 16.dp)
+                } else {
+                  Modifier
+                },
+              ),
           )
         }
-        Icon(
-          imageVector = VoiceIcons.Analytics,
-          contentDescription = null,
-          tint = MaterialTheme.colorScheme.primary,
-          modifier = Modifier.size(36.dp),
-        )
       }
 
-      Spacer(modifier = Modifier.height(16.dp))
+      Spacer(modifier = Modifier.width(4.dp))
 
-      Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
+      // Chart area with gridlines, bars and X-Axis
+      Column(
+        modifier = Modifier
+          .weight(1f)
+          .fillMaxHeight(),
       ) {
-        Column {
-          Text(
-            text = stringResource(StringsR.string.statistics_this_month),
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f),
-          )
-          Text(
-            text = viewState.thisMonthFormattedTime,
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme.colorScheme.onPrimaryContainer,
-          )
+        Box(
+          modifier = Modifier
+            .fillMaxWidth()
+            .weight(1f),
+        ) {
+          // Horizontal guide lines
+          Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceBetween,
+          ) {
+            repeat(yearData.yAxisLabels.size) { index ->
+              val isBaseline = (index == yearData.yAxisLabels.lastIndex)
+              Box(
+                modifier = Modifier
+                  .fillMaxWidth()
+                  .height(1.dp)
+                  .background(
+                    if (isBaseline) {
+                      MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+                    } else {
+                      MaterialTheme.colorScheme.onSurface.copy(alpha = 0.06f)
+                    },
+                  ),
+              )
+            }
+          }
+
+          // Bars
+          Row(
+            modifier = Modifier.fillMaxSize(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.Bottom,
+          ) {
+            yearData.bars.forEach { bar ->
+              val isMonthSelected = selectedMonthIndex == bar.month
+              Box(
+                modifier = Modifier
+                  .weight(1f)
+                  .fillMaxHeight()
+                  .clickable { onMonthClick(bar.month) },
+                contentAlignment = Alignment.BottomCenter,
+              ) {
+                if (bar.totalSeconds > 0L) {
+                  val animatedHeight = animateFloatAsState(
+                    targetValue = bar.heightFraction,
+                    label = "barHeightFraction",
+                  ).value
+                  Box(
+                    modifier = Modifier
+                      .width(8.dp)
+                      .fillMaxHeight(fraction = animatedHeight.coerceIn(0.12f, 1f))
+                      .clip(RoundedCornerShape(topStart = 4.dp, topEnd = 4.dp))
+                      .background(
+                        if (isMonthSelected) {
+                          baseColor
+                        } else if (selectedMonthIndex == null) {
+                          baseColor
+                        } else {
+                          baseColor.copy(alpha = 0.35f)
+                        },
+                      ),
+                  )
+                } else {
+                  Box(
+                    modifier = Modifier
+                      .width(6.dp)
+                      .height(2.dp)
+                      .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)),
+                  )
+                }
+              }
+            }
+          }
         }
-        Column(horizontalAlignment = Alignment.End) {
-          Text(
-            text = stringResource(StringsR.string.statistics_books_listened),
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f),
-          )
-          Text(
-            text = viewState.booksListenedCount.toString(),
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme.colorScheme.onPrimaryContainer,
-          )
+
+        Spacer(modifier = Modifier.height(3.dp))
+
+        // X-Axis month labels
+        Row(
+          modifier = Modifier.fillMaxWidth(),
+          horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+          yearData.bars.forEach { bar ->
+            val isMonthSelected = selectedMonthIndex == bar.month
+            val shortMonth = bar.label.replace(".", "").take(3)
+            Text(
+              text = shortMonth,
+              style = MaterialTheme.typography.labelSmall.copy(fontSize = 8.sp),
+              fontWeight = if (isMonthSelected) FontWeight.Bold else FontWeight.Normal,
+              color = if (isMonthSelected) {
+                baseColor
+              } else {
+                MaterialTheme.colorScheme.onSurfaceVariant
+              },
+              textAlign = TextAlign.Center,
+              modifier = Modifier
+                .weight(1f)
+                .clickable { onMonthClick(bar.month) },
+              maxLines = 1,
+            )
+          }
         }
+      }
+    }
+  }
+}
+
+@Composable
+private fun OverallSummaryContent(viewState: StatisticsViewState) {
+  Column(
+    modifier = Modifier
+      .fillMaxSize()
+      .padding(20.dp),
+    verticalArrangement = Arrangement.SpaceBetween,
+  ) {
+    Column {
+      Text(
+        text = stringResource(StringsR.string.statistics_total_time),
+        style = MaterialTheme.typography.labelLarge,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+      )
+      Text(
+        text = viewState.totalFormattedTime,
+        style = MaterialTheme.typography.headlineMedium,
+        fontWeight = FontWeight.Bold,
+        color = MaterialTheme.colorScheme.onSurface,
+      )
+    }
+
+    Row(
+      modifier = Modifier.fillMaxWidth(),
+      horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+      Column {
+        Text(
+          text = stringResource(StringsR.string.statistics_this_month),
+          style = MaterialTheme.typography.labelMedium,
+          color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        Text(
+          text = viewState.thisMonthFormattedTime,
+          style = MaterialTheme.typography.titleMedium,
+          fontWeight = FontWeight.SemiBold,
+          color = MaterialTheme.colorScheme.onSurface,
+        )
+      }
+      Column(horizontalAlignment = Alignment.End) {
+        Text(
+          text = stringResource(StringsR.string.statistics_books_listened),
+          style = MaterialTheme.typography.labelMedium,
+          color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        Text(
+          text = viewState.booksListenedCount.toString(),
+          style = MaterialTheme.typography.titleMedium,
+          fontWeight = FontWeight.SemiBold,
+          color = MaterialTheme.colorScheme.onSurface,
+        )
       }
     }
   }

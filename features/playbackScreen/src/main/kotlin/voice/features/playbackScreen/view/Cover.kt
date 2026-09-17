@@ -37,7 +37,8 @@ internal fun Cover(
       },
     contentScale = ContentScale.Crop,
     model = cover,
-    placeholder = painterResource(id = UiR.drawable.album_art),
+    placeholder = null,
+    fallback = painterResource(id = UiR.drawable.album_art),
     error = painterResource(id = UiR.drawable.album_art),
     contentDescription = stringResource(id = StringsR.string.cover_title),
   )
