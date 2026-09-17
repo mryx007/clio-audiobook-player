@@ -40,15 +40,20 @@ internal fun ChapterSliderRow(
   enabled: Boolean,
   onSeek: (Duration) -> Unit,
 ) {
-  val labelColor = (if (isCustomBackground) Color.White else MaterialTheme.colorScheme.onSurface).copy(alpha = 0.75f)
-  val trackBackgroundColor = if (isCustomBackground) {
-    Color.White.copy(
-      alpha = 0.22f,
-    )
+  val surfaceColor = MaterialTheme.colorScheme.surface
+  val isDark = isCustomBackground || (0.299f * surfaceColor.red + 0.587f * surfaceColor.green + 0.114f * surfaceColor.blue) < 0.5f
+
+  val labelColor = (if (isDark) Color.White else MaterialTheme.colorScheme.onSurface).copy(alpha = 0.75f)
+  val trackBackgroundColor = if (isDark) {
+    Color.White.copy(alpha = 0.18f)
   } else {
     MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f)
   }
-  val activeTrackColor = MaterialTheme.colorScheme.primary.toVibrant().copy(alpha = 0.85f)
+  val activeTrackColor = if (isDark) {
+    Color.White.copy(alpha = 0.88f)
+  } else {
+    MaterialTheme.colorScheme.primary.copy(alpha = 0.85f)
+  }
 
   Column(
     modifier = Modifier
