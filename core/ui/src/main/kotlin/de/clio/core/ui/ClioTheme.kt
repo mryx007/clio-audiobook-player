@@ -15,7 +15,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
-import com.materialkolor.DynamicMaterialExpressiveTheme
 import com.materialkolor.PaletteStyle
 import com.materialkolor.dynamiccolor.ColorSpec
 import com.materialkolor.rememberDynamicColorScheme
@@ -56,13 +55,14 @@ fun ClioTheme(
           themedContent()
         }
       } else {
-        DynamicMaterialExpressiveTheme(
+        val scheme = rememberDynamicColorScheme(
           primary = VoiceBlue,
           secondary = Color(0xFF5E6F95),
           isDark = darkTheme,
           style = PaletteStyle.Expressive,
           specVersion = ColorSpec.SpecVersion.SPEC_2025,
-        ) {
+        )
+        MaterialExpressiveTheme(colorScheme = scheme) {
           themedContent()
         }
       }
@@ -333,13 +333,14 @@ fun ClioTheme(
       }
     }
     ThemeMode.FollowSystem, ThemeMode.Light, ThemeMode.Dark -> {
-      DynamicMaterialExpressiveTheme(
+      val scheme = rememberDynamicColorScheme(
         primary = VoiceBlue,
         secondary = Color(0xFF5E6F95),
         isDark = darkTheme,
         style = PaletteStyle.Expressive,
         specVersion = ColorSpec.SpecVersion.SPEC_2025,
-      ) {
+      )
+      MaterialExpressiveTheme(colorScheme = scheme) {
         themedContent()
       }
     }
