@@ -51,8 +51,7 @@ Compared to the original Voice app, Clio brings several usability tweaks and qua
 
 ## Downloads
 
-- [Clio-Audiobook-Player-v1.0.1.apk](https://github.com/mryx007/clio-audiobook-player/releases/download/v1.0.1/Clio-Audiobook-Player-v1.0.1.apk) - Latest release (v1.0.1)
-- [Clio-Audiobook-Player-v1.0.0-beta.apk](https://github.com/mryx007/clio-audiobook-player/releases/download/v1.0.0-beta/Clio-Audiobook-Player-v1.0.0-beta.apk) - Previous beta build (v1.0.0-beta)
+
 
 ---
 
