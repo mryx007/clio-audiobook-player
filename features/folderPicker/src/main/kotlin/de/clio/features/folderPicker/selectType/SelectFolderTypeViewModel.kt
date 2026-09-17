@@ -9,10 +9,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.documentfile.provider.DocumentFile
-import dev.zacsweers.metro.Assisted
-import dev.zacsweers.metro.AssistedFactory
-import dev.zacsweers.metro.AssistedInject
-import kotlinx.coroutines.withContext
 import de.clio.core.common.DispatcherProvider
 import de.clio.core.data.audioFileCount
 import de.clio.core.data.folders.AudiobookFolders
@@ -24,6 +20,10 @@ import de.clio.core.documentfile.nameWithoutExtension
 import de.clio.navigation.Destination
 import de.clio.navigation.Navigator
 import de.clio.navigation.Origin
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
+import kotlinx.coroutines.withContext
 
 @AssistedInject
 class SelectFolderTypeViewModel(

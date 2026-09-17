@@ -15,8 +15,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.delay
 import de.clio.core.ui.icons.ClioIcons
+import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.seconds
 import de.clio.core.strings.R as StringsR
 

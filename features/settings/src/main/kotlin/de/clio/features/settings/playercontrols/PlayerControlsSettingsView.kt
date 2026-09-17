@@ -24,10 +24,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavEntry
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesTo
-import dev.zacsweers.metro.IntoSet
-import dev.zacsweers.metro.Provides
 import de.clio.core.common.rootGraphAs
 import de.clio.core.ui.icons.ClioIcons
 import de.clio.features.settings.views.AutoRewindAmountDialog
@@ -36,6 +32,10 @@ import de.clio.features.settings.views.SeekAmountDialog
 import de.clio.features.settings.views.SeekTimeRow
 import de.clio.navigation.Destination
 import de.clio.navigation.NavEntryProvider
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesTo
+import dev.zacsweers.metro.IntoSet
+import dev.zacsweers.metro.Provides
 import de.clio.core.strings.R as StringsR
 
 @Composable
@@ -280,14 +280,13 @@ interface PlayerControlsSettingsProvider {
 
   @Provides
   @IntoSet
-  fun playerControlsSettingsNavEntryProvider(): NavEntryProvider<*> =
-    NavEntryProvider<Destination.PlayerControlsSettings> { key ->
-      NavEntry(key) {
-        val viewModel = retain<PlayerControlsSettingsViewModel> {
-          rootGraphAs<PlayerControlsSettingsGraph>().playerControlsSettingsViewModel
-        }
-        val viewState = viewModel.viewState() ?: return@NavEntry
-        PlayerControlsSettings(viewState, viewModel)
+  fun playerControlsSettingsNavEntryProvider(): NavEntryProvider<*> = NavEntryProvider<Destination.PlayerControlsSettings> { key ->
+    NavEntry(key) {
+      val viewModel = retain<PlayerControlsSettingsViewModel> {
+        rootGraphAs<PlayerControlsSettingsGraph>().playerControlsSettingsViewModel
       }
+      val viewState = viewModel.viewState() ?: return@NavEntry
+      PlayerControlsSettings(viewState, viewModel)
     }
+  }
 }

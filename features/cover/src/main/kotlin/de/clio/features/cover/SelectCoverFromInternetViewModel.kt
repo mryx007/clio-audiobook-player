@@ -13,12 +13,6 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.Assisted
-import dev.zacsweers.metro.AssistedFactory
-import dev.zacsweers.metro.AssistedInject
-import dev.zacsweers.metro.ContributesTo
-import kotlinx.coroutines.flow.Flow
 import de.clio.core.data.BookId
 import de.clio.core.data.repo.BookRepository
 import de.clio.features.cover.api.CoverApi
@@ -26,6 +20,12 @@ import de.clio.features.cover.api.ImageSearchPagingSource
 import de.clio.features.cover.api.SearchResponse
 import de.clio.navigation.Destination
 import de.clio.navigation.Navigator
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
+import dev.zacsweers.metro.ContributesTo
+import kotlinx.coroutines.flow.Flow
 import de.clio.core.strings.R as StringsR
 
 @AssistedInject

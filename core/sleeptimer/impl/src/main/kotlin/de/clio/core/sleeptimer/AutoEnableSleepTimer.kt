@@ -2,6 +2,11 @@
 
 import android.app.Application
 import androidx.datastore.core.DataStore
+import de.clio.core.data.sleeptimer.SleepTimerPreference
+import de.clio.core.data.store.SleepTimerPreferenceStore
+import de.clio.core.initializer.AppInitializer
+import de.clio.core.playback.playstate.PlayStateManager
+import de.clio.core.playback.playstate.PlayStateManager.PlayState.Playing
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoSet
 import kotlinx.coroutines.CoroutineScope
@@ -9,11 +14,6 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import de.clio.core.data.sleeptimer.SleepTimerPreference
-import de.clio.core.data.store.SleepTimerPreferenceStore
-import de.clio.core.initializer.AppInitializer
-import de.clio.core.playback.playstate.PlayStateManager
-import de.clio.core.playback.playstate.PlayStateManager.PlayState.Playing
 import java.time.Clock
 
 @ContributesIntoSet(AppScope::class)

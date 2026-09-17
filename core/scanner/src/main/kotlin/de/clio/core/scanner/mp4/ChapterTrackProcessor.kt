@@ -4,9 +4,9 @@ import android.net.Uri
 import androidx.media3.common.util.ParsableByteArray
 import androidx.media3.datasource.DataSource
 import androidx.media3.datasource.DataSpec
-import dev.zacsweers.metro.Inject
 import de.clio.core.data.MarkData
 import de.clio.core.logging.api.Logger
+import dev.zacsweers.metro.Inject
 
 @Inject
 internal class ChapterTrackProcessor {

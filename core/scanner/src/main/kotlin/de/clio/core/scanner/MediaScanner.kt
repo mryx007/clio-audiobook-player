@@ -1,12 +1,5 @@
 ﻿package de.clio.core.scanner
 
-import dev.zacsweers.metro.Inject
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.sync.Semaphore
-import kotlinx.coroutines.sync.withPermit
 import de.clio.core.data.BookId
 import de.clio.core.data.audioFileCount
 import de.clio.core.data.folders.FolderType
@@ -15,6 +8,13 @@ import de.clio.core.data.repo.BookContentRepo
 import de.clio.core.documentfile.CachedDocumentFile
 import de.clio.core.documentfile.walk
 import de.clio.core.logging.api.Logger
+import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 
 @Inject
 internal class MediaScanner(

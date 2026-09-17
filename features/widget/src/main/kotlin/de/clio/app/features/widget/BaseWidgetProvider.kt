@@ -5,10 +5,10 @@ import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import dev.zacsweers.metro.Inject
 import de.clio.core.common.rootGraph
 import de.clio.features.widget.WidgetGraph
 import de.clio.features.widget.WidgetUpdater
+import dev.zacsweers.metro.Inject
 
 class BaseWidgetProvider : AppWidgetProvider() {
 

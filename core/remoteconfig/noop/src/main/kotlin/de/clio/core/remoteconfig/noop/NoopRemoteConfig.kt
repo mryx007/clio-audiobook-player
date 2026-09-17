@@ -1,8 +1,8 @@
 ﻿package de.clio.core.remoteconfig.noop
 
+import de.clio.core.remoteconfig.api.RemoteConfig
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
-import de.clio.core.remoteconfig.api.RemoteConfig
 
 @ContributesBinding(AppScope::class)
 class NoopRemoteConfig : RemoteConfig {

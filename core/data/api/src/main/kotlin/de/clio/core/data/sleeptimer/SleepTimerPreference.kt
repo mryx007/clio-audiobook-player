@@ -1,7 +1,7 @@
 ﻿package de.clio.core.data.sleeptimer
 
-import kotlinx.serialization.Serializable
 import de.clio.core.common.serialization.LocalTimeSerializer
+import kotlinx.serialization.Serializable
 import java.time.LocalTime
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes

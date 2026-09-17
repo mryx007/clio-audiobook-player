@@ -1,9 +1,9 @@
 ﻿package de.clio.features.onboarding.welcome
 
-import dev.zacsweers.metro.Inject
 import de.clio.navigation.Destination
 import de.clio.navigation.Navigator
 import de.clio.navigation.Origin
+import dev.zacsweers.metro.Inject
 
 @Inject
 class OnboardingWelcomeViewModel(private val navigator: Navigator) {
@@ -12,4 +12,3 @@ class OnboardingWelcomeViewModel(private val navigator: Navigator) {
     navigator.goTo(Destination.AddContent(origin = Origin.Onboarding))
   }
 }
-

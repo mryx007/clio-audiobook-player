@@ -17,13 +17,13 @@ import com.google.android.play.core.ktx.launchReview
 import com.google.android.play.core.ktx.requestReview
 import com.google.android.play.core.review.ReviewInfo
 import com.google.android.play.core.review.ReviewManager
+import de.clio.core.common.rootGraphAs
+import de.clio.core.logging.api.Logger
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
-import de.clio.core.common.rootGraphAs
-import de.clio.core.logging.api.Logger
 
 @Composable
 fun ReviewFeature() {

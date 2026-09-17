@@ -1,10 +1,10 @@
 ﻿package de.clio.core.playback.misc
 
 import android.media.audiofx.LoudnessEnhancer
+import de.clio.core.logging.api.Logger
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import de.clio.core.logging.api.Logger
 import kotlin.properties.Delegates
 
 @Inject

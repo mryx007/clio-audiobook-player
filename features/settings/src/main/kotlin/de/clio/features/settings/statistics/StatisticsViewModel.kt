@@ -1,5 +1,6 @@
-﻿package de.clio.features.settings.statistics
+package de.clio.features.settings.statistics
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
 import androidx.compose.runtime.Composable
@@ -8,17 +9,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import dev.zacsweers.metro.Inject
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
+import androidx.documentfile.provider.DocumentFile
 import de.clio.core.common.DispatcherProvider
 import de.clio.core.common.MainScope
 import de.clio.core.data.StatisticsSummary
 import de.clio.core.data.repo.ListeningStatisticRepository
 import de.clio.core.logging.api.Logger
 import de.clio.navigation.Navigator
-import androidx.documentfile.provider.DocumentFile
+import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 import java.io.InputStream
 import java.time.Month
 import java.time.YearMonth
@@ -63,6 +64,7 @@ public class StatisticsViewModel(
   }
 
   @Composable
+  @SuppressLint("NonObservableLocale")
   public fun viewState(): StatisticsViewState {
     val summary: StatisticsSummary? by remember {
       statisticRepo.getStatisticsSummary()
@@ -214,6 +216,7 @@ public class StatisticsViewModel(
     importFromUri(uri)
   }
 
+  @SuppressLint("Recycle")
   public fun importFromUri(uri: Uri) {
     if (isImportingState) return
     isImportingState = true
@@ -352,8 +355,8 @@ public class StatisticsViewModel(
     val hours = totalSeconds / 3600
     val minutes = (totalSeconds % 3600) / 60
     return when {
-      hours > 0 && minutes > 0 -> "${hours} Std. ${minutes} Min."
-      hours > 0 -> "${hours} Std."
+      hours > 0 && minutes > 0 -> "$hours Std. $minutes Min."
+      hours > 0 -> "$hours Std."
       else -> "${minutes.coerceAtLeast(1)} Min."
     }
   }

@@ -27,17 +27,17 @@ import androidx.navigation3.scene.DialogSceneStrategy
 import coil.compose.AsyncImage
 import coil.imageLoader
 import coil.request.ImageRequest
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesTo
-import dev.zacsweers.metro.IntoSet
-import dev.zacsweers.metro.Provides
-import kotlinx.coroutines.launch
 import de.clio.core.common.rootGraphAs
 import de.clio.core.data.BookId
 import de.clio.core.scanner.CoverSaver
 import de.clio.navigation.Destination
 import de.clio.navigation.NavEntryProvider
 import de.clio.navigation.Navigator
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesTo
+import dev.zacsweers.metro.IntoSet
+import dev.zacsweers.metro.Provides
+import kotlinx.coroutines.launch
 import de.clio.core.strings.R as StringsR
 
 @ContributesTo(AppScope::class)

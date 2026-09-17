@@ -18,12 +18,6 @@ import androidx.media3.session.SessionResult
 import com.google.common.collect.ImmutableList
 import com.google.common.util.concurrent.Futures
 import com.google.common.util.concurrent.ListenableFuture
-import dev.zacsweers.metro.Inject
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.guava.await
-import kotlinx.coroutines.guava.future
-import kotlinx.coroutines.launch
 import de.clio.core.data.Book
 import de.clio.core.data.BookId
 import de.clio.core.data.repo.BookRepository
@@ -32,6 +26,12 @@ import de.clio.core.logging.api.Logger
 import de.clio.core.playback.player.ClioPlayer
 import de.clio.core.playback.session.search.BookSearchHandler
 import de.clio.core.playback.session.search.BookSearchParser
+import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.guava.await
+import kotlinx.coroutines.guava.future
+import kotlinx.coroutines.launch
 
 @Inject
 class LibrarySessionCallback(

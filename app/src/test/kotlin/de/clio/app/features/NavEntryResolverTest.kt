@@ -2,13 +2,13 @@
 
 import android.app.Application
 import androidx.test.core.app.ApplicationProvider
+import de.clio.app.navigation.NavEntryResolver
+import de.clio.navigation.Destination
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
 import dev.zacsweers.metro.createGraph
-import de.clio.app.navigation.NavEntryResolver
-import de.clio.navigation.Destination
 import kotlin.reflect.KClass
 import kotlin.test.Test
 import kotlin.test.assertEquals

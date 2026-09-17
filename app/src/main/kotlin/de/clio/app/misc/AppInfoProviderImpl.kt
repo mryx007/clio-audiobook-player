@@ -3,9 +3,9 @@
 import android.app.Application
 import android.content.pm.PackageManager
 import android.os.Build
-import dev.zacsweers.metro.Inject
 import de.clio.app.BuildConfig
 import de.clio.core.common.AppInfoProvider
+import dev.zacsweers.metro.Inject
 import kotlin.time.Instant
 
 @Inject

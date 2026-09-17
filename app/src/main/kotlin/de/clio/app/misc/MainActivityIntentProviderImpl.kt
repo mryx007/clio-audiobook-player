@@ -2,9 +2,9 @@
 
 import android.app.PendingIntent
 import android.content.Context
-import dev.zacsweers.metro.Inject
 import de.clio.app.MainActivity
 import de.clio.core.playback.notification.MainActivityIntentProvider
+import dev.zacsweers.metro.Inject
 
 @Inject
 class MainActivityIntentProviderImpl(private val context: Context) : MainActivityIntentProvider {

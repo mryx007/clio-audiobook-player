@@ -6,14 +6,14 @@ import android.content.SharedPreferences
 import androidx.core.content.edit
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import de.clio.core.data.store.ClioDataStoreFactory
+import de.clio.core.data.store.booleanPrefsDataMigration
+import de.clio.core.data.store.intPrefsDataMigration
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
 import org.junit.Before
 import org.junit.runner.RunWith
-import de.clio.core.data.store.ClioDataStoreFactory
-import de.clio.core.data.store.booleanPrefsDataMigration
-import de.clio.core.data.store.intPrefsDataMigration
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

@@ -1,8 +1,8 @@
 ﻿package de.clio.core.scanner.mp4.visitor
 
 import androidx.media3.common.util.ParsableByteArray
-import dev.zacsweers.metro.Inject
 import de.clio.core.scanner.mp4.Mp4ChpaterExtractorOutput
+import dev.zacsweers.metro.Inject
 
 @Inject
 internal class ChapVisitor : AtomVisitor {

@@ -19,4 +19,3 @@ internal fun TopBarTrailingIcon(
     SettingsIcon(onSettingsClick)
   }
 }
-

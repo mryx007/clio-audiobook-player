@@ -1,12 +1,12 @@
 ﻿package de.clio.features.bookOverview.editBookCategory
 
-import dev.zacsweers.metro.ContributesIntoSet
-import dev.zacsweers.metro.SingleIn
 import de.clio.core.data.BookId
 import de.clio.core.data.repo.BookRepository
 import de.clio.features.bookOverview.bottomSheet.BottomSheetItem
 import de.clio.features.bookOverview.bottomSheet.BottomSheetItemViewModel
 import de.clio.features.bookOverview.di.BookOverviewScope
+import dev.zacsweers.metro.ContributesIntoSet
+import dev.zacsweers.metro.SingleIn
 import java.util.concurrent.TimeUnit.SECONDS
 
 @SingleIn(BookOverviewScope::class)

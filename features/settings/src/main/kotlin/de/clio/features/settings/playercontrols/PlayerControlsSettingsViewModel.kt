@@ -6,8 +6,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.datastore.core.DataStore
-import dev.zacsweers.metro.Inject
-import kotlinx.coroutines.launch
 import de.clio.core.common.DispatcherProvider
 import de.clio.core.common.MainScope
 import de.clio.core.data.PlayerButtonVisibility
@@ -16,6 +14,8 @@ import de.clio.core.data.store.FastForwardTimeStore
 import de.clio.core.data.store.PlayerButtonVisibilityStore
 import de.clio.core.data.store.RewindTimeStore
 import de.clio.navigation.Navigator
+import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.launch
 
 data class PlayerControlsSettingsViewState(
   val buttonVisibility: PlayerButtonVisibility,

@@ -7,14 +7,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.datastore.core.DataStore
-import dev.zacsweers.metro.Assisted
-import dev.zacsweers.metro.AssistedFactory
-import dev.zacsweers.metro.AssistedInject
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import de.clio.core.common.DispatcherProvider
 import de.clio.core.common.MainScope
 import de.clio.core.data.Book
@@ -53,6 +45,14 @@ import de.clio.features.playbackScreen.batteryOptimization.BatteryOptimization
 import de.clio.features.sleepTimer.SleepTimerViewState
 import de.clio.navigation.Destination
 import de.clio.navigation.Navigator
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.milliseconds
@@ -362,7 +362,10 @@ class BookPlayViewModel(
     }
   }
 
-  fun onEqualizerBandChanged(index: Int, gainDb: Int) {
+  fun onEqualizerBandChanged(
+    index: Int,
+    gainDb: Int,
+  ) {
     val currentDialog = dialogState.value as? BookPlayDialogViewState.EqualizerDialog ?: return
     val newBands = currentDialog.bands.toMutableList()
     if (index in newBands.indices) {

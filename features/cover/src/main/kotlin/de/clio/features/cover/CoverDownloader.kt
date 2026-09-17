@@ -1,6 +1,7 @@
 ﻿package de.clio.features.cover
 
 import android.content.Context
+import de.clio.core.logging.api.Logger
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -8,7 +9,6 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.coroutines.executeAsync
 import okio.sink
-import de.clio.core.logging.api.Logger
 import java.io.File
 import java.io.IOException
 import kotlin.uuid.Uuid

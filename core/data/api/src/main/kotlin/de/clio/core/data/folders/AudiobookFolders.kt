@@ -1,8 +1,8 @@
 ﻿package de.clio.core.data.folders
 
 import android.net.Uri
-import kotlinx.coroutines.flow.Flow
 import de.clio.core.documentfile.CachedDocumentFile
+import kotlinx.coroutines.flow.Flow
 
 public interface AudiobookFolders {
   public fun all(): Flow<Map<FolderType, List<DocumentFileWithUri>>>

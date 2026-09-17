@@ -1,14 +1,14 @@
 ﻿package de.clio.features.bookOverview.fileCover
 
 import android.net.Uri
-import dev.zacsweers.metro.ContributesIntoSet
-import dev.zacsweers.metro.SingleIn
 import de.clio.core.data.BookId
 import de.clio.features.bookOverview.bottomSheet.BottomSheetItem
 import de.clio.features.bookOverview.bottomSheet.BottomSheetItemViewModel
 import de.clio.features.bookOverview.di.BookOverviewScope
 import de.clio.navigation.Destination
 import de.clio.navigation.Navigator
+import dev.zacsweers.metro.ContributesIntoSet
+import dev.zacsweers.metro.SingleIn
 
 @SingleIn(BookOverviewScope::class)
 @ContributesIntoSet(BookOverviewScope::class)

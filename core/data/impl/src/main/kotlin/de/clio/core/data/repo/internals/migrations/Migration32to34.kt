@@ -6,13 +6,13 @@ import android.database.sqlite.SQLiteDatabase
 import android.provider.BaseColumns
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesBinding
 import de.clio.core.data.repo.internals.getLong
 import de.clio.core.data.repo.internals.getString
 import de.clio.core.data.repo.internals.mapRows
 import de.clio.core.data.repo.internals.transaction
 import de.clio.core.logging.api.Logger
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 
 private const val BOOKMARK_TABLE_NAME = "tableBookmarks"
 private const val BM_PATH = "bookmarkPath"

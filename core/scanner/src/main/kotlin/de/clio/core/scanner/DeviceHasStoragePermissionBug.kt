@@ -1,6 +1,8 @@
 ﻿package de.clio.core.scanner
 
 import android.content.Context
+import de.clio.core.documentfile.CachedDocumentFile
+import de.clio.core.logging.api.Logger
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -8,8 +10,6 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.withContext
-import de.clio.core.documentfile.CachedDocumentFile
-import de.clio.core.logging.api.Logger
 
 @Inject
 public class DeviceHasStoragePermissionBug(private val context: Context) {

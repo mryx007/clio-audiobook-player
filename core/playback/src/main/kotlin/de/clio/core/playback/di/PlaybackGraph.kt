@@ -1,10 +1,10 @@
 ﻿package de.clio.core.playback.di
 
+import de.clio.core.playback.session.PlaybackService
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.GraphExtension
 import dev.zacsweers.metro.Provides
-import de.clio.core.playback.session.PlaybackService
 
 @GraphExtension(
   scope = PlaybackScope::class,

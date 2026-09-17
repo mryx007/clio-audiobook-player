@@ -2,6 +2,15 @@
 
 import androidx.datastore.core.DataStore
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import de.clio.core.common.DispatcherProvider
+import de.clio.core.common.MainScope
+import de.clio.core.data.sleeptimer.SleepTimerPreference
+import de.clio.core.data.store.FadeOutStore
+import de.clio.core.data.store.SleepTimerPreferenceStore
+import de.clio.core.logging.api.Logger
+import de.clio.core.playback.PlayerController
+import de.clio.core.playback.playstate.PlayStateManager
+import de.clio.core.playback.playstate.PlayStateManager.PlayState.Playing
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.SingleIn
@@ -12,15 +21,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
-import de.clio.core.common.DispatcherProvider
-import de.clio.core.common.MainScope
-import de.clio.core.data.sleeptimer.SleepTimerPreference
-import de.clio.core.data.store.FadeOutStore
-import de.clio.core.data.store.SleepTimerPreferenceStore
-import de.clio.core.logging.api.Logger
-import de.clio.core.playback.PlayerController
-import de.clio.core.playback.playstate.PlayStateManager
-import de.clio.core.playback.playstate.PlayStateManager.PlayState.Playing
 import kotlin.math.max
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds

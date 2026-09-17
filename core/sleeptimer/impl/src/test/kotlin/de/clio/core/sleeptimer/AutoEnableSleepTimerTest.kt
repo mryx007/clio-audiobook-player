@@ -1,5 +1,9 @@
 ﻿package de.clio.core.sleeptimer
 
+import de.clio.core.data.sleeptimer.SleepTimerPreference
+import de.clio.core.playback.playstate.PlayStateManager
+import de.clio.core.sleeptimer.SleepTimerMode.TimedWithDuration
+import de.clio.core.sleeptimer.impl.MemoryDataStore
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
@@ -9,10 +13,6 @@ import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.yield
-import de.clio.core.data.sleeptimer.SleepTimerPreference
-import de.clio.core.playback.playstate.PlayStateManager
-import de.clio.core.sleeptimer.SleepTimerMode.TimedWithDuration
-import de.clio.core.sleeptimer.impl.MemoryDataStore
 import java.time.Clock
 import java.time.Instant
 import java.time.LocalTime

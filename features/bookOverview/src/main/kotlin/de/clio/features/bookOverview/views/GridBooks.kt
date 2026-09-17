@@ -1,6 +1,7 @@
-﻿package de.clio.features.bookOverview.views
+package de.clio.features.bookOverview.views
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,7 +22,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenu
@@ -125,11 +125,11 @@ internal fun GridBooks(
 internal fun GridBook(
   book: BookOverviewItemViewState,
   onBookClick: (BookId) -> Unit,
+  modifier: Modifier = Modifier,
   onBookMoreClick: (BookId) -> Unit = {},
   selectedBookId: BookId? = null,
   menuItems: List<BottomSheetItem> = emptyList(),
   onMenuItemClick: (BookId, BottomSheetItem) -> Unit = { _, _ -> },
-  modifier: Modifier = Modifier,
 ) {
   var menuExpanded by remember { mutableStateOf(false) }
   Column(
@@ -277,11 +277,17 @@ internal fun gridColumnCount(): Int {
 @Composable
 @Preview(widthDp = 200)
 private fun GridBookPreviewWithProgress() {
-  GridBook(BookOverviewPreviewParameterProvider().book().copy(progress = 0.66f), {}, {}, null, emptyList(), { _, _ -> })
+  GridBook(
+    book = BookOverviewPreviewParameterProvider().book().copy(progress = 0.66f),
+    onBookClick = {},
+  )
 }
 
 @Composable
 @Preview(widthDp = 200)
 private fun GridBookPreviewWithoutProgress() {
-  GridBook(BookOverviewPreviewParameterProvider().book().copy(progress = 0f), {}, {}, null, emptyList(), { _, _ -> })
+  GridBook(
+    book = BookOverviewPreviewParameterProvider().book().copy(progress = 0f),
+    onBookClick = {},
+  )
 }

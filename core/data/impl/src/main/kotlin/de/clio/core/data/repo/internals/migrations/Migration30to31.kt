@@ -4,10 +4,10 @@ import android.annotation.SuppressLint
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.sqlite.db.SupportSQLiteQueryBuilder
+import de.clio.core.data.repo.internals.moveToNextLoop
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoSet
 import dev.zacsweers.metro.binding
-import de.clio.core.data.repo.internals.moveToNextLoop
 
 @ContributesIntoSet(
   scope = AppScope::class,

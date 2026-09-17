@@ -6,14 +6,10 @@ import androidx.media3.common.ForwardingPlayer
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
-import dev.zacsweers.metro.Inject
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import de.clio.core.analytics.api.Analytics
 import de.clio.core.data.BookContent
 import de.clio.core.data.BookId
+import de.clio.core.data.EqualizerSetting
 import de.clio.core.data.repo.BookRepository
 import de.clio.core.data.store.AutoRewindAmountStore
 import de.clio.core.data.store.CurrentBookStore
@@ -21,7 +17,6 @@ import de.clio.core.data.store.FastForwardTimeStore
 import de.clio.core.data.store.RewindTimeStore
 import de.clio.core.data.store.SeekTimeStore
 import de.clio.core.logging.api.Logger
-import de.clio.core.data.EqualizerSetting
 import de.clio.core.playback.audio.EqualizerAudioProcessor
 import de.clio.core.playback.misc.Decibel
 import de.clio.core.playback.misc.VolumeGain
@@ -32,6 +27,11 @@ import de.clio.core.playback.session.positionInMediaItem
 import de.clio.core.playback.session.toMediaIdOrNull
 import de.clio.core.sleeptimer.SleepTimer
 import de.clio.core.sleeptimer.SleepTimerState
+import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.time.Instant
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.ZERO

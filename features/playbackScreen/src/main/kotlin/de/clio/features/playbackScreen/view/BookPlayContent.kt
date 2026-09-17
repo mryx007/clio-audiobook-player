@@ -55,7 +55,7 @@ internal fun BookPlayContent(
       modifier = Modifier
         .fillMaxSize()
         .padding(contentPadding)
-        .then(contentModifier)
+        .then(contentModifier),
     ) {
       CoverRow(
         bookId = bookId,
@@ -109,7 +109,7 @@ internal fun BookPlayContent(
       modifier = Modifier
         .fillMaxSize()
         .padding(contentPadding)
-        .then(contentModifier)
+        .then(contentModifier),
     ) {
       CoverRow(
         bookId = bookId,

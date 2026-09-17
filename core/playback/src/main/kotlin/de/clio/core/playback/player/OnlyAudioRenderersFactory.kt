@@ -11,8 +11,8 @@ import androidx.media3.exoplayer.mediacodec.MediaCodecSelector
 import androidx.media3.exoplayer.metadata.MetadataOutput
 import androidx.media3.exoplayer.text.TextOutput
 import androidx.media3.exoplayer.video.VideoRendererEventListener
-import dev.zacsweers.metro.Inject
 import de.clio.core.playback.audio.EqualizerAudioProcessor
+import dev.zacsweers.metro.Inject
 
 @Inject
 class OnlyAudioRenderersFactory(

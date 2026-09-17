@@ -5,6 +5,10 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.DocumentsContract
 import androidx.datastore.core.DataStore
+import de.clio.core.analytics.api.Analytics
+import de.clio.core.documentfile.CachedDocumentFile
+import de.clio.core.documentfile.CachedDocumentFileFactory
+import de.clio.core.logging.api.Logger
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import kotlinx.coroutines.MainScope
@@ -13,10 +17,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import de.clio.core.analytics.api.Analytics
-import de.clio.core.documentfile.CachedDocumentFile
-import de.clio.core.documentfile.CachedDocumentFileFactory
-import de.clio.core.logging.api.Logger
 
 @ContributesBinding(AppScope::class)
 public class AudiobookFoldersImpl

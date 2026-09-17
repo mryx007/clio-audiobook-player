@@ -1,6 +1,10 @@
 ﻿package de.clio.core.scanner
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import de.clio.core.data.repo.ChapterRepoImpl
+import de.clio.core.documentfile.CachedDocumentFile
+import de.clio.core.documentfile.FileBasedDocumentFile
+import de.clio.core.documentfile.nameWithoutExtension
 import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.just
@@ -10,10 +14,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 import org.junit.runner.RunWith
-import de.clio.core.data.repo.ChapterRepoImpl
-import de.clio.core.documentfile.CachedDocumentFile
-import de.clio.core.documentfile.FileBasedDocumentFile
-import de.clio.core.documentfile.nameWithoutExtension
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

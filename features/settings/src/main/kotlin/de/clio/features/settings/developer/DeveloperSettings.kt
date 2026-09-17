@@ -27,15 +27,15 @@ import androidx.compose.ui.platform.ClipEntry
 import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.res.stringResource
 import androidx.navigation3.runtime.NavEntry
+import de.clio.core.common.rootGraphAs
+import de.clio.core.ui.icons.ClioIcons
+import de.clio.navigation.Destination
+import de.clio.navigation.NavEntryProvider
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.IntoSet
 import dev.zacsweers.metro.Provides
 import kotlinx.coroutines.launch
-import de.clio.core.common.rootGraphAs
-import de.clio.core.ui.icons.ClioIcons
-import de.clio.navigation.Destination
-import de.clio.navigation.NavEntryProvider
 import de.clio.core.strings.R as StringsR
 
 @Composable

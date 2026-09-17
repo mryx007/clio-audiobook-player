@@ -4,10 +4,10 @@ import androidx.media3.common.C
 import androidx.media3.common.audio.AudioProcessor
 import androidx.media3.common.audio.AudioProcessor.UnhandledAudioFormatException
 import androidx.media3.common.audio.BaseAudioProcessor
+import de.clio.core.data.EqualizerSetting
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
-import de.clio.core.data.EqualizerSetting
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import kotlin.math.cos
@@ -18,6 +18,7 @@ import kotlin.math.sin
 class EqualizerAudioProcessor : BaseAudioProcessor() {
 
   private var setting: EqualizerSetting = EqualizerSetting.Flat
+
   @Volatile
   private var isFlat: Boolean = true
 
@@ -139,7 +140,12 @@ class EqualizerAudioProcessor : BaseAudioProcessor() {
       }
     }
 
-    fun setParameters(gainDb: Int, f0: Float, fs: Float, q: Float) {
+    fun setParameters(
+      gainDb: Int,
+      f0: Float,
+      fs: Float,
+      q: Float,
+    ) {
       this.gainDb = gainDb
       if (gainDb == 0) return
 
@@ -162,7 +168,10 @@ class EqualizerAudioProcessor : BaseAudioProcessor() {
       a2 = a2Temp / a0Temp
     }
 
-    fun processSample(x: Float, channel: Int): Float {
+    fun processSample(
+      x: Float,
+      channel: Int,
+    ): Float {
       val y = b0 * x + b1 * x1[channel] + b2 * x2[channel] - a1 * y1[channel] - a2 * y2[channel]
       x2[channel] = x1[channel]
       x1[channel] = x

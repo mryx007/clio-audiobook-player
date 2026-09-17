@@ -1,6 +1,8 @@
 ﻿package de.clio.core.featureflag
 
 import androidx.datastore.core.DataStore
+import de.clio.core.data.store.FeatureFlagOverridesStore
+import de.clio.core.remoteconfig.api.RemoteConfig
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
@@ -11,8 +13,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import de.clio.core.data.store.FeatureFlagOverridesStore
-import de.clio.core.remoteconfig.api.RemoteConfig
 import kotlin.reflect.KClass
 
 @Inject

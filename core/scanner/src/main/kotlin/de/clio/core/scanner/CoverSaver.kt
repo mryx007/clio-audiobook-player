@@ -4,12 +4,12 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.os.Build
 import androidx.core.graphics.scale
-import dev.zacsweers.metro.Inject
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import de.clio.core.data.BookId
 import de.clio.core.data.repo.BookRepository
 import de.clio.core.logging.api.Logger
+import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException

@@ -2,15 +2,15 @@
 
 import androidx.media3.session.MediaLibraryService
 import androidx.media3.session.MediaSession
-import dev.zacsweers.metro.Inject
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.runBlocking
 import de.clio.core.common.rootGraphAs
 import de.clio.core.logging.api.Logger
 import de.clio.core.playback.di.PlaybackGraph
 import de.clio.core.playback.player.ClioPlayer
 import de.clio.core.playback.playstate.PositionUpdater
+import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.runBlocking
 
 class PlaybackService : MediaLibraryService() {
 

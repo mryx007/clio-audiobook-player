@@ -6,13 +6,6 @@ import android.content.SharedPreferences
 import androidx.core.content.edit
 import androidx.datastore.core.DataMigration
 import androidx.datastore.core.DataStore
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesTo
-import dev.zacsweers.metro.Provides
-import dev.zacsweers.metro.SingleIn
-import kotlinx.serialization.builtins.MapSerializer
-import kotlinx.serialization.builtins.nullable
-import kotlinx.serialization.builtins.serializer
 import de.clio.core.data.BookId
 import de.clio.core.data.GridMode
 import de.clio.core.data.PlaybackBackgroundStyle
@@ -21,6 +14,13 @@ import de.clio.core.data.ThemeColor
 import de.clio.core.data.ThemeMode
 import de.clio.core.data.sleeptimer.SleepTimerPreference
 import de.clio.core.featureflag.FeatureFlagOverride
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesTo
+import dev.zacsweers.metro.Provides
+import dev.zacsweers.metro.SingleIn
+import kotlinx.serialization.builtins.MapSerializer
+import kotlinx.serialization.builtins.nullable
+import kotlinx.serialization.builtins.serializer
 import java.io.File
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
@@ -108,16 +108,12 @@ public interface StoreModule {
   @Provides
   @SingleIn(AppScope::class)
   @SeekTimeStore
-  private fun seekTime(
-    @RewindTimeStore rewindTimeStore: DataStore<Int>,
-  ): DataStore<Int> = rewindTimeStore
+  private fun seekTime(@RewindTimeStore rewindTimeStore: DataStore<Int>): DataStore<Int> = rewindTimeStore
 
   @Provides
   @SingleIn(AppScope::class)
   @FastForwardTimeStore
-  private fun fastForwardTime(
-    factory: ClioDataStoreFactory,
-  ): DataStore<Int> {
+  private fun fastForwardTime(factory: ClioDataStoreFactory): DataStore<Int> {
     return factory.int(
       fileName = "fastForwardTime",
       defaultValue = 30,
@@ -254,7 +250,6 @@ public interface StoreModule {
       defaultValue = PlayerButtonVisibility(),
     )
   }
-
 }
 
 private class LegacyDarkThemeMigration(

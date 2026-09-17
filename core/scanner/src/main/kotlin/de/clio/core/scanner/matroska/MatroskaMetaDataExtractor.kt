@@ -2,11 +2,11 @@
 
 import android.content.Context
 import android.net.Uri
+import de.clio.core.data.MarkData
 import dev.zacsweers.metro.Inject
 import org.ebml.EBMLReader
 import org.ebml.Element
 import org.ebml.matroska.MatroskaDocTypes
-import de.clio.core.data.MarkData
 import java.util.Locale
 
 internal class MatroskaMetaDataExtractor(

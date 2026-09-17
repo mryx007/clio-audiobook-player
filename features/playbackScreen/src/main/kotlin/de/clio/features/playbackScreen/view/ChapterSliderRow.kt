@@ -41,14 +41,20 @@ internal fun ChapterSliderRow(
   onSeek: (Duration) -> Unit,
 ) {
   val labelColor = if (isCustomBackground) Color.White.copy(alpha = 0.7f) else MaterialTheme.colorScheme.outline
-  val trackBackgroundColor = if (isCustomBackground) Color.White.copy(alpha = 0.22f) else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f)
+  val trackBackgroundColor = if (isCustomBackground) {
+    Color.White.copy(
+      alpha = 0.22f,
+    )
+  } else {
+    MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f)
+  }
   val activeTrackColor = MaterialTheme.colorScheme.primary.toVibrant().copy(alpha = 0.85f)
 
   Column(
     modifier = Modifier
       .fillMaxWidth()
       .padding(horizontal = 16.dp),
-    verticalArrangement = Arrangement.spacedBy(0.dp)
+    verticalArrangement = Arrangement.spacedBy(0.dp),
   ) {
     if (chapterName != null) {
       Text(
@@ -56,7 +62,7 @@ internal fun ChapterSliderRow(
         style = MaterialTheme.typography.titleSmall,
         fontWeight = FontWeight.Bold,
         color = if (isCustomBackground) Color.White else MaterialTheme.colorScheme.onSurface,
-        modifier = Modifier.padding(horizontal = 4.dp)
+        modifier = Modifier.padding(horizontal = 4.dp),
       )
     }
 
@@ -81,7 +87,7 @@ internal fun ChapterSliderRow(
       modifier = Modifier
         .fillMaxWidth()
         .height(18.dp),
-      contentAlignment = Alignment.Center
+      contentAlignment = Alignment.Center,
     ) {
       // Custom thinner track background
       Box(
@@ -90,8 +96,8 @@ internal fun ChapterSliderRow(
           .height(6.dp) // Thinner than main bar
           .background(
             color = trackBackgroundColor,
-            shape = RoundedCornerShape(3.dp)
-          )
+            shape = RoundedCornerShape(3.dp),
+          ),
       )
 
       // Custom progress track
@@ -99,7 +105,7 @@ internal fun ChapterSliderRow(
         modifier = Modifier
           .fillMaxWidth()
           .height(6.dp),
-        contentAlignment = Alignment.CenterStart
+        contentAlignment = Alignment.CenterStart,
       ) {
         Box(
           modifier = Modifier
@@ -111,9 +117,9 @@ internal fun ChapterSliderRow(
                 topStart = 3.dp,
                 bottomStart = 3.dp,
                 topEnd = 0.dp,
-                bottomEnd = 0.dp
-              )
-            )
+                bottomEnd = 0.dp,
+              ),
+            ),
         )
       }
 
@@ -135,7 +141,7 @@ internal fun ChapterSliderRow(
           disabledInactiveTrackColor = Color.Transparent,
           thumbColor = Color.Transparent,
         ),
-        thumb = {}
+        thumb = {},
       )
     }
 
@@ -144,7 +150,7 @@ internal fun ChapterSliderRow(
         .fillMaxWidth()
         .padding(horizontal = 4.dp),
       verticalAlignment = Alignment.CenterVertically,
-      horizontalArrangement = Arrangement.SpaceBetween
+      horizontalArrangement = Arrangement.SpaceBetween,
     ) {
       Text(
         text = formatTime(currentDisplayTime.inWholeMilliseconds, duration.inWholeMilliseconds),

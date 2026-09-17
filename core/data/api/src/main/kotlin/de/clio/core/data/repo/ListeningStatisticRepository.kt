@@ -1,12 +1,12 @@
 ﻿package de.clio.core.data.repo
 
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
 import de.clio.core.data.BookId
 import de.clio.core.data.BookStatistic
 import de.clio.core.data.ImportResult
 import de.clio.core.data.MonthlyStatistic
 import de.clio.core.data.StatisticsSummary
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 
 public interface ListeningStatisticRepository {
 

@@ -2,8 +2,8 @@
 
 import android.net.Uri
 import androidx.core.net.toUri
-import kotlinx.serialization.Serializable
 import de.clio.core.common.comparator.NaturalOrderComparator
+import kotlinx.serialization.Serializable
 
 @Serializable(with = ChapterIdSerializer::class)
 public data class ChapterId(val value: String) : Comparable<ChapterId> {

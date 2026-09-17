@@ -1,10 +1,10 @@
 ﻿package de.clio.core.search
 
-import dev.zacsweers.metro.Inject
 import de.clio.core.data.Book
 import de.clio.core.data.repo.BookRepository
 import de.clio.core.data.repo.internals.dao.BookContentDao
 import de.clio.core.logging.api.Logger
+import dev.zacsweers.metro.Inject
 
 @Inject
 class BookSearch(

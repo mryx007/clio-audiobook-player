@@ -9,20 +9,20 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.retain.retain
-import de.clio.core.ui.LocalAppReady
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.navigation3.runtime.NavEntry
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesTo
-import dev.zacsweers.metro.IntoSet
-import dev.zacsweers.metro.Provides
 import de.clio.core.common.rootGraphAs
 import de.clio.core.data.BookId
+import de.clio.core.ui.LocalAppReady
 import de.clio.features.playbackScreen.view.BookPlayView
 import de.clio.features.sleepTimer.SleepTimerDialog
 import de.clio.navigation.Destination
 import de.clio.navigation.NavEntryProvider
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesTo
+import dev.zacsweers.metro.IntoSet
+import dev.zacsweers.metro.Provides
 import de.clio.core.strings.R as StringsR
 
 @Composable

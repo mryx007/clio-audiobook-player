@@ -1,13 +1,13 @@
 ﻿package de.clio.core.data.repo
 
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesBinding
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import de.clio.core.data.Chapter
 import de.clio.core.data.ChapterId
 import de.clio.core.data.repo.internals.dao.ChapterDao
 import de.clio.core.data.runForMaxSqlVariableNumber
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 @ContributesBinding(AppScope::class)
 public class ChapterRepoImpl(private val dao: ChapterDao) : ChapterRepo {
@@ -37,4 +37,3 @@ public class ChapterRepoImpl(private val dao: ChapterDao) : ChapterRepo {
     cache[chapter.id] = chapter
   }
 }
-

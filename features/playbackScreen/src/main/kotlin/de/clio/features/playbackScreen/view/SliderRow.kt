@@ -27,12 +27,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import de.clio.core.ui.formatTime
 import kotlin.time.Duration
-
-import androidx.compose.ui.graphics.toArgb
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,7 +43,13 @@ internal fun SliderRow(
   onSeek: (Duration) -> Unit,
 ) {
   val labelColor = (if (isCustomBackground) Color.White else MaterialTheme.colorScheme.onSurface).copy(alpha = 0.8f)
-  val trackBackgroundColor = if (isCustomBackground) Color.White.copy(alpha = 0.28f) else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f)
+  val trackBackgroundColor = if (isCustomBackground) {
+    Color.White.copy(
+      alpha = 0.28f,
+    )
+  } else {
+    MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f)
+  }
   val activeProgressColor = MaterialTheme.colorScheme.primary.toVibrant()
 
   var showTotalDuration by remember { mutableStateOf(false) }
@@ -75,7 +80,7 @@ internal fun SliderRow(
       modifier = Modifier
         .fillMaxWidth()
         .height(22.dp),
-      contentAlignment = Alignment.Center
+      contentAlignment = Alignment.Center,
     ) {
       // Custom full-width track background
       Box(
@@ -84,8 +89,8 @@ internal fun SliderRow(
           .height(10.dp)
           .background(
             color = trackBackgroundColor,
-            shape = RoundedCornerShape(5.dp)
-          )
+            shape = RoundedCornerShape(5.dp),
+          ),
       )
 
       // Custom progress track
@@ -93,7 +98,7 @@ internal fun SliderRow(
         modifier = Modifier
           .fillMaxWidth()
           .height(10.dp),
-        contentAlignment = Alignment.CenterStart
+        contentAlignment = Alignment.CenterStart,
       ) {
         Box(
           modifier = Modifier
@@ -105,9 +110,9 @@ internal fun SliderRow(
                 topStart = 5.dp,
                 bottomStart = 5.dp,
                 topEnd = 0.dp,
-                bottomEnd = 0.dp
-              )
-            )
+                bottomEnd = 0.dp,
+              ),
+            ),
         )
       }
 
@@ -130,7 +135,7 @@ internal fun SliderRow(
           disabledInactiveTrackColor = Color.Transparent,
           thumbColor = Color.Transparent, // Make default thumb transparent
         ),
-        thumb = {} // Remove the thumb entirely
+        thumb = {}, // Remove the thumb entirely
       )
     }
 
@@ -139,7 +144,7 @@ internal fun SliderRow(
         .fillMaxWidth()
         .padding(horizontal = 4.dp),
       verticalAlignment = Alignment.CenterVertically,
-      horizontalArrangement = Arrangement.SpaceBetween
+      horizontalArrangement = Arrangement.SpaceBetween,
     ) {
       // Left: Total elapsed
       Text(

@@ -7,9 +7,6 @@ import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaItem.ClippingConfiguration
 import androidx.media3.session.MediaSession.MediaItemsWithStartPosition
-import dev.zacsweers.metro.Inject
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 import de.clio.core.data.Book
 import de.clio.core.data.BookComparator
 import de.clio.core.data.BookContent
@@ -21,6 +18,9 @@ import de.clio.core.data.repo.BookRepository
 import de.clio.core.data.repo.ChapterRepo
 import de.clio.core.data.store.CurrentBookStore
 import de.clio.core.data.toUri
+import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import java.io.File
 import de.clio.core.strings.R as StringsR
 

@@ -2,13 +2,13 @@
 
 import android.provider.MediaStore
 import androidx.datastore.core.DataStore
-import dev.zacsweers.metro.Inject
-import kotlinx.coroutines.flow.first
 import de.clio.core.data.Book
 import de.clio.core.data.BookId
 import de.clio.core.data.repo.BookRepository
 import de.clio.core.data.store.CurrentBookStore
 import de.clio.core.logging.api.Logger
+import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.flow.first
 
 @Inject
 class BookSearchHandler(

@@ -1,10 +1,6 @@
 ﻿package de.clio.core.data.repo
 
 import androidx.room.RoomDatabase
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesBinding
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import de.clio.core.data.Book
 import de.clio.core.data.BookContent
 import de.clio.core.data.Bookmark
@@ -12,6 +8,10 @@ import de.clio.core.data.repo.internals.dao.BookmarkDao
 import de.clio.core.data.repo.internals.transaction
 import de.clio.core.data.runForMaxSqlVariableNumber
 import de.clio.core.logging.api.Logger
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.time.Instant
 
 @ContributesBinding(AppScope::class)

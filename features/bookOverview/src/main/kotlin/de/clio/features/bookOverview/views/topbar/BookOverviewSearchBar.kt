@@ -76,4 +76,3 @@ internal fun ColumnScope.BookOverviewSearchBar(
     content = {},
   )
 }
-

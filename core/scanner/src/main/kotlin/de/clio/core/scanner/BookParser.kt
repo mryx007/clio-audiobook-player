@@ -1,6 +1,5 @@
 ﻿package de.clio.core.scanner
 
-import dev.zacsweers.metro.Inject
 import de.clio.core.data.Book
 import de.clio.core.data.BookContent
 import de.clio.core.data.BookId
@@ -11,6 +10,7 @@ import de.clio.core.data.toUri
 import de.clio.core.documentfile.CachedDocumentFile
 import de.clio.core.documentfile.CachedDocumentFileFactory
 import de.clio.core.logging.api.Logger
+import dev.zacsweers.metro.Inject
 import java.time.Instant
 
 @Inject
@@ -37,7 +37,9 @@ internal class BookParser(
         val analyzed = if (needsAuthorUpdate) {
           firstChapterMetadata
             ?: mediaAnalyzer.analyze(fileFactory.create(chapters.first().id.toUri()))
-        } else null
+        } else {
+          null
+        }
 
         val (newAuthor, _) = if (needsAuthorUpdate) {
           resolveAuthorAndName(
@@ -47,7 +49,9 @@ internal class BookParser(
             isFile = file.isFile,
             rawFallbackName = file.bookName(),
           )
-        } else Pair(existing.author, existing.name)
+        } else {
+          Pair(existing.author, existing.name)
+        }
 
         val updated = existing.copy(
           author = newAuthor?.takeIf { it.isNotBlank() } ?: existing.author,
@@ -195,10 +199,9 @@ private val DELIMITER_REGEX = Regex("""(?:\s+[-–—]\s+)|(?:_-_)""")
 private val NON_AUTHOR_PREFIXES = Regex("""^(?:cd|track|disc|part|kapitel|chapter|\d+)\b""", RegexOption.IGNORE_CASE)
 private val NARRATOR_IN_PARENS_REGEX = Regex(
   """\s*[\(\[]\s*(?:ungekürzt(?:e\s+lesung)?|gekürzt(?:e\s+lesung)?|unabridged|abridged)?\s*,?\s*(?:gelesen\s+von|read\s+by|narrated\s+by)\s+([^()\[\]]+)[\)\]]""",
-  RegexOption.IGNORE_CASE
+  RegexOption.IGNORE_CASE,
 )
 private val NARRATOR_TRAILING_REGEX = Regex(
   """\s*[,–-]\s*(?:gelesen\s+von|read\s+by|narrated\s+by)\s+(.+)$""",
-  RegexOption.IGNORE_CASE
+  RegexOption.IGNORE_CASE,
 )
-

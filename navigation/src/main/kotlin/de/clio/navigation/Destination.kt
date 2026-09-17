@@ -3,9 +3,9 @@
 import android.content.Intent
 import android.net.Uri
 import androidx.navigation3.runtime.NavKey
-import kotlinx.serialization.Serializable
 import de.clio.core.common.serialization.UriSerializer
 import de.clio.core.data.BookId
+import kotlinx.serialization.Serializable
 
 sealed interface Destination {
 

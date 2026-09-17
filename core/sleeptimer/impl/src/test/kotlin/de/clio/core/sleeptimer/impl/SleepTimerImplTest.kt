@@ -1,5 +1,16 @@
 ﻿package de.clio.core.sleeptimer.impl
 
+import de.clio.core.common.DispatcherProvider
+import de.clio.core.data.sleeptimer.SleepTimerPreference
+import de.clio.core.logging.api.LogWriter
+import de.clio.core.logging.api.Logger
+import de.clio.core.playback.PlayerController
+import de.clio.core.playback.playstate.PlayStateManager
+import de.clio.core.sleeptimer.ShakeDetector
+import de.clio.core.sleeptimer.SleepTimer
+import de.clio.core.sleeptimer.SleepTimerImpl
+import de.clio.core.sleeptimer.SleepTimerMode
+import de.clio.core.sleeptimer.SleepTimerState
 import io.mockk.Runs
 import io.mockk.coVerify
 import io.mockk.every
@@ -14,17 +25,6 @@ import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.yield
 import org.junit.BeforeClass
-import de.clio.core.common.DispatcherProvider
-import de.clio.core.data.sleeptimer.SleepTimerPreference
-import de.clio.core.logging.api.LogWriter
-import de.clio.core.logging.api.Logger
-import de.clio.core.playback.PlayerController
-import de.clio.core.playback.playstate.PlayStateManager
-import de.clio.core.sleeptimer.ShakeDetector
-import de.clio.core.sleeptimer.SleepTimer
-import de.clio.core.sleeptimer.SleepTimerImpl
-import de.clio.core.sleeptimer.SleepTimerMode
-import de.clio.core.sleeptimer.SleepTimerState
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue

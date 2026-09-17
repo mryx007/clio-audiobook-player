@@ -3,7 +3,6 @@
 import androidx.media3.common.util.ParsableByteArray
 import androidx.media3.container.Mp4Box
 import androidx.media3.extractor.ExtractorInput
-import dev.zacsweers.metro.Inject
 import de.clio.core.logging.api.Logger
 import de.clio.core.scanner.mp4.visitor.ChapVisitor
 import de.clio.core.scanner.mp4.visitor.ChplVisitor
@@ -11,6 +10,7 @@ import de.clio.core.scanner.mp4.visitor.MdhdVisitor
 import de.clio.core.scanner.mp4.visitor.StcoVisitor
 import de.clio.core.scanner.mp4.visitor.StscVisitor
 import de.clio.core.scanner.mp4.visitor.SttsVisitor
+import dev.zacsweers.metro.Inject
 
 @Inject
 internal class Mp4BoxParser(

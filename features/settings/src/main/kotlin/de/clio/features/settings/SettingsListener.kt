@@ -10,7 +10,10 @@ interface SettingsListener {
   fun onPlaybackBackgroundStyleRowClick()
   fun setThemeMode(themeMode: ThemeMode)
   fun setCustomThemeHex(hex: String)
-  fun setCustomTheme(hex: String, hue: Int) = setCustomThemeHex(hex)
+  fun setCustomTheme(
+    hex: String,
+    hue: Int,
+  ) = setCustomThemeHex(hex)
   fun setPlaybackBackgroundStyle(style: PlaybackBackgroundStyle)
   fun toggleGrid()
   fun rewindAmountChanged(seconds: Int)

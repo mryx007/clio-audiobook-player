@@ -39,6 +39,6 @@ internal fun PlaybackIconButton(
         interactionSource = remember { MutableInteractionSource() },
         indication = ripple(bounded = false),
         onClick = onClick,
-      )
+      ),
   )
 }

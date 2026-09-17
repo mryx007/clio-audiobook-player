@@ -12,24 +12,24 @@ import androidx.media3.exoplayer.source.MediaSource
 import androidx.media3.extractor.DefaultExtractorsFactory
 import androidx.media3.session.CommandButton
 import androidx.media3.session.MediaLibraryService
+import de.clio.core.featureflag.FeatureFlag
+import de.clio.core.featureflag.Media3AudioOffloadFeatureFlagQualifier
+import de.clio.core.playback.misc.VolumeGain
+import de.clio.core.playback.notification.MainActivityIntentProvider
+import de.clio.core.playback.player.ClioPlayer
+import de.clio.core.playback.player.DurationInconsistenciesUpdater
+import de.clio.core.playback.player.OnlyAudioRenderersFactory
+import de.clio.core.playback.player.onAudioSessionIdChanged
+import de.clio.core.playback.playstate.PlayStateDelegatingListener
+import de.clio.core.playback.playstate.PositionUpdater
+import de.clio.core.playback.session.LibrarySessionCallback
+import de.clio.core.playback.session.PlaybackService
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import de.clio.core.featureflag.FeatureFlag
-import de.clio.core.featureflag.Media3AudioOffloadFeatureFlagQualifier
-import de.clio.core.playback.misc.VolumeGain
-import de.clio.core.playback.notification.MainActivityIntentProvider
-import de.clio.core.playback.player.DurationInconsistenciesUpdater
-import de.clio.core.playback.player.OnlyAudioRenderersFactory
-import de.clio.core.playback.player.ClioPlayer
-import de.clio.core.playback.player.onAudioSessionIdChanged
-import de.clio.core.playback.playstate.PlayStateDelegatingListener
-import de.clio.core.playback.playstate.PositionUpdater
-import de.clio.core.playback.session.LibrarySessionCallback
-import de.clio.core.playback.session.PlaybackService
 import de.clio.core.strings.R as StringsR
 
 @ContributesTo(PlaybackScope::class)

@@ -5,15 +5,15 @@ import android.content.BroadcastReceiver
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import de.clio.core.common.rootGraphAs
+import de.clio.core.logging.api.Logger
+import de.clio.core.playback.PlayerController
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
-import de.clio.core.common.rootGraphAs
-import de.clio.core.logging.api.Logger
-import de.clio.core.playback.PlayerController
 import kotlin.time.Duration.Companion.seconds
 
 class WidgetButtonReceiver : BroadcastReceiver() {

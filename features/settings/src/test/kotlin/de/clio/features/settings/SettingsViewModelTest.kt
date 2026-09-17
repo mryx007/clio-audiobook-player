@@ -4,6 +4,17 @@ import androidx.datastore.core.DataStore
 import app.cash.molecule.RecompositionMode
 import app.cash.molecule.launchMolecule
 import app.cash.turbine.test
+import de.clio.core.common.AppInfoProvider
+import de.clio.core.common.DispatcherProvider
+import de.clio.core.data.GridMode
+import de.clio.core.data.PlaybackBackgroundStyle
+import de.clio.core.data.ThemeColor
+import de.clio.core.data.ThemeMode
+import de.clio.core.data.sleeptimer.SleepTimerPreference
+import de.clio.core.featureflag.MemoryFeatureFlag
+import de.clio.core.ui.GridCount
+import de.clio.navigation.Destination
+import de.clio.navigation.Navigator
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
@@ -16,17 +27,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
-import de.clio.core.common.AppInfoProvider
-import de.clio.core.common.DispatcherProvider
-import de.clio.core.data.GridMode
-import de.clio.core.data.PlaybackBackgroundStyle
-import de.clio.core.data.ThemeColor
-import de.clio.core.data.ThemeMode
-import de.clio.core.data.sleeptimer.SleepTimerPreference
-import de.clio.core.featureflag.MemoryFeatureFlag
-import de.clio.core.ui.GridCount
-import de.clio.navigation.Destination
-import de.clio.navigation.Navigator
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -79,10 +79,9 @@ class SettingsViewModelTest {
     dispatcherProvider = DispatcherProvider(scope.coroutineContext, scope.coroutineContext, scope.coroutineContext),
   )
 
-  private fun TestScope.viewStateFlow(): Flow<SettingsViewState> =
-    backgroundScope.launchMolecule(RecompositionMode.Immediate) {
-      viewModel.viewState()
-    }.filterNotNull()
+  private fun TestScope.viewStateFlow(): Flow<SettingsViewState> = backgroundScope.launchMolecule(RecompositionMode.Immediate) {
+    viewModel.viewState()
+  }.filterNotNull()
 
   @Test
   fun `view state defaults to follow system and voice blue`() = scope.runTest {

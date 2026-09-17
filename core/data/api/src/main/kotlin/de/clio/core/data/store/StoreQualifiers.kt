@@ -61,4 +61,3 @@ public annotation class PlaybackBackgroundStyleStore
 
 @Qualifier
 public annotation class PlayerButtonVisibilityStore
-

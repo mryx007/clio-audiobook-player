@@ -3,9 +3,9 @@
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavMetadataKey
 import androidx.navigation3.runtime.metadata
-import dev.zacsweers.metro.Inject
 import de.clio.navigation.Destination
 import de.clio.navigation.NavEntryProvider
+import dev.zacsweers.metro.Inject
 
 @Inject
 class NavEntryResolver(private val providers: Set<NavEntryProvider<*>>) {

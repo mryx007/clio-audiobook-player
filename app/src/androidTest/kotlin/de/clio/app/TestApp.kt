@@ -1,8 +1,8 @@
 ﻿package de.clio.app
 
-import dev.zacsweers.metro.createGraphFactory
 import de.clio.app.di.App
 import de.clio.app.di.AppGraph
+import dev.zacsweers.metro.createGraphFactory
 
 class TestApp : App() {
 

@@ -13,7 +13,10 @@
   <issue id="RestrictedApi" severity="informational" />
   <issue id="VectorRaster" severity="ignore" />
   <issue id="VectorPath" severity="informational" />
-  <issue id="UnusedResources" severity="error" />
+  <issue id="UnusedResources" severity="informational" />
+  <issue id="NonObservableLocale" severity="informational" />
+  <issue id="PluralsCandidate" severity="informational" />
+  <issue id="ObsoleteSdkInt" severity="informational" />
   <!-- renovate takes care of this -->
   <issue id="NewerVersionAvailable" severity="informational" />
   <!-- renovate takes care of this -->

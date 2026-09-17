@@ -2,11 +2,6 @@
 
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import kotlinx.coroutines.runBlocking
-import org.junit.BeforeClass
-import org.junit.Rule
-import org.junit.rules.TemporaryFolder
-import org.junit.runner.RunWith
 import de.clio.core.data.MarkData
 import de.clio.core.documentfile.FileBasedDocumentFile
 import de.clio.core.logging.api.LogWriter
@@ -21,6 +16,11 @@ import de.clio.core.scanner.mp4.visitor.MdhdVisitor
 import de.clio.core.scanner.mp4.visitor.StcoVisitor
 import de.clio.core.scanner.mp4.visitor.StscVisitor
 import de.clio.core.scanner.mp4.visitor.SttsVisitor
+import kotlinx.coroutines.runBlocking
+import org.junit.BeforeClass
+import org.junit.Rule
+import org.junit.rules.TemporaryFolder
+import org.junit.runner.RunWith
 import java.io.File
 import kotlin.test.Test
 import kotlin.test.assertEquals

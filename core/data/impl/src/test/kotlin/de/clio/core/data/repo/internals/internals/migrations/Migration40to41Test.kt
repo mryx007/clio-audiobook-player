@@ -10,12 +10,12 @@ import androidx.sqlite.db.SupportSQLiteQueryBuilder
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import org.junit.After
-import org.junit.Before
-import org.junit.runner.RunWith
 import de.clio.core.data.repo.internals.getInt
 import de.clio.core.data.repo.internals.mapRows
 import de.clio.core.data.repo.internals.migrations.Migration40to41
+import org.junit.After
+import org.junit.Before
+import org.junit.runner.RunWith
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

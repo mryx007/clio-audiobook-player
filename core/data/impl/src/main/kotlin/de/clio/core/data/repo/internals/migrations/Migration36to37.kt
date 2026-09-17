@@ -4,13 +4,13 @@ import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesIntoSet
-import dev.zacsweers.metro.binding
 import de.clio.core.data.repo.internals.getLong
 import de.clio.core.data.repo.internals.getString
 import de.clio.core.data.repo.internals.mapRows
 import de.clio.core.data.repo.internals.transaction
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoSet
+import dev.zacsweers.metro.binding
 
 private const val TABLE_NAME = "tableChapters"
 private const val DURATION = "chapterDuration"

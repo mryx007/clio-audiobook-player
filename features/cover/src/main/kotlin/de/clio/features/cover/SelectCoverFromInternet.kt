@@ -8,18 +8,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation3.runtime.NavEntry
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesTo
-import dev.zacsweers.metro.IntoSet
-import dev.zacsweers.metro.Provides
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import de.clio.core.common.rootGraphAs
 import de.clio.core.data.BookId
 import de.clio.core.ui.ClioTheme
 import de.clio.features.cover.api.SearchResponse
 import de.clio.navigation.Destination
 import de.clio.navigation.NavEntryProvider
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesTo
+import dev.zacsweers.metro.IntoSet
+import dev.zacsweers.metro.Provides
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 
 @ContributesTo(AppScope::class)
 interface SelectCoverFromInternetProvider {

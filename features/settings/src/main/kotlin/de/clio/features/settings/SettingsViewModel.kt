@@ -8,11 +8,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.core.net.toUri
 import androidx.datastore.core.DataStore
-import dev.zacsweers.metro.Inject
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import de.clio.core.common.AppInfoProvider
 import de.clio.core.common.DispatcherProvider
 import de.clio.core.common.MainScope
@@ -24,9 +19,9 @@ import de.clio.core.data.sleeptimer.SleepTimerPreference
 import de.clio.core.data.store.AnalyticsConsentStore
 import de.clio.core.data.store.AutoRewindAmountStore
 import de.clio.core.data.store.DeveloperMenuUnlockedStore
+import de.clio.core.data.store.FastForwardTimeStore
 import de.clio.core.data.store.GridModeStore
 import de.clio.core.data.store.OpenLastBookOnStartupStore
-import de.clio.core.data.store.FastForwardTimeStore
 import de.clio.core.data.store.PlaybackBackgroundStyleStore
 import de.clio.core.data.store.RewindTimeStore
 import de.clio.core.data.store.SleepTimerPreferenceStore
@@ -37,6 +32,11 @@ import de.clio.core.featureflag.KioskModeFeatureFlagQualifier
 import de.clio.core.ui.GridCount
 import de.clio.navigation.Destination
 import de.clio.navigation.Navigator
+import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import java.time.LocalTime
 
 @Inject
@@ -142,7 +142,10 @@ class SettingsViewModel(
     dialog.value = null
   }
 
-  override fun setCustomTheme(hex: String, hue: Int) {
+  override fun setCustomTheme(
+    hex: String,
+    hue: Int,
+  ) {
     val formatted = if (hex.startsWith("#")) hex else "#$hex"
     mainScope.launch {
       themeColorStore.updateData { it.copy(hex = formatted, hue = hue) }

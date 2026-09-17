@@ -2,15 +2,6 @@
 
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.SingleIn
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 import de.clio.core.data.repo.BookRepository
 import de.clio.core.data.repo.ListeningStatisticRepository
 import de.clio.core.featureflag.ExperimentalPlaybackPersistenceQualifier
@@ -21,6 +12,15 @@ import de.clio.core.playback.session.bookId
 import de.clio.core.playback.session.positionInChapter
 import de.clio.core.playback.session.realChapterId
 import de.clio.core.playback.session.toMediaIdOrNull
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import java.time.Instant
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes

@@ -1,12 +1,12 @@
 ﻿package de.clio.features.onboarding.completion
 
 import androidx.datastore.core.DataStore
-import dev.zacsweers.metro.Inject
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
 import de.clio.core.data.store.OnboardingCompletedStore
 import de.clio.navigation.Destination
 import de.clio.navigation.Navigator
+import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 @Inject
 class OnboardingCompletionViewModel(

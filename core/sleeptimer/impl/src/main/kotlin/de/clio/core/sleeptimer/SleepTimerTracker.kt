@@ -1,7 +1,7 @@
 ﻿package de.clio.core.sleeptimer
 
-import dev.zacsweers.metro.Inject
 import de.clio.core.analytics.api.Analytics
+import dev.zacsweers.metro.Inject
 
 @Inject
 internal class SleepTimerTracker(private val analytics: Analytics) {

@@ -3,12 +3,12 @@
 import android.net.Uri
 import androidx.core.net.toUri
 import androidx.room.TypeConverter
-import kotlinx.serialization.builtins.ListSerializer
-import kotlinx.serialization.json.Json
 import de.clio.core.data.BookId
 import de.clio.core.data.Bookmark
 import de.clio.core.data.ChapterId
 import de.clio.core.data.MarkData
+import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.json.Json
 import java.io.File
 import java.time.Instant
 import kotlin.uuid.Uuid

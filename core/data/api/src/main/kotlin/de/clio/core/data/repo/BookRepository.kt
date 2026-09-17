@@ -1,9 +1,9 @@
 ﻿package de.clio.core.data.repo
 
-import kotlinx.coroutines.flow.Flow
 import de.clio.core.data.Book
 import de.clio.core.data.BookContent
 import de.clio.core.data.BookId
+import kotlinx.coroutines.flow.Flow
 
 public interface BookRepository {
 

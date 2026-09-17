@@ -35,10 +35,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavEntry
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesTo
-import dev.zacsweers.metro.IntoSet
-import dev.zacsweers.metro.Provides
 import de.clio.core.common.rootGraphAs
 import de.clio.core.data.BookId
 import de.clio.core.ui.ClioTheme
@@ -54,6 +50,10 @@ import de.clio.features.bookOverview.overview.BookOverviewViewState
 import de.clio.features.bookOverview.views.topbar.BookOverviewTopBar
 import de.clio.navigation.Destination
 import de.clio.navigation.NavEntryProvider
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesTo
+import dev.zacsweers.metro.IntoSet
+import dev.zacsweers.metro.Provides
 import kotlin.uuid.Uuid
 import de.clio.core.strings.R as StringsR
 
@@ -320,4 +320,3 @@ internal class BookOverviewPreviewParameterProvider : PreviewParameterProvider<B
     ),
   )
 }
-

@@ -3,14 +3,14 @@
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import kotlinx.coroutines.test.runTest
-import org.junit.runner.RunWith
 import de.clio.core.data.Book
 import de.clio.core.data.BookId
 import de.clio.core.data.repo.BookContentRepoImpl
 import de.clio.core.data.repo.BookRepositoryImpl
 import de.clio.core.data.repo.ChapterRepoImpl
 import de.clio.core.data.repo.internals.AppDb
+import kotlinx.coroutines.test.runTest
+import org.junit.runner.RunWith
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.uuid.Uuid

@@ -1,4 +1,4 @@
-﻿package de.clio.core.ui
+package de.clio.core.ui
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -354,8 +354,8 @@ private fun rememberPresetColorScheme(
   surfaceColor: Color,
   containerColor: Color,
   containerHighColor: Color,
-  onBgColor: Color = Color(0xFFF8F8F8),
   onSurfaceVarColor: Color,
+  onBgColor: Color = Color(0xFFF8F8F8),
 ): ColorScheme = rememberDynamicColorScheme(
   primary = primary,
   neutral = bgColor,
@@ -394,4 +394,3 @@ private fun systemDynamicColorScheme(darkTheme: Boolean): ColorScheme {
     dynamicLightColorScheme(LocalContext.current)
   }
 }
-

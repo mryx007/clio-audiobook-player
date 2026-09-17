@@ -2,11 +2,6 @@
 
 import android.content.Intent
 import androidx.datastore.core.DataStore
-import dev.zacsweers.metro.Inject
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 import de.clio.app.MainActivity
 import de.clio.core.data.BookId
 import de.clio.core.data.folders.AudiobookFolders
@@ -15,6 +10,11 @@ import de.clio.core.data.store.OnboardingCompletedStore
 import de.clio.core.data.store.OpenLastBookOnStartupStore
 import de.clio.core.playback.PlayerController
 import de.clio.navigation.Destination
+import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 
 @Inject
 class StartDestinationProvider(

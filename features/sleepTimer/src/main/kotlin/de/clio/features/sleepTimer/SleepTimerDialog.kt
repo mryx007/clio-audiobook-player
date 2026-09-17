@@ -34,8 +34,8 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.delay
 import de.clio.core.ui.icons.ClioIcons
+import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.milliseconds
 import de.clio.core.strings.R as StringsR
 

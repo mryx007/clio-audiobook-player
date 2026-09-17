@@ -1,5 +1,7 @@
 ﻿package de.clio.features.cover.api
 
+import de.clio.core.featureflag.FeatureFlag
+import de.clio.core.featureflag.UserAgentFeatureFlagQualifier
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.Provides
@@ -11,8 +13,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.create
-import de.clio.core.featureflag.FeatureFlag
-import de.clio.core.featureflag.UserAgentFeatureFlagQualifier
 
 @ContributesTo(AppScope::class)
 interface CoverModule {

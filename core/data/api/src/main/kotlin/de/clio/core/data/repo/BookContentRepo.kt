@@ -1,8 +1,8 @@
 ﻿package de.clio.core.data.repo
 
-import kotlinx.coroutines.flow.Flow
 import de.clio.core.data.BookContent
 import de.clio.core.data.BookId
+import kotlinx.coroutines.flow.Flow
 
 public interface BookContentRepo {
   public fun flow(): Flow<List<BookContent>>

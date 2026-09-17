@@ -1,10 +1,10 @@
 ﻿package de.clio.core.analytics.firebase
 
 import com.google.firebase.analytics.logEvent
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesBinding
 import de.clio.core.analytics.api.Analytics
 import de.clio.core.logging.api.Logger
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 import com.google.firebase.analytics.FirebaseAnalytics as GmsFirebaseAnalytics
 
 @ContributesBinding(AppScope::class)

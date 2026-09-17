@@ -11,13 +11,6 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.datastore.core.DataStore
 import coil.imageLoader
 import coil.request.ImageRequest
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.SingleIn
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import de.clio.app.features.widget.BaseWidgetProvider
 import de.clio.core.data.Book
 import de.clio.core.data.BookId
@@ -27,6 +20,13 @@ import de.clio.core.playback.notification.MainActivityIntentProvider
 import de.clio.core.playback.playstate.PlayStateManager
 import de.clio.core.playback.receiver.WidgetButtonReceiver
 import de.clio.core.ui.dpToPxRounded
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import de.clio.core.ui.R as UiR
 
 @SingleIn(AppScope::class)

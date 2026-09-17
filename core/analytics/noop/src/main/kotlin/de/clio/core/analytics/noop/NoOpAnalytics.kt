@@ -1,9 +1,9 @@
 ﻿package de.clio.core.analytics.noop
 
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesBinding
 import de.clio.core.analytics.api.Analytics
 import de.clio.core.logging.api.Logger
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesBinding
 
 @ContributesBinding(AppScope::class)
 class NoOpAnalytics : Analytics {

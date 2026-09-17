@@ -1,5 +1,9 @@
 ﻿package de.clio.core.data.repo
 
+import de.clio.core.data.Book
+import de.clio.core.data.BookContent
+import de.clio.core.data.BookId
+import de.clio.core.logging.api.Logger
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.SingleIn
@@ -7,10 +11,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import de.clio.core.data.Book
-import de.clio.core.data.BookContent
-import de.clio.core.data.BookId
-import de.clio.core.logging.api.Logger
 
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)

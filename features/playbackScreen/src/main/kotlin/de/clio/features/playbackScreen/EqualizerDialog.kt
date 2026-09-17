@@ -24,8 +24,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import de.clio.core.data.EqualizerPreset
 import de.clio.core.data.EqualizerSetting
-import de.clio.core.strings.R as StringsR
 import kotlin.math.roundToInt
+import de.clio.core.strings.R as StringsR
 
 @Composable
 internal fun EqualizerDialog(
@@ -126,4 +126,3 @@ private fun EqualizerPreset.label(): String = when (this) {
   EqualizerPreset.BassCut -> stringResource(StringsR.string.playback_equalizer_preset_bass_cut)
   EqualizerPreset.DeEsser -> stringResource(StringsR.string.playback_equalizer_preset_de_esser)
 }
-

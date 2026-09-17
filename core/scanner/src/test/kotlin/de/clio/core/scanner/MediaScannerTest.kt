@@ -5,10 +5,6 @@ import androidx.core.net.toUri
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import io.mockk.coEvery
-import io.mockk.mockk
-import kotlinx.coroutines.test.runTest
-import org.junit.runner.RunWith
 import de.clio.core.data.BookId
 import de.clio.core.data.ChapterId
 import de.clio.core.data.folders.FolderType
@@ -20,6 +16,10 @@ import de.clio.core.data.repo.internals.AppDb
 import de.clio.core.data.toUri
 import de.clio.core.documentfile.FileBasedDocumentFactory
 import de.clio.core.documentfile.FileBasedDocumentFile
+import io.mockk.coEvery
+import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
+import org.junit.runner.RunWith
 import java.io.Closeable
 import java.io.File
 import java.nio.file.Files

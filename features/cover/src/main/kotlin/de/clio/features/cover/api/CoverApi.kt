@@ -1,7 +1,7 @@
 ﻿package de.clio.features.cover.api
 
-import dev.zacsweers.metro.Inject
 import de.clio.core.logging.api.Logger
+import dev.zacsweers.metro.Inject
 
 @Inject
 class CoverApi(private val api: InternalCoverApi) {

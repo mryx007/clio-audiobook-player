@@ -5,16 +5,16 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
-import dev.zacsweers.metro.Inject
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.launch
 import de.clio.core.common.DispatcherProvider
 import de.clio.core.common.MainScope
 import de.clio.core.featureflag.FeatureFlag
 import de.clio.core.remoteconfig.api.FmcTokenProvider
 import de.clio.core.remoteconfig.api.RemoteConfig
 import de.clio.navigation.Navigator
+import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.launch
 
 @Inject
 class DeveloperSettingsViewModel(

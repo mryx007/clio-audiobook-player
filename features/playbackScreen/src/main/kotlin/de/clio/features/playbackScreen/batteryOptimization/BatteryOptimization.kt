@@ -2,9 +2,9 @@
 
 import android.os.Build
 import androidx.datastore.core.DataStore
+import de.clio.core.data.store.AmountOfBatteryOptimizationRequestedStore
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.first
-import de.clio.core.data.store.AmountOfBatteryOptimizationRequestedStore
 
 @Inject
 class BatteryOptimization(

@@ -1,7 +1,6 @@
 ﻿package de.clio.core.scanner
 
 import android.content.Context
-import android.media.MediaMetadataRetriever as AndroidMediaMetadataRetriever
 import android.net.Uri
 import androidx.media3.common.C
 import androidx.media3.common.FileTypes
@@ -14,11 +13,6 @@ import androidx.media3.extractor.metadata.id3.ChapterFrame
 import androidx.media3.extractor.metadata.id3.TextInformationFrame
 import androidx.media3.extractor.metadata.vorbis.VorbisComment
 import androidx.media3.inspector.MetadataRetriever
-import dev.zacsweers.metro.Inject
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.currentCoroutineContext
-import kotlinx.coroutines.ensureActive
-import kotlinx.coroutines.guava.await
 import de.clio.core.data.MarkData
 import de.clio.core.documentfile.CachedDocumentFile
 import de.clio.core.documentfile.nameWithoutExtension
@@ -26,8 +20,14 @@ import de.clio.core.logging.api.Logger
 import de.clio.core.scanner.matroska.MatroskaMetaDataExtractor
 import de.clio.core.scanner.matroska.MatroskaParseException
 import de.clio.core.scanner.mp4.Mp4ChapterExtractor
+import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.guava.await
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.microseconds
+import android.media.MediaMetadataRetriever as AndroidMediaMetadataRetriever
 
 @Inject
 internal class MediaAnalyzer(
@@ -222,7 +222,10 @@ internal class MediaAnalyzer(
     }
   }
 
-  private fun fillWithNativeRetriever(uri: Uri, builder: Metadata.Builder) {
+  private fun fillWithNativeRetriever(
+    uri: Uri,
+    builder: Metadata.Builder,
+  ) {
     val retriever = AndroidMediaMetadataRetriever()
     try {
       retriever.setDataSource(context, uri)

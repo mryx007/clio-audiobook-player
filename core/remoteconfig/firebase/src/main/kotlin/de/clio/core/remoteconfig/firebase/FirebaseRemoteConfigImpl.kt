@@ -3,11 +3,11 @@
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigValue
 import com.google.firebase.remoteconfig.get
+import de.clio.core.logging.api.Logger
+import de.clio.core.remoteconfig.api.RemoteConfig
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import kotlinx.coroutines.tasks.await
-import de.clio.core.logging.api.Logger
-import de.clio.core.remoteconfig.api.RemoteConfig
 
 @ContributesBinding(AppScope::class)
 class FirebaseRemoteConfigImpl : RemoteConfig {

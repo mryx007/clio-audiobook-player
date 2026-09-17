@@ -1,16 +1,16 @@
 ﻿package de.clio.core.scanner
 
-import dev.zacsweers.metro.Inject
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
 import de.clio.core.data.Chapter
 import de.clio.core.data.ChapterId
 import de.clio.core.data.isAudioFile
 import de.clio.core.data.repo.ChapterRepo
 import de.clio.core.data.repo.getOrPut
 import de.clio.core.documentfile.CachedDocumentFile
+import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import java.time.Instant
 
 internal data class ChapterParseResult(
@@ -70,4 +70,3 @@ internal class ChapterParser(
     )
   }
 }
-

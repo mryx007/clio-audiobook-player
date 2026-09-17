@@ -13,10 +13,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.delay
 import de.clio.core.ui.ClioTheme
 import de.clio.features.bookOverview.overview.BookOverviewLayoutMode
 import de.clio.features.bookOverview.overview.BookOverviewViewState
+import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
@@ -75,4 +75,3 @@ private fun BookOverviewTopBarPreview() {
     )
   }
 }
-

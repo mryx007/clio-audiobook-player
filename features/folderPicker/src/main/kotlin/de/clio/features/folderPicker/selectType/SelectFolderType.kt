@@ -32,15 +32,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.documentfile.provider.DocumentFile
 import androidx.navigation3.runtime.NavEntry
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesTo
-import dev.zacsweers.metro.IntoSet
-import dev.zacsweers.metro.Provides
 import de.clio.core.common.rootGraphAs
 import de.clio.core.ui.icons.ClioIcons
 import de.clio.navigation.Destination
 import de.clio.navigation.NavEntryProvider
 import de.clio.navigation.Origin
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesTo
+import dev.zacsweers.metro.IntoSet
+import dev.zacsweers.metro.Provides
 import de.clio.core.strings.R as StringsR
 
 @ContributesTo(AppScope::class)

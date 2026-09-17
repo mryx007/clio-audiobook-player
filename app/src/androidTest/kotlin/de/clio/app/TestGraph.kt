@@ -1,11 +1,11 @@
 ﻿package de.clio.app
 
 import android.app.Application
+import de.clio.app.di.AppGraph
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
-import de.clio.app.di.AppGraph
 
 @SingleIn(AppScope::class)
 @DependencyGraph(

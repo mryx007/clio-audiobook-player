@@ -8,13 +8,13 @@ import androidx.media3.exoplayer.source.TrackGroupArray
 import androidx.media3.extractor.metadata.flac.PictureFrame
 import androidx.media3.extractor.metadata.id3.ApicFrame
 import androidx.media3.inspector.MetadataRetriever
+import de.clio.core.logging.api.Logger
+import de.clio.core.scanner.matroska.MatroskaCoverExtractor
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.guava.await
-import de.clio.core.logging.api.Logger
-import de.clio.core.scanner.matroska.MatroskaCoverExtractor
 import java.io.File
 
 @Inject

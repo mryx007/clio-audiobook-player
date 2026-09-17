@@ -49,9 +49,7 @@ internal fun BookCard(
 }
 
 @Composable
-internal fun NewBadge(
-  modifier: Modifier = Modifier,
-) {
+internal fun NewBadge(modifier: Modifier = Modifier) {
   val surfaceColor = MaterialTheme.colorScheme.surface
   val isDark = (0.299f * surfaceColor.red + 0.587f * surfaceColor.green + 0.114f * surfaceColor.blue) < 0.5f
   val badgeBgColor = if (isDark) Color(0xFF1E3A24) else Color(0xFFE8F5E9)
@@ -115,13 +113,13 @@ internal fun BookProgressIndicator(
     Box(
       modifier = modifier
         .background(actualTrackColor, MaterialTheme.shapes.small)
-        .clip(MaterialTheme.shapes.small)
+        .clip(MaterialTheme.shapes.small),
     ) {
       Box(
         modifier = Modifier
           .fillMaxHeight()
           .fillMaxWidth(progress)
-          .background(actualColor)
+          .background(actualColor),
       )
     }
   }

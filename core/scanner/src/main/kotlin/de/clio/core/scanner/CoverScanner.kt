@@ -2,6 +2,9 @@
 
 import android.content.Context
 import androidx.documentfile.provider.DocumentFile
+import de.clio.core.data.Book
+import de.clio.core.data.toUri
+import de.clio.core.logging.api.Logger
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -10,9 +13,6 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
-import de.clio.core.data.Book
-import de.clio.core.data.toUri
-import de.clio.core.logging.api.Logger
 import java.io.IOException
 
 @Inject

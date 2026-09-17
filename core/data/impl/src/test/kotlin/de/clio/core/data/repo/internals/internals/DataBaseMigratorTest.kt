@@ -5,8 +5,6 @@ import android.database.sqlite.SQLiteDatabase
 import androidx.room.testing.MigrationTestHelper
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import org.junit.Rule
-import org.junit.runner.RunWith
 import de.clio.core.data.repo.internals.AppDb
 import de.clio.core.data.repo.internals.allMigrations
 import de.clio.core.data.repo.internals.getFloat
@@ -14,6 +12,8 @@ import de.clio.core.data.repo.internals.getInt
 import de.clio.core.data.repo.internals.getString
 import de.clio.core.data.repo.internals.getStringOrNull
 import de.clio.core.data.repo.internals.mapRows
+import org.junit.Rule
+import org.junit.runner.RunWith
 import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertEquals

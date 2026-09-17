@@ -29,4 +29,3 @@ internal fun AppBarTitle(
     ),
   )
 }
-

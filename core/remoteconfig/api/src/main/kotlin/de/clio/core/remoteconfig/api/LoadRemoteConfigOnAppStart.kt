@@ -1,12 +1,12 @@
 ﻿package de.clio.core.remoteconfig.api
 
 import android.app.Application
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesIntoSet
-import kotlinx.coroutines.launch
 import de.clio.core.common.DispatcherProvider
 import de.clio.core.common.MainScope
 import de.clio.core.initializer.AppInitializer
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoSet
+import kotlinx.coroutines.launch
 
 @ContributesIntoSet(AppScope::class)
 class LoadRemoteConfigOnAppStart(

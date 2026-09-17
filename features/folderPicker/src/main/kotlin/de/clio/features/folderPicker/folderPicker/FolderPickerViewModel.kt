@@ -5,11 +5,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import dev.zacsweers.metro.Inject
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.withContext
 import de.clio.core.data.folders.AudiobookFolders
 import de.clio.core.data.folders.FolderType
 import de.clio.core.documentfile.nameWithoutExtension
@@ -18,6 +13,11 @@ import de.clio.core.featureflag.KioskModeFeatureFlagQualifier
 import de.clio.navigation.Destination
 import de.clio.navigation.Navigator
 import de.clio.navigation.Origin
+import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 
 @Inject
 class FolderPickerViewModel(

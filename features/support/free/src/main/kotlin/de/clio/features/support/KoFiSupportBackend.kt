@@ -1,11 +1,11 @@
 ﻿package de.clio.features.support
 
+import de.clio.navigation.Destination
+import de.clio.navigation.Navigator
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import de.clio.navigation.Destination
-import de.clio.navigation.Navigator
 
 @ContributesBinding(AppScope::class)
 class KoFiSupportBackend(private val navigator: Navigator) : SupportBackend {

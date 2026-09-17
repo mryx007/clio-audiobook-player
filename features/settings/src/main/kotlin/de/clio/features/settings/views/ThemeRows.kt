@@ -1,9 +1,9 @@
 ﻿package de.clio.features.settings.views
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
@@ -50,8 +50,8 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
@@ -64,8 +64,8 @@ import androidx.compose.ui.window.DialogProperties
 import de.clio.core.data.PlaybackBackgroundStyle
 import de.clio.core.data.ThemeColor
 import de.clio.core.data.ThemeMode
-import de.clio.core.strings.R as StringsR
 import de.clio.core.ui.icons.ClioIcons
+import de.clio.core.strings.R as StringsR
 
 @Composable
 internal fun ThemeModeRow(
@@ -483,7 +483,11 @@ private fun hexToHsv(hex: String): FloatArray {
   return hsv
 }
 
-private fun hsvToHex(h: Float, s: Float, v: Float): String {
+private fun hsvToHex(
+  h: Float,
+  s: Float,
+  v: Float,
+): String {
   val colorInt = android.graphics.Color.HSVToColor(
     floatArrayOf(
       h.coerceIn(0f, 360f),
@@ -571,7 +575,7 @@ private fun ThemeModeDialogItem(
               )
             } else {
               Modifier
-            }
+            },
           ),
       )
     }
@@ -662,7 +666,9 @@ private fun SelectionRow(
           contentDescription = title,
         )
       }
-    } else null,
+    } else {
+      null
+    },
     supportingContent = {
       Text(text = value)
     },

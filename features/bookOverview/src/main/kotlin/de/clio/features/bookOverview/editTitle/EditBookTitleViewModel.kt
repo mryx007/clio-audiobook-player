@@ -2,15 +2,15 @@
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import dev.zacsweers.metro.ContributesIntoSet
-import dev.zacsweers.metro.SingleIn
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
 import de.clio.core.data.BookId
 import de.clio.core.data.repo.BookRepository
 import de.clio.features.bookOverview.bottomSheet.BottomSheetItem
 import de.clio.features.bookOverview.bottomSheet.BottomSheetItemViewModel
 import de.clio.features.bookOverview.di.BookOverviewScope
+import dev.zacsweers.metro.ContributesIntoSet
+import dev.zacsweers.metro.SingleIn
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 @SingleIn(BookOverviewScope::class)
 @ContributesIntoSet(BookOverviewScope::class)

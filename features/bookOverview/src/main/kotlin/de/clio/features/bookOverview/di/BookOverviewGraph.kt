@@ -1,13 +1,13 @@
 ﻿package de.clio.features.bookOverview.di
 
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesTo
-import dev.zacsweers.metro.GraphExtension
 import de.clio.features.bookOverview.bottomSheet.BottomSheetViewModel
 import de.clio.features.bookOverview.deleteBook.DeleteBookViewModel
 import de.clio.features.bookOverview.editTitle.EditBookTitleViewModel
 import de.clio.features.bookOverview.fileCover.FileCoverViewModel
 import de.clio.features.bookOverview.overview.BookOverviewViewModel
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesTo
+import dev.zacsweers.metro.GraphExtension
 
 abstract class BookOverviewScope private constructor()
 

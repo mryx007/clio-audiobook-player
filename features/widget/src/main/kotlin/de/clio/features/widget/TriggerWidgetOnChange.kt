@@ -2,6 +2,12 @@
 
 import android.app.Application
 import androidx.datastore.core.DataStore
+import de.clio.core.data.Book
+import de.clio.core.data.BookId
+import de.clio.core.data.repo.BookRepository
+import de.clio.core.data.store.CurrentBookStore
+import de.clio.core.initializer.AppInitializer
+import de.clio.core.playback.playstate.PlayStateManager
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoSet
 import kotlinx.coroutines.CoroutineScope
@@ -12,12 +18,6 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
-import de.clio.core.data.Book
-import de.clio.core.data.BookId
-import de.clio.core.data.repo.BookRepository
-import de.clio.core.data.store.CurrentBookStore
-import de.clio.core.initializer.AppInitializer
-import de.clio.core.playback.playstate.PlayStateManager
 
 @ContributesIntoSet(AppScope::class)
 class TriggerWidgetOnChange(

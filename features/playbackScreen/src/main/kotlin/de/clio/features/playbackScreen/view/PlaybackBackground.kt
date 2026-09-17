@@ -56,7 +56,7 @@ internal fun PlaybackBackground(
           palette.vibrantSwatch,
           palette.darkVibrantSwatch,
           palette.mutedSwatch,
-          palette.darkMutedSwatch
+          palette.darkMutedSwatch,
         ).sortedByDescending { it.population }
 
         dominantColors = swatches.map { Color(it.rgb) }
@@ -70,14 +70,14 @@ internal fun PlaybackBackground(
         Box(
           modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surface)
+            .background(MaterialTheme.colorScheme.surface),
         )
       }
       PlaybackBackgroundStyle.AmoledBlack -> {
         Box(
           modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black)
+            .background(Color.Black),
         )
       }
       PlaybackBackgroundStyle.BlurredCover, PlaybackBackgroundStyle.DimmedCover, PlaybackBackgroundStyle.Glassmorphism -> {
@@ -95,7 +95,7 @@ internal fun PlaybackBackground(
         Box(
           modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF121212))
+            .background(Color(0xFF121212)),
         ) {
           if (cover != null) {
             val imageModel = remember(cover, style) {
@@ -119,7 +119,7 @@ internal fun PlaybackBackground(
                 .drawWithContent {
                   drawContent()
                   drawRect(Color.Black.copy(alpha = dimAlpha))
-                }
+                },
             )
           }
         }
@@ -129,11 +129,11 @@ internal fun PlaybackBackground(
         val defaultDarkVariant = Color(0xFF121212)
         val color1 by animateColorAsState(
           targetValue = dominantColors.getOrElse(0) { defaultDarkSurface },
-          animationSpec = tween(500)
+          animationSpec = tween(500),
         )
         val color2 by animateColorAsState(
           targetValue = dominantColors.getOrElse(1) { defaultDarkVariant },
-          animationSpec = tween(500)
+          animationSpec = tween(500),
         )
 
         Box(
@@ -141,13 +141,13 @@ internal fun PlaybackBackground(
             .fillMaxSize()
             .background(
               Brush.verticalGradient(
-                colors = listOf(color1, color2)
-              )
+                colors = listOf(color1, color2),
+              ),
             )
             .drawWithContent {
-               drawContent()
-               drawRect(Color.Black.copy(alpha = 0.3f))
-            }
+              drawContent()
+              drawRect(Color.Black.copy(alpha = 0.3f))
+            },
         )
       }
       PlaybackBackgroundStyle.AmbientColors -> {
@@ -165,14 +165,14 @@ internal fun PlaybackBackground(
               Brush.linearGradient(
                 0.0f to color1,
                 0.5f to color2,
-                1.0f to color3
-              )
+                1.0f to color3,
+              ),
             )
             .blur(100.dp)
             .drawWithContent {
-               drawContent()
-               drawRect(Color.Black.copy(alpha = 0.4f))
-            }
+              drawContent()
+              drawRect(Color.Black.copy(alpha = 0.4f))
+            },
         )
       }
     }

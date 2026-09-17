@@ -59,13 +59,13 @@ internal fun BookPlayView(
         // Force light icons for custom (typically dark) backgrounds
         activity.enableEdgeToEdge(
           statusBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT),
-          navigationBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT)
+          navigationBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT),
         )
       } else {
         // Restore default auto behavior
         activity.enableEdgeToEdge(
           statusBarStyle = SystemBarStyle.auto(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT),
-          navigationBarStyle = SystemBarStyle.auto(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT)
+          navigationBarStyle = SystemBarStyle.auto(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT),
         )
       }
     }
@@ -73,7 +73,7 @@ internal fun BookPlayView(
       // Always restore default on dispose
       activity?.enableEdgeToEdge(
         statusBarStyle = SystemBarStyle.auto(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT),
-        navigationBarStyle = SystemBarStyle.auto(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT)
+        navigationBarStyle = SystemBarStyle.auto(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT),
       )
     }
   }
@@ -81,7 +81,7 @@ internal fun BookPlayView(
   Box(modifier = Modifier.fillMaxSize()) {
     PlaybackBackground(
       cover = viewState.cover,
-      style = viewState.backgroundStyle
+      style = viewState.backgroundStyle,
     )
     Scaffold(
       containerColor = Color.Transparent,

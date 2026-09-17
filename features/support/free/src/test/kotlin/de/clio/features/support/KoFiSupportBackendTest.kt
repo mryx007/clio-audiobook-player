@@ -1,14 +1,14 @@
 ﻿package de.clio.features.support
 
 import app.cash.turbine.test
+import de.clio.navigation.Destination
+import de.clio.navigation.Navigator
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.test.runTest
-import de.clio.navigation.Destination
-import de.clio.navigation.Navigator
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

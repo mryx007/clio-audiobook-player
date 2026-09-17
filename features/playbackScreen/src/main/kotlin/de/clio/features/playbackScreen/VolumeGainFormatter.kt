@@ -1,7 +1,7 @@
 ﻿package de.clio.features.playbackScreen
 
-import dev.zacsweers.metro.Inject
 import de.clio.core.playback.misc.Decibel
+import dev.zacsweers.metro.Inject
 import java.text.DecimalFormat
 
 @Inject

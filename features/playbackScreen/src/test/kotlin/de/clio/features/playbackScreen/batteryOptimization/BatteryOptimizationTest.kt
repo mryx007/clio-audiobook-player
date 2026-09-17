@@ -1,7 +1,7 @@
 ﻿package de.clio.features.playbackScreen.batteryOptimization
 
-import kotlinx.coroutines.test.runTest
 import de.clio.features.playbackScreen.MemoryDataStore
+import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue

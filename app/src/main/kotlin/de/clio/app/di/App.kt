@@ -1,14 +1,14 @@
 ﻿package de.clio.app.di
 
 import android.app.Application
+import de.clio.core.common.rootGraph
+import de.clio.core.initializer.AppInitializer
 import dev.zacsweers.metro.HasMemberInjections
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.createGraphFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import de.clio.core.common.rootGraph
-import de.clio.core.initializer.AppInitializer
 
 @HasMemberInjections
 open class App : Application() {

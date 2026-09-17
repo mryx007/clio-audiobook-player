@@ -1,9 +1,6 @@
 ﻿package de.clio.features.folderPicker.addcontent
 
 import android.net.Uri
-import dev.zacsweers.metro.Assisted
-import dev.zacsweers.metro.AssistedFactory
-import dev.zacsweers.metro.AssistedInject
 import de.clio.core.data.folders.AudiobookFolders
 import de.clio.core.data.folders.FolderType
 import de.clio.features.folderPicker.folderPicker.FileTypeSelection
@@ -11,6 +8,9 @@ import de.clio.navigation.Destination
 import de.clio.navigation.Destination.OnboardingCompletion
 import de.clio.navigation.Navigator
 import de.clio.navigation.Origin
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
 
 @AssistedInject
 class AddContentViewModel(

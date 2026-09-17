@@ -4,11 +4,11 @@ import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import de.clio.core.logging.api.Logger
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoSet
 import dev.zacsweers.metro.binding
 import org.json.JSONObject
-import de.clio.core.logging.api.Logger
 import java.io.File
 
 @ContributesIntoSet(

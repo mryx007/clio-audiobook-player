@@ -2,13 +2,13 @@
 
 import android.net.Uri
 import androidx.datastore.core.DataStore
+import de.clio.core.common.serialization.UriSerializer
+import de.clio.core.data.store.ClioDataStoreFactory
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.Provides
 import dev.zacsweers.metro.SingleIn
 import kotlinx.serialization.builtins.SetSerializer
-import de.clio.core.common.serialization.UriSerializer
-import de.clio.core.data.store.ClioDataStoreFactory
 
 @ContributesTo(AppScope::class)
 public interface AudiobookFoldersGraph {

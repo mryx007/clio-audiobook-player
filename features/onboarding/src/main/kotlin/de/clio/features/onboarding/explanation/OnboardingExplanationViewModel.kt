@@ -1,14 +1,14 @@
 ﻿package de.clio.features.onboarding.explanation
 
 import androidx.datastore.core.DataStore
-import dev.zacsweers.metro.Inject
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
 import de.clio.core.common.AppInfoProvider
 import de.clio.core.data.store.AnalyticsConsentStore
 import de.clio.navigation.Destination
 import de.clio.navigation.Navigator
 import de.clio.navigation.Origin
+import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 @Inject
 class OnboardingExplanationViewModel(

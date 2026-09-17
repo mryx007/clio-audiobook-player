@@ -4,15 +4,15 @@ import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesTo
-import dev.zacsweers.metro.Provides
-import dev.zacsweers.metro.SingleIn
 import de.clio.core.data.repo.internals.dao.BookContentDao
 import de.clio.core.data.repo.internals.dao.BookmarkDao
 import de.clio.core.data.repo.internals.dao.ChapterDao
 import de.clio.core.data.repo.internals.dao.ListeningStatisticDao
 import de.clio.core.data.repo.internals.dao.RecentBookSearchDao
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesTo
+import dev.zacsweers.metro.Provides
+import dev.zacsweers.metro.SingleIn
 
 @ContributesTo(AppScope::class)
 public interface PersistenceModule {

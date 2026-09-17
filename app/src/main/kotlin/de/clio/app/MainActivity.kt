@@ -30,9 +30,6 @@ import androidx.datastore.core.DataStore
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.scene.DialogSceneStrategy
 import androidx.navigation3.ui.NavDisplay
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesTo
-import dev.zacsweers.metro.Inject
 import de.clio.app.navigation.BottomSheetSceneStrategy
 import de.clio.app.navigation.NavEntryResolver
 import de.clio.app.navigation.StartDestinationProvider
@@ -42,18 +39,21 @@ import de.clio.core.data.ThemeColor
 import de.clio.core.data.ThemeMode
 import de.clio.core.data.store.ThemeColorStore
 import de.clio.core.data.store.ThemeModeStore
-import kotlinx.coroutines.async
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 import de.clio.core.logging.api.Logger
+import de.clio.core.ui.ClioTheme
 import de.clio.core.ui.LocalAppReady
 import de.clio.core.ui.LocalSharedTransitionScope
-import de.clio.core.ui.ClioTheme
 import de.clio.features.review.ReviewFeature
 import de.clio.navigation.Destination
 import de.clio.navigation.NavigationCommand
 import de.clio.navigation.Navigator
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesTo
+import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 
 @ContributesTo(AppScope::class)
 interface MainActivityGraph {
@@ -180,7 +180,6 @@ class MainActivity : AppCompatActivity() {
         }
         onDispose {}
       }
-
 
       ClioTheme(
         themeMode = themeMode,

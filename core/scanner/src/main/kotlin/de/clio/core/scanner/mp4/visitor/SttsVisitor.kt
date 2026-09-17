@@ -1,10 +1,10 @@
 ﻿package de.clio.core.scanner.mp4.visitor
 
 import androidx.media3.common.util.ParsableByteArray
-import dev.zacsweers.metro.Inject
 import de.clio.core.logging.api.Logger
 import de.clio.core.scanner.mp4.Mp4ChpaterExtractorOutput
 import de.clio.core.scanner.mp4.SttsEntry
+import dev.zacsweers.metro.Inject
 
 // https://developer.apple.com/documentation/quicktime-file-format/time-to-sample_atom
 @Inject

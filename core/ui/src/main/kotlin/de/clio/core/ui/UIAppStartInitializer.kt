@@ -5,15 +5,15 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.datastore.core.DataStore
 import coil.Coil
 import coil.ImageLoader
+import de.clio.core.data.ThemeMode
+import de.clio.core.data.store.ThemeModeStore
+import de.clio.core.initializer.AppInitializer
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoSet
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import de.clio.core.data.ThemeMode
-import de.clio.core.data.store.ThemeModeStore
-import de.clio.core.initializer.AppInitializer
 
 @ContributesIntoSet(AppScope::class)
 class UIAppStartInitializer(

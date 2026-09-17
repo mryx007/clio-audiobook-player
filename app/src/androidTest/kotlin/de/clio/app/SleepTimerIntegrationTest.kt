@@ -5,9 +5,6 @@ import androidx.core.net.toUri
 import androidx.datastore.core.DataStore
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.platform.app.InstrumentationRegistry
-import dev.zacsweers.metro.Inject
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.runTest
 import de.clio.core.common.rootGraphAs
 import de.clio.core.data.BookContent
 import de.clio.core.data.BookId
@@ -23,6 +20,9 @@ import de.clio.core.playback.playstate.PlayStateManager
 import de.clio.core.sleeptimer.SleepTimer
 import de.clio.core.sleeptimer.SleepTimerMode
 import de.clio.core.sleeptimer.SleepTimerState
+import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.test.runTest
 import java.io.File
 import java.time.Instant
 import kotlin.test.Test

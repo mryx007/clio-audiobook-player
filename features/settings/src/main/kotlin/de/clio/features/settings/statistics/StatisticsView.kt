@@ -1,4 +1,4 @@
-﻿package de.clio.features.settings.statistics
+package de.clio.features.settings.statistics
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -60,14 +60,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation3.runtime.NavEntry
 import coil.compose.AsyncImage
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesTo
-import dev.zacsweers.metro.IntoSet
-import dev.zacsweers.metro.Provides
 import de.clio.core.common.rootGraphAs
 import de.clio.core.ui.icons.ClioIcons
 import de.clio.navigation.Destination
 import de.clio.navigation.NavEntryProvider
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesTo
+import dev.zacsweers.metro.IntoSet
+import dev.zacsweers.metro.Provides
 import de.clio.core.strings.R as StringsR
 import de.clio.core.ui.R as UiR
 
@@ -166,7 +166,10 @@ internal fun StatisticsView(
       ) {
         // Summary Cards
         item {
-          SummarySection(viewState, viewModel)
+          SummarySection(
+            viewState = viewState,
+            onMonthClick = viewModel::onMonthClick,
+          )
         }
 
         // Tabs: Jahresübersicht & Hörbücher
@@ -215,8 +218,11 @@ internal fun StatisticsView(
                       .weight(1f)
                       .clip(RoundedCornerShape(10.dp))
                       .background(
-                        if (isSelected) MaterialTheme.colorScheme.primaryContainer
-                        else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                        if (isSelected) {
+                          MaterialTheme.colorScheme.primaryContainer
+                        } else {
+                          MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                        },
                       )
                       .clickable { viewModel.onYearClick(item.year) }
                       .padding(horizontal = 8.dp, vertical = 8.dp),
@@ -231,7 +237,13 @@ internal fun StatisticsView(
                     Text(
                       text = item.formattedDuration,
                       style = MaterialTheme.typography.bodySmall,
-                      color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f) else MaterialTheme.colorScheme.onSurfaceVariant,
+                      color = if (isSelected) {
+                        MaterialTheme.colorScheme.onPrimaryContainer.copy(
+                          alpha = 0.8f,
+                        )
+                      } else {
+                        MaterialTheme.colorScheme.onSurfaceVariant
+                      },
                       maxLines = 1,
                     )
                   }
@@ -242,7 +254,6 @@ internal fun StatisticsView(
               }
             }
           }
-
           StatisticsTab.BOOKS -> {
             items(viewState.bookStats, key = { it.bookTitle }) { book ->
               BookStatCard(book)
@@ -275,7 +286,7 @@ internal fun StatisticsView(
 @Composable
 private fun SummarySection(
   viewState: StatisticsViewState,
-  viewModel: StatisticsViewModel,
+  onMonthClick: (Int) -> Unit,
 ) {
   val selectedYearData = viewState.selectedYearData
 
@@ -294,7 +305,7 @@ private fun SummarySection(
       YearDiagramContent(
         yearData = selectedYearData,
         selectedMonthIndex = viewState.selectedMonthIndex,
-        onMonthClick = viewModel::onMonthClick,
+        onMonthClick = onMonthClick,
       )
     } else {
       OverallSummaryContent(viewState = viewState)

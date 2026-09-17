@@ -1,9 +1,9 @@
 ﻿package de.clio.core.playback.session
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
 import de.clio.core.data.BookId
 import de.clio.core.data.ChapterId
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 @Serializable
 sealed interface MediaId {

@@ -1,13 +1,13 @@
 ﻿package de.clio.core.playback.player
 
 import androidx.media3.common.Player
-import dev.zacsweers.metro.Inject
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
 import de.clio.core.data.repo.ChapterRepo
 import de.clio.core.logging.api.Logger
 import de.clio.core.playback.session.MediaId
 import de.clio.core.playback.session.toMediaIdOrNull
+import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 @Inject
 class DurationInconsistenciesUpdater(private val chapterRepo: ChapterRepo) : Player.Listener {

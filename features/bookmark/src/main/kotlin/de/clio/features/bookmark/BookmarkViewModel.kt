@@ -9,11 +9,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.datastore.core.DataStore
-import dev.zacsweers.metro.Assisted
-import dev.zacsweers.metro.AssistedFactory
-import dev.zacsweers.metro.AssistedInject
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
 import de.clio.core.data.BookId
 import de.clio.core.data.Bookmark
 import de.clio.core.data.Chapter
@@ -29,6 +24,11 @@ import de.clio.core.playback.playstate.PlayStateManager
 import de.clio.core.strings.R
 import de.clio.core.ui.formatTime
 import de.clio.navigation.Navigator
+import dev.zacsweers.metro.Assisted
+import dev.zacsweers.metro.AssistedFactory
+import dev.zacsweers.metro.AssistedInject
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import kotlin.time.Duration.Companion.days

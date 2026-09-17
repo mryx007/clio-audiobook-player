@@ -29,10 +29,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation3.runtime.NavEntry
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesTo
-import dev.zacsweers.metro.IntoSet
-import dev.zacsweers.metro.Provides
 import de.clio.core.common.rootGraphAs
 import de.clio.core.ui.ClioTheme
 import de.clio.core.ui.icons.ClioIcons
@@ -43,6 +39,10 @@ import de.clio.features.settings.SettingsViewState
 import de.clio.features.settings.views.sleeptimer.AutoSleepTimerCard
 import de.clio.navigation.Destination
 import de.clio.navigation.NavEntryProvider
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesTo
+import dev.zacsweers.metro.IntoSet
+import dev.zacsweers.metro.Provides
 import de.clio.core.strings.R as StringsR
 
 @Composable
@@ -174,8 +174,6 @@ private fun Settings(
           Text(stringResource(StringsR.string.settings_library_use_grid_title))
         }
       }
-
-
 
       item {
         OpenLastBookOnStartupRow(

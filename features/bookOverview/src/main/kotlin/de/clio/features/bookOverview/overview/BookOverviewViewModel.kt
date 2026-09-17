@@ -14,9 +14,6 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.core.net.toUri
 import androidx.datastore.core.DataStore
-import dev.zacsweers.metro.Inject
-import dev.zacsweers.metro.SingleIn
-import kotlinx.coroutines.launch
 import de.clio.core.common.AppInfoProvider
 import de.clio.core.common.DispatcherProvider
 import de.clio.core.common.MainScope
@@ -42,6 +39,9 @@ import de.clio.core.ui.GridCount
 import de.clio.features.bookOverview.di.BookOverviewScope
 import de.clio.navigation.Destination
 import de.clio.navigation.Navigator
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
+import kotlinx.coroutines.launch
 import kotlin.time.Instant
 
 @SingleIn(BookOverviewScope::class)

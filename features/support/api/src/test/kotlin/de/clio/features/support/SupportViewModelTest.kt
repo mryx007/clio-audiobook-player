@@ -4,6 +4,10 @@ import androidx.navigation3.runtime.get
 import app.cash.molecule.RecompositionMode
 import app.cash.molecule.launchMolecule
 import app.cash.turbine.test
+import de.clio.navigation.BottomSheetNav
+import de.clio.navigation.Destination
+import de.clio.navigation.NavEntryProvider
+import de.clio.navigation.Navigator
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
@@ -12,10 +16,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
-import de.clio.navigation.BottomSheetNav
-import de.clio.navigation.Destination
-import de.clio.navigation.NavEntryProvider
-import de.clio.navigation.Navigator
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull

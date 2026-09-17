@@ -1,13 +1,13 @@
 ﻿package de.clio.features.review
 
 import androidx.datastore.core.DataStore
-import dev.zacsweers.metro.Inject
-import kotlinx.coroutines.flow.first
 import de.clio.core.data.repo.BookRepository
 import de.clio.core.data.store.ReviewDialogShownStore
 import de.clio.core.featureflag.FeatureFlag
 import de.clio.core.featureflag.ReviewEnabledFeatureFlagQualifier
 import de.clio.core.playback.playstate.PlayStateManager
+import dev.zacsweers.metro.Inject
+import kotlinx.coroutines.flow.first
 import java.time.Clock
 import java.time.temporal.ChronoUnit
 import kotlin.time.Duration.Companion.days

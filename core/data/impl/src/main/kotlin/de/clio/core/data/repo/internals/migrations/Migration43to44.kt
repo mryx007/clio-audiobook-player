@@ -5,9 +5,6 @@ import android.database.sqlite.SQLiteDatabase
 import androidx.core.content.contentValuesOf
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import dev.zacsweers.metro.AppScope
-import dev.zacsweers.metro.ContributesIntoSet
-import dev.zacsweers.metro.binding
 import de.clio.core.data.repo.internals.consumeEach
 import de.clio.core.data.repo.internals.getFloat
 import de.clio.core.data.repo.internals.getInt
@@ -16,6 +13,9 @@ import de.clio.core.data.repo.internals.getLong
 import de.clio.core.data.repo.internals.getString
 import de.clio.core.data.repo.internals.getStringOrNull
 import de.clio.core.data.repo.internals.moveToNextLoop
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoSet
+import dev.zacsweers.metro.binding
 import kotlin.uuid.Uuid
 
 @ContributesIntoSet(

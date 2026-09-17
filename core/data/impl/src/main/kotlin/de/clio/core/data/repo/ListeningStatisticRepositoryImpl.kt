@@ -2,6 +2,18 @@
 
 import android.content.Context
 import androidx.documentfile.provider.DocumentFile
+import de.clio.core.data.BookId
+import de.clio.core.data.BookStatistic
+import de.clio.core.data.ImportResult
+import de.clio.core.data.ListeningStatistic
+import de.clio.core.data.MonthlyStatistic
+import de.clio.core.data.StatisticsSummary
+import de.clio.core.data.folders.AudiobookFolders
+import de.clio.core.data.folders.FolderType
+import de.clio.core.data.repo.internals.SmartAudioBookPlayerXmlParser
+import de.clio.core.data.repo.internals.SmartAudioBookPlayerXmlSerializer
+import de.clio.core.data.repo.internals.dao.ListeningStatisticDao
+import de.clio.core.logging.api.Logger
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesBinding
 import dev.zacsweers.metro.Inject
@@ -19,18 +31,6 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.withContext
-import de.clio.core.data.BookId
-import de.clio.core.data.BookStatistic
-import de.clio.core.data.ImportResult
-import de.clio.core.data.ListeningStatistic
-import de.clio.core.data.MonthlyStatistic
-import de.clio.core.data.StatisticsSummary
-import de.clio.core.data.folders.AudiobookFolders
-import de.clio.core.data.folders.FolderType
-import de.clio.core.data.repo.internals.SmartAudioBookPlayerXmlParser
-import de.clio.core.data.repo.internals.SmartAudioBookPlayerXmlSerializer
-import de.clio.core.data.repo.internals.dao.ListeningStatisticDao
-import de.clio.core.logging.api.Logger
 import java.io.File
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -209,7 +209,10 @@ public class ListeningStatisticRepositoryImpl(
     }
   }
 
-  private fun persistCoverStream(bookTitle: String, stream: java.io.InputStream): String? {
+  private fun persistCoverStream(
+    bookTitle: String,
+    stream: java.io.InputStream,
+  ): String? {
     return try {
       val coversDir = File(context.filesDir, "statisticCovers").also { it.mkdirs() }
       val safeFileName = "stat_cover_" + (bookTitle.hashCode().toString().replace('-', 'n')) + ".png"
@@ -319,7 +322,10 @@ public class ListeningStatisticRepositoryImpl(
     return sb.toString().trim()
   }
 
-  private fun getOrPersistCover(bookTitle: String, sourceCoverFile: File?): String? {
+  private fun getOrPersistCover(
+    bookTitle: String,
+    sourceCoverFile: File?,
+  ): String? {
     try {
       val coversDir = File(context.filesDir, "statisticCovers").also { it.mkdirs() }
       val safeFileName = "stat_cover_" + (bookTitle.hashCode().toString().replace('-', 'n')) + ".png"

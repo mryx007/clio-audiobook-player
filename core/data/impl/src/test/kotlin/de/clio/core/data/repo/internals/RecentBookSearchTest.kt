@@ -3,9 +3,9 @@
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import de.clio.core.data.repo.internals.dao.RecentBookSearchDao
 import kotlinx.coroutines.test.runTest
 import org.junit.runner.RunWith
-import de.clio.core.data.repo.internals.dao.RecentBookSearchDao
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue

@@ -19,9 +19,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import de.clio.core.data.PlaybackBackgroundStyle
 import de.clio.core.strings.R
 import de.clio.core.ui.icons.ClioIcons
-import de.clio.core.data.PlaybackBackgroundStyle
 import de.clio.features.playbackScreen.BookPlayViewState
 
 @Composable
@@ -145,4 +145,3 @@ internal fun BookPlayAppBar(
     )
   }
 }
-
