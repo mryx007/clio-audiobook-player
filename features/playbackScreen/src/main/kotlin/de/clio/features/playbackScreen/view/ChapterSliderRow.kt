@@ -1,4 +1,4 @@
-﻿package de.clio.features.playbackScreen.view
+package de.clio.features.playbackScreen.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -40,7 +40,7 @@ internal fun ChapterSliderRow(
   enabled: Boolean,
   onSeek: (Duration) -> Unit,
 ) {
-  val labelColor = if (isCustomBackground) Color.White.copy(alpha = 0.7f) else MaterialTheme.colorScheme.outline
+  val labelColor = (if (isCustomBackground) Color.White else MaterialTheme.colorScheme.onSurface).copy(alpha = 0.75f)
   val trackBackgroundColor = if (isCustomBackground) {
     Color.White.copy(
       alpha = 0.22f,
@@ -155,11 +155,13 @@ internal fun ChapterSliderRow(
       Text(
         text = formatTime(currentDisplayTime.inWholeMilliseconds, duration.inWholeMilliseconds),
         style = MaterialTheme.typography.labelMedium,
+        fontWeight = FontWeight.Medium,
         color = labelColor,
       )
       Text(
         text = "-${formatTime((duration - currentDisplayTime).inWholeMilliseconds, duration.inWholeMilliseconds)}",
         style = MaterialTheme.typography.labelMedium,
+        fontWeight = FontWeight.Medium,
         color = labelColor,
       )
     }
