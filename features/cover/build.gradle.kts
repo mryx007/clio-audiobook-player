@@ -1,6 +1,6 @@
-plugins {
-  id("voice.library")
-  id("voice.compose")
+﻿plugins {
+  id("de.clio.library")
+  id("de.clio.compose")
   alias(libs.plugins.kotlin.serialization)
   alias(libs.plugins.metro)
 }

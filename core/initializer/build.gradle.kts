@@ -1,3 +1,3 @@
-plugins {
-  id("voice.library")
+﻿plugins {
+  id("de.clio.library")
 }

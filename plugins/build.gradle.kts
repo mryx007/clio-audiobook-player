@@ -1,4 +1,4 @@
-plugins {
+﻿plugins {
   `kotlin-dsl`
 }
 
@@ -13,19 +13,19 @@ dependencies {
 gradlePlugin {
   plugins {
     create("library") {
-      id = "voice.library"
+      id = "de.clio.library"
       implementationClass = "LibraryPlugin"
     }
     create("app") {
-      id = "voice.app"
+      id = "de.clio.app"
       implementationClass = "AppPlugin"
     }
     create("compose") {
-      id = "voice.compose"
+      id = "de.clio.compose"
       implementationClass = "ComposePlugin"
     }
     create("ktlint") {
-      id = "voice.ktlint"
+      id = "de.clio.ktlint"
       implementationClass = "KtlintPlugin"
     }
   }

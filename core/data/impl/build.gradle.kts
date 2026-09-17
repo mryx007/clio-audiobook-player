@@ -1,5 +1,5 @@
-plugins {
-  id("voice.library")
+﻿plugins {
+  id("de.clio.library")
   alias(libs.plugins.kotlin.serialization)
   alias(libs.plugins.metro)
   alias(libs.plugins.ksp)
@@ -7,7 +7,7 @@ plugins {
 
 ksp {
   arg("room.schemaLocation", "$projectDir/schemas")
-  allWarningsAsErrors = providers.gradleProperty("voice.warningsAsErrors").get().toBooleanStrict()
+  allWarningsAsErrors = providers.gradleProperty("de.clio.warningsAsErrors").get().toBooleanStrict()
 }
 
 kotlin {

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:tools="http://schemas.android.com/tools"
   xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -19,7 +19,7 @@
       tools:ignore="ExportedReceiver">
 
       <intent-filter>
-        <action android:name="voice.WidgetAction" />
+        <action android:name="de.clio.WidgetAction" />
       </intent-filter>
 
     </receiver>

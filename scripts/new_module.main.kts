@@ -1,4 +1,4 @@
-#!/usr/bin/env kotlin
+﻿#!/usr/bin/env kotlin
 @file:DependsOn("com.github.ajalt.clikt:clikt-jvm:5.1.0")
 
 import com.github.ajalt.clikt.core.CliktCommand
@@ -50,7 +50,7 @@ class NewFeatureModule : CliktCommand() {
 
   private fun gradleContent(): String {
     val plugins = buildList {
-      add("voice.library")
+      add("de.clio.library")
     }
 
     return buildString {

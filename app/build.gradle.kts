@@ -1,12 +1,12 @@
-@file:Suppress("UnstableApiUsage")
+﻿@file:Suppress("UnstableApiUsage")
 
 import com.android.build.api.dsl.ManagedVirtualDevice
 import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
 import java.util.Properties
 
 plugins {
-  id("voice.app")
-  id("voice.compose")
+  id("de.clio.app")
+  id("de.clio.compose")
   alias(libs.plugins.kotlin.serialization)
   alias(libs.plugins.metro)
   alias(libs.plugins.crashlytics) apply false
@@ -21,7 +21,7 @@ if (playGoogleServicesJson.asFile.canRead()) {
 
 android {
 
-  namespace = "voice.app"
+  namespace = "de.clio.app"
 
   dependenciesInfo {
     // disable the dependencies info in apks to allow reproducible builds
@@ -31,10 +31,10 @@ android {
 
   defaultConfig {
     applicationId = "de.clio.audiobook"
-    versionName = providers.gradleProperty("voice.versionName").orNull ?: "1.0.1"
-    versionCode = providers.gradleProperty("voice.versionCode").orNull?.toInt() ?: 10001
+    versionName = providers.gradleProperty("de.clio.versionName").orNull ?: "1.0.1"
+    versionCode = providers.gradleProperty("de.clio.versionCode").orNull?.toInt() ?: 10001
 
-    testInstrumentationRunner = "voice.app.VoiceJUnitRunner"
+    testInstrumentationRunner = "de.clio.app.ClioJUnitRunner"
   }
 
   val distributionFlavor = "distribution"
@@ -111,7 +111,7 @@ android {
     checkDependencies = true
     ignoreTestSources = true
     checkReleaseBuilds = false
-    warningsAsErrors = providers.gradleProperty("voice.warningsAsErrors").get().toBooleanStrict()
+    warningsAsErrors = providers.gradleProperty("de.clio.warningsAsErrors").get().toBooleanStrict()
   }
 
   packaging {
