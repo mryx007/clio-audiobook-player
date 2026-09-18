@@ -52,9 +52,9 @@ Optional setting to jump straight into your last played audiobook when opening t
 
 ## Downloads
 
-
-
----
+Download the latest version directly from GitHub Releases:
+- [Clio Audiobook Player v1.0.2 (APK)](https://github.com/mryx007/clio-audiobook-player/releases/download/v1.0.2/Clio-Audiobook-Player-v1.0.2.apk)
+- [All Releases](https://github.com/mryx007/clio-audiobook-player/releases)
 
 ## Credits & Acknowledgements
 

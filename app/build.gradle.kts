@@ -1,4 +1,4 @@
-﻿@file:Suppress("UnstableApiUsage")
+@file:Suppress("UnstableApiUsage")
 
 import com.android.build.api.dsl.ManagedVirtualDevice
 import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
@@ -31,8 +31,8 @@ android {
 
   defaultConfig {
     applicationId = "de.clio.audiobook"
-    versionName = providers.gradleProperty("de.clio.versionName").orNull ?: "1.0.1"
-    versionCode = providers.gradleProperty("de.clio.versionCode").orNull?.toInt() ?: 10001
+    versionName = providers.gradleProperty("de.clio.versionName").orNull ?: "1.0.2"
+    versionCode = providers.gradleProperty("de.clio.versionCode").orNull?.toInt() ?: 10002
 
     testInstrumentationRunner = "de.clio.app.ClioJUnitRunner"
   }
