@@ -52,7 +52,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavEntry
-import kotlin.math.roundToInt
 import de.clio.core.common.rootGraphAs
 import de.clio.core.data.BookId
 import de.clio.core.data.BookSortOrder
@@ -73,6 +72,7 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.IntoSet
 import dev.zacsweers.metro.Provides
+import kotlin.math.roundToInt
 import kotlin.uuid.Uuid
 import de.clio.core.strings.R as StringsR
 
@@ -206,7 +206,10 @@ internal fun BookOverview(
 
   val nestedScrollConnection = remember {
     object : NestedScrollConnection {
-      override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+      override fun onPreScroll(
+        available: Offset,
+        source: NestedScrollSource,
+      ): Offset {
         val delta = available.y
         val maxOffset = if (topBarHeightPx > 0f) topBarHeightPx else with(density) { initialTopBarHeightDp.toPx() }
         if (maxOffset > 0f) {

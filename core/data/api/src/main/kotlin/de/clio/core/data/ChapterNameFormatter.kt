@@ -4,7 +4,10 @@ private val CHAPTER_KEYWORD_REGEX = Regex("""\b(?:kapitel|chapter|teil|part|trac
 private val LEADING_NUMBER_REGEX = Regex("""^(\d+)\s*(?:[-–—._]\s*|\s+)(.+)$""")
 private val TRAILING_NUMBER_REGEX = Regex("""[-–—._\s]\d+$""")
 
-public fun formatChapterName(name: String, author: String? = null): String {
+public fun formatChapterName(
+  name: String,
+  author: String? = null,
+): String {
   var working = name.trim()
   if (working.isEmpty()) return working
 
@@ -55,7 +58,10 @@ public fun formatChapterName(name: String, author: String? = null): String {
   return result
 }
 
-public fun removeAuthorPrefix(name: String, author: String?): String {
+public fun removeAuthorPrefix(
+  name: String,
+  author: String?,
+): String {
   if (author.isNullOrBlank()) return name
   val cleanAuthor = author.trim()
   if (cleanAuthor.isEmpty()) return name
@@ -128,7 +134,9 @@ public fun isAlbumOrBookTitle(
   if (album == null && !fileName.isNullOrBlank()) {
     val cleanBase = fileName.replace(Regex("""\d+"""), "").trim().trim('-', '_', '.')
     val t = cleanTitle.trim().trim('-', '_', '.')
-    if (cleanBase.isNotEmpty() && (cleanBase.equals(t, ignoreCase = true) || t.contains(cleanBase, ignoreCase = true) || cleanBase.contains(t, ignoreCase = true))) {
+    if (cleanBase.isNotEmpty() &&
+      (cleanBase.equals(t, ignoreCase = true) || t.contains(cleanBase, ignoreCase = true) || cleanBase.contains(t, ignoreCase = true))
+    ) {
       return true
     }
   }

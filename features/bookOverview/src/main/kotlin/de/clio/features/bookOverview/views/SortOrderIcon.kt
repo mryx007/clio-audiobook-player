@@ -75,4 +75,3 @@ private val BookSortOrder.nameRes: Int
     BookSortOrder.BY_DURATION_ASC -> StringsR.string.book_sort_by_duration_asc
     BookSortOrder.BY_DURATION_DESC -> StringsR.string.book_sort_by_duration_desc
   }
-

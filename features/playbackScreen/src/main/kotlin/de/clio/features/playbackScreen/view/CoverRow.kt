@@ -55,7 +55,7 @@ internal fun CoverRow(
         bookId = bookId,
         onDoubleClick = onPlayClick,
         cover = cover,
-        onCoverLoaded = { ratio ->
+        onCoverLoad = { ratio ->
           coverAspectRatio = ratio
         },
       )
