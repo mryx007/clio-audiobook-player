@@ -1,4 +1,4 @@
-﻿package de.clio.core.ui.icons
+package de.clio.core.ui.icons
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathFillType
@@ -3484,6 +3484,70 @@ object ClioIcons {
           reflectiveQuadTo(4f, 12f)
           quadToRelative(0f, 3.35f, 2.35f, 5.67f)
           reflectiveQuadTo(12f, 20f)
+          close()
+        }
+      }
+      .build()
+
+  val PlayArrow: ImageVector =
+    ImageVector.Builder(
+      name = "PlayArrow",
+      defaultWidth = 24.dp,
+      defaultHeight = 24.dp,
+      viewportWidth = 24f,
+      viewportHeight = 24f,
+    )
+      .apply {
+        path(
+          fill = SolidColor(Color.Black),
+          fillAlpha = 1f,
+          stroke = null,
+          strokeAlpha = 1f,
+          strokeLineWidth = 1f,
+          strokeLineCap = StrokeCap.Butt,
+          strokeLineJoin = StrokeJoin.Bevel,
+          strokeLineMiter = 1f,
+          pathFillType = PathFillType.NonZero,
+        ) {
+          moveTo(8f, 5f)
+          verticalLineToRelative(14f)
+          lineToRelative(11f, -7f)
+          close()
+        }
+      }
+      .build()
+
+  val Pause: ImageVector =
+    ImageVector.Builder(
+      name = "Pause",
+      defaultWidth = 24.dp,
+      defaultHeight = 24.dp,
+      viewportWidth = 24f,
+      viewportHeight = 24f,
+    )
+      .apply {
+        path(
+          fill = SolidColor(Color.Black),
+          fillAlpha = 1f,
+          stroke = null,
+          strokeAlpha = 1f,
+          strokeLineWidth = 1f,
+          strokeLineCap = StrokeCap.Butt,
+          strokeLineJoin = StrokeJoin.Bevel,
+          strokeLineMiter = 1f,
+          pathFillType = PathFillType.NonZero,
+        ) {
+          moveTo(6f, 19f)
+          horizontalLineToRelative(4f)
+          verticalLineTo(5f)
+          horizontalLineTo(6f)
+          verticalLineToRelative(14f)
+          close()
+          moveTo(14f, 5f)
+          verticalLineToRelative(14f)
+          horizontalLineToRelative(4f)
+          verticalLineTo(5f)
+          horizontalLineToRelative(-4f)
           close()
         }
       }

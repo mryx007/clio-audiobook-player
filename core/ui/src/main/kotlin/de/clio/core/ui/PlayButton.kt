@@ -1,10 +1,10 @@
 package de.clio.core.ui
 
-import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.graphics.res.animatedVectorResource
-import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
-import androidx.compose.animation.graphics.vector.AnimatedImageVector
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.FloatingActionButton
@@ -12,14 +12,12 @@ import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import de.clio.core.strings.R as StringsR
+import de.clio.core.ui.icons.ClioIcons
 
 @Composable
 fun PlayButton(
@@ -32,46 +30,34 @@ fun PlayButton(
   containerColor: Color = FloatingActionButtonDefaults.containerColor,
   contentColor: Color = contentColorFor(containerColor),
 ) {
-  val animatedContainerColor by animateColorAsState(
-    targetValue = containerColor,
-    animationSpec = tween(durationMillis = 300),
-    label = "playButtonContainerColor",
-  )
-  val animatedContentColor by animateColorAsState(
-    targetValue = contentColor,
-    animationSpec = tween(durationMillis = 300),
-    label = "playButtonContentColor",
-  )
-
   FloatingActionButton(
     modifier = modifier
       .size(fabSize)
       .then(sharedElementModifier),
     onClick = onPlayClick,
     shape = CircleShape,
-    containerColor = animatedContainerColor,
-    contentColor = animatedContentColor,
+    containerColor = containerColor,
+    contentColor = contentColor,
   ) {
-    Icon(
-      modifier = Modifier.size(iconSize),
-      painter = rememberPlayIconPainter(playing = playing),
-      contentDescription = stringResource(
-        id = if (playing) {
-          StringsR.string.playback_action_pause
-        } else {
-          StringsR.string.playback_action_play
-        },
-      ),
-    )
+    AnimatedContent(
+      targetState = playing,
+      transitionSpec = {
+        fadeIn(animationSpec = tween(durationMillis = 150)) togetherWith
+          fadeOut(animationSpec = tween(durationMillis = 150))
+      },
+      label = "playButtonIconTransition",
+    ) { isPlaying ->
+      Icon(
+        modifier = Modifier.size(iconSize),
+        imageVector = if (isPlaying) ClioIcons.Pause else ClioIcons.PlayArrow,
+        contentDescription = stringResource(
+          id = if (isPlaying) {
+            StringsR.string.playback_action_pause
+          } else {
+            StringsR.string.playback_action_play
+          },
+        ),
+      )
+    }
   }
-}
-
-@Composable
-private fun rememberPlayIconPainter(playing: Boolean): Painter {
-  return rememberAnimatedVectorPainter(
-    animatedImageVector = AnimatedImageVector.animatedVectorResource(
-      id = R.drawable.avd_pause_to_play,
-    ),
-    atEnd = !playing,
-  )
 }

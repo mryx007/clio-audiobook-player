@@ -31,7 +31,7 @@ fun Modifier.sharedCoverElementModifier(bookId: BookId): Modifier {
       sharedContentState = rememberSharedContentState(key = sharedCoverKey(bookId)),
       animatedVisibilityScope = LocalNavAnimatedContentScope.current,
       boundsTransform = { _, _ ->
-        tween(durationMillis = 350, easing = FastOutSlowInEasing)
+        tween(durationMillis = 250, easing = FastOutSlowInEasing)
       },
       clipInOverlayDuringTransition = OverlayClip(RoundedCornerShape(6.dp)),
     )
