@@ -11,17 +11,19 @@ It started as a fork of [Voice](https://github.com/PaulWoitaschek/Voice) by Paul
 ## Screenshots
 
 <p align="center">
-  <img src="docs/screenshots/Screenshot_1789584256.png" width="30%" alt="Clio Screenshot 1" />
-  <img src="docs/screenshots/Screenshot_1789584298.png" width="30%" alt="Clio Screenshot 2" />
-  <img src="docs/screenshots/Screenshot_1789584321.png" width="30%" alt="Clio Screenshot 3" />
+  <img src="docs/screenshots/Screenshot_1789757504.png" width="30%" alt="Clio Screenshot 1" />
+  <img src="docs/screenshots/Screenshot_1789757512.png" width="30%" alt="Clio Screenshot 2" />
+  <img src="docs/screenshots/Screenshot_1789757516.png" width="30%" alt="Clio Screenshot 3" />
 </p>
 <p align="center">
-  <img src="docs/screenshots/Screenshot_1789584325.png" width="30%" alt="Clio Screenshot 4" />
-  <img src="docs/screenshots/Screenshot_1789584336.png" width="30%" alt="Clio Screenshot 5" />
-  <img src="docs/screenshots/Screenshot_1789584396.png" width="30%" alt="Clio Screenshot 6" />
+  <img src="docs/screenshots/Screenshot_1789757521.png" width="30%" alt="Clio Screenshot 4" />
+  <img src="docs/screenshots/Screenshot_1789757549.png" width="30%" alt="Clio Screenshot 5" />
+  <img src="docs/screenshots/Screenshot_1789757557.png" width="30%" alt="Clio Screenshot 6" />
 </p>
 <p align="center">
-  <img src="docs/screenshots/Screenshot_1789584595.png" width="30%" alt="Clio Screenshot 7" />
+  <img src="docs/screenshots/Screenshot_1789757577.png" width="30%" alt="Clio Screenshot 7" />
+  <img src="docs/screenshots/Screenshot_1789757581.png" width="30%" alt="Clio Screenshot 8" />
+  <img src="docs/screenshots/Screenshot_1789757597.png" width="30%" alt="Clio Screenshot 9" />
 </p>
 
 ---
