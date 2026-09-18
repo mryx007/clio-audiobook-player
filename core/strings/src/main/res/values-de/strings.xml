@@ -15,6 +15,14 @@
     <string name="grid.columns.one">1 Buch</string>
     <string name="grid.columns.two">2 Bücher</string>
     <string name="grid.columns.three">3 Bücher</string>
+    <string name="book.sort.title">Sortieren</string>
+    <string name="book.sort.by_last_played">Zuletzt gehört</string>
+    <string name="book.sort.by_added_at">Neu hinzugefügt</string>
+    <string name="book.sort.by_name_asc">Titel (A–Z)</string>
+    <string name="book.sort.by_name_desc">Titel (Z–A)</string>
+    <string name="book.sort.by_author">Autor (A–Z)</string>
+    <string name="book.sort.by_duration_asc">Kürzeste Dauer</string>
+    <string name="book.sort.by_duration_desc">Längste Dauer</string>
     <string name="book.bulk_delete.dialog.title">Bücher löschen</string>
     <string name="book.bulk_delete.dialog.message">Möchtest Du die %1$d ausgewählten Bücher wirklich löschen? Dies wird die Dateien auf Deinem Gerät löschen.</string>
     <string name="book.edit.cover.file">Cover aus dem Dateisystem</string>

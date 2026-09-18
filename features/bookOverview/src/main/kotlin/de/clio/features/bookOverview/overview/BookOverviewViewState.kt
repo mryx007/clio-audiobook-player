@@ -3,6 +3,7 @@ package de.clio.features.bookOverview.overview
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.State
 import de.clio.core.data.BookId
+import de.clio.core.data.BookSortOrder
 
 @Immutable
 data class BookOverviewViewState(
@@ -18,6 +19,7 @@ data class BookOverviewViewState(
   val dialog: Dialog?,
   val selectedBookIds: Set<BookId> = emptySet(),
   val gridColumnCount: Int = 2,
+  val sortOrder: BookSortOrder = BookSortOrder.Default,
 ) {
 
   val inSelectionMode: Boolean = selectedBookIds.isNotEmpty()

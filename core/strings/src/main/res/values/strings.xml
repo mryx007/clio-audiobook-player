@@ -27,6 +27,15 @@
     <string name="grid.columns.one">1 book</string>
     <string name="grid.columns.two">2 books</string>
     <string name="grid.columns.three">3 books</string>
+    <!-- Sorting options for audiobooks overview -->
+    <string name="book.sort.title">Sort</string>
+    <string name="book.sort.by_last_played">Last played</string>
+    <string name="book.sort.by_added_at">Recently added</string>
+    <string name="book.sort.by_name_asc">Title (A–Z)</string>
+    <string name="book.sort.by_name_desc">Title (Z–A)</string>
+    <string name="book.sort.by_author">Author (A–Z)</string>
+    <string name="book.sort.by_duration_asc">Shortest duration</string>
+    <string name="book.sort.by_duration_desc">Longest duration</string>
     <!-- Title for bulk deleting multiple books. -->
     <string name="book.bulk_delete.dialog.title">Delete books</string>
     <!-- Warning message for bulk deleting multiple books. -->

@@ -1,10 +1,11 @@
-﻿package de.clio.core.data
+package de.clio.core.data
 
 import java.time.Instant
 import kotlin.uuid.Uuid
 
 fun book(
   name: String = Uuid.random().toString(),
+  author: String? = null,
   chapters: List<Chapter> = listOf(chapter(), chapter()),
   time: Long = 42,
   currentChapter: ChapterId = chapters.first().id,
@@ -13,7 +14,7 @@ fun book(
 ): Book {
   return Book(
     content = BookContent(
-      author = Uuid.random().toString(),
+      author = author ?: Uuid.random().toString(),
       name = name,
       positionInChapter = time,
       playbackSpeed = 1F,

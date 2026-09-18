@@ -3552,4 +3552,46 @@ object ClioIcons {
         }
       }
       .build()
+
+  val Sort: ImageVector =
+    ImageVector.Builder(
+      name = "Sort",
+      defaultWidth = 24.dp,
+      defaultHeight = 24.dp,
+      viewportWidth = 24f,
+      viewportHeight = 24f,
+    )
+      .apply {
+        path(
+          fill = SolidColor(Color.Black),
+          fillAlpha = 1f,
+          stroke = null,
+          strokeAlpha = 1f,
+          strokeLineWidth = 1f,
+          strokeLineCap = StrokeCap.Butt,
+          strokeLineJoin = StrokeJoin.Bevel,
+          strokeLineMiter = 1f,
+          pathFillType = PathFillType.NonZero,
+        ) {
+          moveTo(3f, 18f)
+          verticalLineToRelative(-2f)
+          horizontalLineToRelative(6f)
+          verticalLineToRelative(2f)
+          horizontalLineTo(3f)
+          close()
+          moveToRelative(0f, -5f)
+          verticalLineToRelative(-2f)
+          horizontalLineToRelative(12f)
+          verticalLineToRelative(2f)
+          horizontalLineTo(3f)
+          close()
+          moveToRelative(0f, -5f)
+          verticalLineTo(6f)
+          horizontalLineToRelative(18f)
+          verticalLineToRelative(2f)
+          horizontalLineTo(3f)
+          close()
+        }
+      }
+      .build()
 }

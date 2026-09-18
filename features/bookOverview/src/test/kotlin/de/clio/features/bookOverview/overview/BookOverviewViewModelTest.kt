@@ -7,6 +7,7 @@ import app.cash.turbine.test
 import de.clio.core.common.AppInfoProvider
 import de.clio.core.common.DispatcherProvider
 import de.clio.core.data.BookId
+import de.clio.core.data.BookSortOrder
 import de.clio.core.data.GridMode
 import de.clio.core.data.KioskModeDemoData
 import de.clio.core.data.repo.BookRepository
@@ -62,6 +63,7 @@ class BookOverviewViewModelTest {
       folderPickerMovedDialogShownStore = MemoryDataStore(false),
       gridModeStore = MemoryDataStore(GridMode.LIST),
       gridColumnCountStore = MemoryDataStore(2),
+      bookSortOrderStore = MemoryDataStore(BookSortOrder.Default),
       gridCount = mockk<GridCount> {
         every { useGridAsDefault() } returns false
       },
@@ -122,6 +124,7 @@ class BookOverviewViewModelTest {
       folderPickerMovedDialogShownStore = MemoryDataStore(false),
       gridModeStore = MemoryDataStore(GridMode.LIST),
       gridColumnCountStore = MemoryDataStore(2),
+      bookSortOrderStore = MemoryDataStore(BookSortOrder.Default),
       gridCount = mockk<GridCount> {
         every { useGridAsDefault() } returns false
       },
@@ -169,6 +172,7 @@ class BookOverviewViewModelTest {
       folderPickerMovedDialogShownStore = MemoryDataStore(false),
       gridModeStore = MemoryDataStore(GridMode.LIST),
       gridColumnCountStore = MemoryDataStore(2),
+      bookSortOrderStore = MemoryDataStore(BookSortOrder.Default),
       gridCount = mockk<GridCount> {
         every { useGridAsDefault() } returns false
       },
@@ -305,6 +309,54 @@ class BookOverviewViewModelTest {
     }
   }
 
+  @Test
+  fun `onSortOrderChange updates sort order and sorts books accordingly`() = runTest {
+    val bookA = book(name = "Alpha", lastPlayedAt = java.time.Instant.ofEpochMilli(100))
+    val bookZ = book(name = "Zeta", lastPlayedAt = java.time.Instant.ofEpochMilli(200))
+    val sortOrderStore = MemoryDataStore(BookSortOrder.BY_LAST_PLAYED)
+    val viewModel = BookOverviewViewModel(
+      repo = mockk<BookRepository> {
+        every { flow() } returns MutableStateFlow(listOf(bookA, bookZ))
+      },
+      mediaScanner = mockk<MediaScanTrigger> {
+        every { scannerActive } returns MutableStateFlow(false)
+        every { scan(any()) } just Runs
+      },
+      playStateManager = PlayStateManager(),
+      playerController = mockk(),
+      currentBookStoreDataStore = MemoryDataStore(null),
+      folderPickerMovedDialogShownStore = MemoryDataStore(false),
+      gridModeStore = MemoryDataStore(GridMode.LIST),
+      gridColumnCountStore = MemoryDataStore(2),
+      bookSortOrderStore = sortOrderStore,
+      gridCount = mockk<GridCount> {
+        every { useGridAsDefault() } returns false
+      },
+      navigator = mockk(),
+      appInfoProvider = appInfoProvider(),
+      deviceHasStoragePermissionBug = mockk<DeviceHasStoragePermissionBug> {
+        every { hasBug } returns MutableStateFlow(false)
+      },
+      folderPickerInSettingsFeatureFlag = MemoryFeatureFlag(false),
+      experimentalPlaybackPersistenceFeatureFlag = MemoryFeatureFlag(false),
+      kioskModeFeatureFlag = MemoryFeatureFlag(false),
+      dispatcherProvider = dispatcherProvider,
+    )
+
+    backgroundScope.launchMolecule(RecompositionMode.Immediate) {
+      viewModel.state()
+    }.test {
+      val initial = awaitItem()
+      assertEquals(BookSortOrder.BY_LAST_PLAYED, initial.sortOrder)
+      assertEquals(listOf(bookZ.id, bookA.id), initial.books.getValue(BookOverviewCategory.OVERVIEW).keys.toList())
+
+      viewModel.onSortOrderChange(BookSortOrder.BY_NAME_ASC)
+      val updated = awaitItem()
+      assertEquals(BookSortOrder.BY_NAME_ASC, updated.sortOrder)
+      assertEquals(listOf(bookA.id, bookZ.id), updated.books.getValue(BookOverviewCategory.OVERVIEW).keys.toList())
+    }
+  }
+
   private fun BookOverviewViewState.currentBook(bookId: BookId): BookOverviewItemViewState {
     return books.getValue(BookOverviewCategory.OVERVIEW).getValue(bookId).value
   }
@@ -329,6 +381,7 @@ class BookOverviewViewModelTest {
       folderPickerMovedDialogShownStore = folderPickerMovedDialogShownStore,
       gridModeStore = MemoryDataStore(GridMode.LIST),
       gridColumnCountStore = MemoryDataStore(2),
+      bookSortOrderStore = MemoryDataStore(BookSortOrder.Default),
       gridCount = mockk<GridCount> {
         every { useGridAsDefault() } returns false
       },

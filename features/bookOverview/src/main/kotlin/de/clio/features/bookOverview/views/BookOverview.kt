@@ -55,6 +55,7 @@ import androidx.navigation3.runtime.NavEntry
 import kotlin.math.roundToInt
 import de.clio.core.common.rootGraphAs
 import de.clio.core.data.BookId
+import de.clio.core.data.BookSortOrder
 import de.clio.core.ui.ClioTheme
 import de.clio.core.ui.icons.ClioIcons
 import de.clio.features.bookOverview.bottomSheet.BottomSheetItem
@@ -148,6 +149,7 @@ fun BookOverviewScreen(modifier: Modifier = Modifier) {
     onSearchQueryChange = bookOverviewViewModel::onSearchQueryChange,
     onPermissionBugCardClick = bookOverviewViewModel::onPermissionBugCardClick,
     onGridColumnCountChange = bookOverviewViewModel::onGridColumnCountChange,
+    onSortOrderChange = bookOverviewViewModel::onSortOrderChange,
     modifier = modifier,
   )
   val deleteBookViewState = deleteBookViewModel.state.value
@@ -189,6 +191,7 @@ internal fun BookOverview(
   onPermissionBugCardClick: () -> Unit,
   modifier: Modifier = Modifier,
   onGridColumnCountChange: (Int) -> Unit = {},
+  onSortOrderChange: (BookSortOrder) -> Unit = {},
 ) {
   val density = LocalDensity.current
   val statusBarTop = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
@@ -296,6 +299,8 @@ internal fun BookOverview(
                 onMenuItemClick = onMenuItemClick,
                 showPermissionBugCard = viewState.showStoragePermissionBugCard,
                 onPermissionBugCardClick = onPermissionBugCardClick,
+                sortOrder = viewState.sortOrder,
+                onSortOrderChange = onSortOrderChange,
                 contentPadding = listContentPadding,
               )
             }
@@ -316,6 +321,8 @@ internal fun BookOverview(
                 onMenuItemClick = onMenuItemClick,
                 showPermissionBugCard = viewState.showStoragePermissionBugCard,
                 onPermissionBugCardClick = onPermissionBugCardClick,
+                sortOrder = viewState.sortOrder,
+                onSortOrderChange = onSortOrderChange,
                 contentPadding = listContentPadding,
               )
             }

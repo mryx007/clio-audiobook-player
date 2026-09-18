@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import de.clio.core.data.BookId
+import de.clio.core.data.BookSortOrder
 import de.clio.core.ui.icons.ClioIcons
 import de.clio.core.ui.sharedCoverElementModifier
 import de.clio.features.bookOverview.bottomSheet.BottomSheetItem
@@ -69,6 +70,8 @@ internal fun ListBooks(
   allBookIds: Set<BookId> = emptySet(),
   onSelectAllClick: () -> Unit = {},
   onDeleteSelectedClick: () -> Unit = {},
+  sortOrder: BookSortOrder = BookSortOrder.Default,
+  onSortOrderChange: (BookSortOrder) -> Unit = {},
   contentPadding: PaddingValues = PaddingValues(top = 4.dp, start = 12.dp, end = 12.dp, bottom = 16.dp),
 ) {
   LazyColumn(
@@ -98,6 +101,8 @@ internal fun ListBooks(
           allSelected = allSelected,
           onSelectAllClick = onSelectAllClick,
           onDeleteSelectedClick = onDeleteSelectedClick,
+          sortOrder = sortOrder,
+          onSortOrderChange = onSortOrderChange,
         )
       }
       items(

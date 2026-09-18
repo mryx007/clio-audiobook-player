@@ -19,9 +19,11 @@ import de.clio.core.common.DispatcherProvider
 import de.clio.core.common.MainScope
 import de.clio.core.data.Book
 import de.clio.core.data.BookId
+import de.clio.core.data.BookSortOrder
 import de.clio.core.data.GridMode
 import de.clio.core.data.KioskModeDemoData
 import de.clio.core.data.repo.BookRepository
+import de.clio.core.data.store.BookSortOrderStore
 import de.clio.core.data.store.CurrentBookStore
 import de.clio.core.data.store.FolderPickerMovedDialogShownStore
 import de.clio.core.data.store.GridColumnCountStore
@@ -60,6 +62,8 @@ class BookOverviewViewModel(
   private val gridModeStore: DataStore<GridMode>,
   @GridColumnCountStore
   private val gridColumnCountStore: DataStore<Int>,
+  @BookSortOrderStore
+  private val bookSortOrderStore: DataStore<BookSortOrder>,
   private val gridCount: GridCount,
   private val navigator: Navigator,
   private val appInfoProvider: AppInfoProvider,
@@ -170,16 +174,20 @@ class BookOverviewViewModel(
       remember { mutableStateOf(null) }
     }
 
+    val sortOrder = remember { bookSortOrderStore.data }
+      .collectAsState(initial = BookSortOrder.Default).value
+
     return BookOverviewViewState(
       layoutMode = layoutMode,
       gridColumnCount = gridColumnCount,
+      sortOrder = sortOrder,
       books = filteredBooks
         .groupBy {
           it.category
         }
         .mapValues { (category, books) ->
           books
-            .sortedWith(category.comparator)
+            .sortedWith(sortOrder)
             .associate { book ->
               book.id to book.itemViewState(
                 currentBookId = currentBookId,
@@ -208,6 +216,12 @@ class BookOverviewViewModel(
       dialog = dialog,
       selectedBookIds = selectedBookIds,
     )
+  }
+
+  fun onSortOrderChange(order: BookSortOrder) {
+    scope.launch {
+      bookSortOrderStore.updateData { order }
+    }
   }
 
   fun onGridColumnCountChange(count: Int) {

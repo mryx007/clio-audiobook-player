@@ -17,6 +17,7 @@ import de.clio.core.data.KioskModeDemoData
 import de.clio.core.data.PlaybackBackgroundStyle
 import de.clio.core.data.PlayerButtonVisibility
 import de.clio.core.data.durationMs
+import de.clio.core.data.formatDisplayChapterName
 import de.clio.core.data.markForPosition
 import de.clio.core.data.repo.BookRepository
 import de.clio.core.data.repo.BookmarkRepo
@@ -157,12 +158,22 @@ class BookPlayViewModel(
     val isLocked = remember { playerLockedStore.data }
       .collectAsState(initial = false).value
     val hasMoreThanOneChapter = book.chapters.sumOf { it.chapterMarks.count() } > 1
+    val chapterName = if (hasMoreThanOneChapter) {
+      formatDisplayChapterName(
+        chapterName = currentMark.name,
+        bookName = book.content.name,
+        chapterUri = book.currentChapter.id.value,
+        author = book.content.author,
+      )
+    } else {
+      null
+    }
     return BookPlayViewState(
       sleepTimerState = sleepTime.toViewState(),
       playing = isPlaying,
       title = book.content.name,
       showPreviousNextButtons = hasMoreThanOneChapter,
-      chapterName = currentMark.name.takeIf { hasMoreThanOneChapter },
+      chapterName = chapterName,
       duration = currentMark.durationMs.milliseconds,
       playedTime = positionInCurrentMark.milliseconds,
       totalDuration = book.duration.milliseconds,
@@ -323,9 +334,15 @@ class BookPlayViewModel(
         items = book.chapters.flatMapIndexed { chapterIndex, chapter ->
           chapter.chapterMarks.mapIndexed { markIndex, chapterMark ->
             val previousChapters = book.chapters.take(chapterIndex)
+            val displayName = formatDisplayChapterName(
+              chapterName = chapterMark.name,
+              bookName = book.content.name,
+              chapterUri = chapter.id.value,
+              author = book.content.author,
+            ) ?: ""
             BookPlayDialogViewState.SelectChapterDialog.ItemViewState(
               number = previousChapters.sumOf { it.chapterMarks.count() } + markIndex + 1,
-              name = chapterMark.name ?: "",
+              name = displayName,
               active = chapterMark == book.currentMark && chapter == book.currentChapter,
               time = formatTime(previousChapters.sumOf { it.duration } + chapterMark.startMs),
             )

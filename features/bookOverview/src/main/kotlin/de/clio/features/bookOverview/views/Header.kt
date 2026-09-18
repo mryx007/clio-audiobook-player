@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import de.clio.core.data.BookSortOrder
 import de.clio.core.ui.icons.ClioIcons
 import de.clio.features.bookOverview.overview.BookOverviewCategory
 import de.clio.core.strings.R as StringsR
@@ -26,6 +27,8 @@ internal fun Header(
   allSelected: Boolean = false,
   onSelectAllClick: () -> Unit = {},
   onDeleteSelectedClick: () -> Unit = {},
+  sortOrder: BookSortOrder = BookSortOrder.Default,
+  onSortOrderChange: (BookSortOrder) -> Unit = {},
 ) {
   Row(
     modifier = modifier.fillMaxWidth(),
@@ -72,6 +75,11 @@ internal fun Header(
           )
         }
       }
+    } else {
+      SortOrderIcon(
+        sortOrder = sortOrder,
+        onSortOrderChange = onSortOrderChange,
+      )
     }
   }
 }

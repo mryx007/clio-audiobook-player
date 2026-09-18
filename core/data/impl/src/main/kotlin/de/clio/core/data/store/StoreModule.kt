@@ -8,6 +8,7 @@ import androidx.datastore.core.DataMigration
 import androidx.datastore.core.DataStore
 import de.clio.core.data.BackButtonBehavior
 import de.clio.core.data.BookId
+import de.clio.core.data.BookSortOrder
 import de.clio.core.data.GridMode
 import de.clio.core.data.PlaybackBackgroundStyle
 import de.clio.core.data.PlayerButtonVisibility
@@ -166,6 +167,17 @@ public interface StoreModule {
     return factory.int(
       fileName = "gridColumnCount",
       defaultValue = 2,
+    )
+  }
+
+  @Provides
+  @SingleIn(AppScope::class)
+  @BookSortOrderStore
+  private fun bookSortOrder(factory: ClioDataStoreFactory): DataStore<BookSortOrder> {
+    return factory.create(
+      serializer = BookSortOrder.serializer(),
+      defaultValue = BookSortOrder.Default,
+      fileName = "bookSortOrder",
     )
   }
 

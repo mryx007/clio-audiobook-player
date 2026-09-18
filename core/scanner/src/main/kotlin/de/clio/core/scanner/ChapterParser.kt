@@ -1,11 +1,13 @@
-﻿package de.clio.core.scanner
+package de.clio.core.scanner
 
 import de.clio.core.data.Chapter
 import de.clio.core.data.ChapterId
 import de.clio.core.data.isAudioFile
 import de.clio.core.data.repo.ChapterRepo
 import de.clio.core.data.repo.getOrPut
+import de.clio.core.data.resolveChapterName
 import de.clio.core.documentfile.CachedDocumentFile
+import de.clio.core.documentfile.nameWithoutExtension
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -39,6 +41,7 @@ internal class ChapterParser(
     val parsedList = audioFiles.map { file ->
       async(Dispatchers.IO) {
         val id = ChapterId(file.uri)
+        val fileName = file.nameWithoutExtension()
         var parsedMeta: Metadata? = null
         val chapter = chapterRepo.getOrPut(
           id = id,
@@ -51,12 +54,32 @@ internal class ChapterParser(
             id = id,
             duration = metaData.duration,
             fileLastModified = Instant.ofEpochMilli(file.lastModified),
-            name = metaData.title ?: metaData.fileName,
+            name = resolveChapterName(
+              title = metaData.title,
+              album = metaData.album,
+              fileName = metaData.fileName,
+              author = metaData.artist,
+            ),
             markData = metaData.chapters,
             fileSize = file.length,
           )
         }
-        chapter?.let { it to parsedMeta }
+        val finalChapter = if (chapter != null) {
+          val expectedName = resolveChapterName(
+            title = chapter.name,
+            album = parsedMeta?.album,
+            fileName = fileName,
+            author = parsedMeta?.artist,
+          )
+          if (expectedName != chapter.name) {
+            chapter.copy(name = expectedName).also { chapterRepo.put(it) }
+          } else {
+            chapter
+          }
+        } else {
+          null
+        }
+        finalChapter?.let { it to parsedMeta }
       }
     }.awaitAll().filterNotNull()
 

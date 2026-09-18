@@ -1,4 +1,4 @@
-﻿package de.clio.features.bookOverview
+package de.clio.features.bookOverview
 
 import de.clio.core.data.Book
 import de.clio.core.data.BookContent
@@ -14,6 +14,8 @@ fun book(
   currentChapter: ChapterId = chapters.first().id,
   name: String = Uuid.random().toString(),
   author: String? = Uuid.random().toString(),
+  lastPlayedAt: Instant = Instant.EPOCH,
+  addedAt: Instant = Instant.EPOCH,
 ): Book {
   return Book(
     content = BookContent(
@@ -21,12 +23,12 @@ fun book(
       name = name,
       positionInChapter = time,
       playbackSpeed = 1F,
-      addedAt = Instant.EPOCH,
+      addedAt = addedAt,
       chapters = chapters.map { it.id },
       cover = null,
       currentChapter = currentChapter,
       isActive = true,
-      lastPlayedAt = Instant.EPOCH,
+      lastPlayedAt = lastPlayedAt,
       skipSilence = false,
       id = BookId(Uuid.random().toString()),
       gain = 0F,

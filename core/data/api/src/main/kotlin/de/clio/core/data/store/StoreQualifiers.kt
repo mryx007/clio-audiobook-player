@@ -70,3 +70,6 @@ public annotation class BackButtonBehaviorStore
 
 @Qualifier
 public annotation class GridColumnCountStore
+
+@Qualifier
+public annotation class BookSortOrderStore
