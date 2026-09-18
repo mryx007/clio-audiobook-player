@@ -52,7 +52,10 @@ class DeleteBookViewModel(
     )
   }
 
-  fun onDeleteMultiple(bookIds: Set<BookId>, onDeleted: () -> Unit = {}) {
+  fun onDeleteMultiple(
+    bookIds: Set<BookId>,
+    onDeleted: () -> Unit = {},
+  ) {
     if (bookIds.isEmpty()) return
     val description = if (bookIds.size == 1) {
       bookIds.first().toUri().pathSegments
@@ -109,5 +112,3 @@ data class DeleteBookViewState(
   val id: BookId get() = ids.first()
   val count: Int get() = ids.size
 }
-
-

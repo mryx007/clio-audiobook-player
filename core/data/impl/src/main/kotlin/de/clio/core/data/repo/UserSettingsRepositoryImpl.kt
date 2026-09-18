@@ -147,4 +147,3 @@ public class UserSettingsRepositoryImpl(
     developerMenuUnlockedStore.updateData { unlocked }
   }
 }
-

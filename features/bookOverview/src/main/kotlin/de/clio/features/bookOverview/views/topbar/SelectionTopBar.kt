@@ -27,8 +27,8 @@ internal fun SelectionTopBar(
   onClearSelection: () -> Unit,
   onSelectAllClick: () -> Unit,
   onDeleteSelectedClick: () -> Unit,
-  horizontalPadding: Dp = 16.dp,
   modifier: Modifier = Modifier,
+  horizontalPadding: Dp = 16.dp,
 ) {
   TopAppBar(
     title = {

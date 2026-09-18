@@ -13,9 +13,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import de.clio.core.strings.R as StringsR
 import de.clio.core.ui.icons.ClioIcons
 import de.clio.features.bookOverview.overview.BookOverviewCategory
+import de.clio.core.strings.R as StringsR
 
 @Composable
 internal fun Header(
@@ -75,4 +75,3 @@ internal fun Header(
     }
   }
 }
-

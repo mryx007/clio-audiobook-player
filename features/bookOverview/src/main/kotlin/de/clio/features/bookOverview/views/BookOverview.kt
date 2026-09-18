@@ -169,8 +169,8 @@ internal fun BookOverview(
   onFolderPickerMovedDialogDismiss: () -> Unit,
   onSearchQueryChange: (String) -> Unit,
   onPermissionBugCardClick: () -> Unit,
-  onGridColumnCountChange: (Int) -> Unit = {},
   modifier: Modifier = Modifier,
+  onGridColumnCountChange: (Int) -> Unit = {},
 ) {
   val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
   Scaffold(

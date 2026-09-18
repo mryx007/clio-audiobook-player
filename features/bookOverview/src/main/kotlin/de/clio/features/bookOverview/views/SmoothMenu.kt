@@ -55,7 +55,13 @@ private class SmoothMenuPositionProvider(
       if (rightAligned >= 0) rightAligned else anchorBounds.left + contentOffsetX
     } else {
       val leftAligned = anchorBounds.left + contentOffsetX
-      if (leftAligned + popupContentSize.width <= windowSize.width) leftAligned else anchorBounds.right - popupContentSize.width + contentOffsetX
+      if (leftAligned + popupContentSize.width <=
+        windowSize.width
+      ) {
+        leftAligned
+      } else {
+        anchorBounds.right - popupContentSize.width + contentOffsetX
+      }
     }.coerceIn(0, (windowSize.width - popupContentSize.width).coerceAtLeast(0))
 
     val y = if (anchorBounds.bottom + popupContentSize.height + contentOffsetY <= windowSize.height) {

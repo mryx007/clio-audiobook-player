@@ -14,8 +14,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import de.clio.core.strings.R as StringsR
 import de.clio.core.ui.icons.ClioIcons
+import de.clio.core.strings.R as StringsR
 
 @Composable
 internal fun GridColumnsIcon(
@@ -52,7 +52,9 @@ internal fun GridColumnsIcon(
                 modifier = Modifier.size(20.dp),
               )
             }
-          } else null,
+          } else {
+            null
+          },
           onClick = {
             expanded = false
             onGridColumnCountChange(count)

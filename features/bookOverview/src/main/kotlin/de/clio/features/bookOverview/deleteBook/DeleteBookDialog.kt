@@ -66,4 +66,3 @@ internal fun DeleteBookDialog(
     },
   )
 }
-

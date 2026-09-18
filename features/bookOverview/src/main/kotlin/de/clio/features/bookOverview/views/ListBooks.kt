@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -52,24 +53,22 @@ import de.clio.features.bookOverview.overview.BookOverviewCategory
 import de.clio.features.bookOverview.overview.BookOverviewItemViewState
 import de.clio.core.ui.R as UiR
 
-import androidx.compose.material3.Checkbox
-
 @Composable
 internal fun ListBooks(
   books: Map<BookOverviewCategory, Map<BookId, State<BookOverviewItemViewState>>>,
   onBookClick: (BookId) -> Unit,
   onBookLongClick: (BookId) -> Unit,
   selectedBookIds: Set<BookId>,
-  allBookIds: Set<BookId> = emptySet(),
   inSelectionMode: Boolean,
-  onSelectAllClick: () -> Unit = {},
-  onDeleteSelectedClick: () -> Unit = {},
   onBookMoreClick: (BookId) -> Unit,
   selectedBookId: BookId?,
   menuItems: List<BottomSheetItem>,
   onMenuItemClick: (BookId, BottomSheetItem) -> Unit,
   showPermissionBugCard: Boolean,
   onPermissionBugCardClick: () -> Unit,
+  allBookIds: Set<BookId> = emptySet(),
+  onSelectAllClick: () -> Unit = {},
+  onDeleteSelectedClick: () -> Unit = {},
 ) {
   LazyColumn(
     verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -328,4 +327,3 @@ private fun ListBookRowPreviewWithProgress() {
 private fun ListBookRowPreviewWithoutProgress() {
   ListBookRow(BookOverviewPreviewParameterProvider().book().copy(progress = 0f), {}, {}, false, false, {}, null, emptyList(), { _, _ -> })
 }
-
