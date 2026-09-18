@@ -202,25 +202,26 @@ class MainActivity : AppCompatActivity() {
                 sharedTransitionScope = this,
                 transitionSpec = {
                   if (isBookOverviewPlaybackTransition(initialState.destination(), targetState.destination())) {
-                    SharedZAxisEnterTransition togetherWith SharedZAxisExitTransition
+                    BookOverviewPlaybackEnterTransition togetherWith BookOverviewPlaybackExitTransition
                   } else {
                     EnterTransition.None togetherWith ExitTransition.None
                   }
                 },
                 popTransitionSpec = {
                   if (isBookOverviewPlaybackTransition(initialState.destination(), targetState.destination())) {
-                    SharedZAxisEnterTransition togetherWith SharedZAxisExitTransition
+                    BookOverviewPlaybackEnterTransition togetherWith BookOverviewPlaybackExitTransition
                   } else {
                     EnterTransition.None togetherWith ExitTransition.None
                   }
                 },
                 predictivePopTransitionSpec = {
                   if (isBookOverviewPlaybackTransition(initialState.destination(), targetState.destination())) {
-                    SharedZAxisEnterTransition togetherWith SharedZAxisExitTransition
+                    BookOverviewPlaybackEnterTransition togetherWith BookOverviewPlaybackExitTransition
                   } else {
                     EnterTransition.None togetherWith ExitTransition.None
                   }
                 },
+
                 onBack = {
                   if (backStack.size > 1) {
                     backStack.removeLastOrNull()

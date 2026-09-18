@@ -79,7 +79,6 @@ class BookOverviewViewModelTest {
     backgroundScope.launchMolecule(RecompositionMode.Immediate) {
       viewModel.state()
     }.test {
-      assertEquals(expected = BookOverviewViewState.Loading, actual = awaitItem())
       val initial = awaitItem()
       val initialCurrentItem = initial.currentBook(currentBook.id)
       val initialOtherItem = initial.currentBook(otherBook.id)
@@ -140,7 +139,6 @@ class BookOverviewViewModelTest {
     backgroundScope.launchMolecule(RecompositionMode.Immediate) {
       viewModel.state()
     }.test {
-      assertEquals(expected = BookOverviewViewState.Loading, actual = awaitItem())
       val initial = awaitItem()
       assertEquals(expected = listOf(book1.id, book2.id), actual = initial.books.getValue(BookOverviewCategory.OVERVIEW).keys.toList())
 
@@ -209,7 +207,6 @@ class BookOverviewViewModelTest {
     backgroundScope.launchMolecule(RecompositionMode.Immediate) {
       viewModel.state()
     }.test {
-      assertEquals(expected = BookOverviewViewState.Loading, actual = awaitItem())
       assertEquals(expected = false, actual = awaitItem().showFolderPickerIcon)
     }
   }
@@ -224,7 +221,6 @@ class BookOverviewViewModelTest {
     backgroundScope.launchMolecule(RecompositionMode.Immediate) {
       viewModel.state()
     }.test {
-      assertEquals(expected = BookOverviewViewState.Loading, actual = awaitItem())
       assertEquals(expected = true, actual = awaitItem().showFolderPickerIcon)
     }
   }
@@ -239,7 +235,6 @@ class BookOverviewViewModelTest {
     backgroundScope.launchMolecule(RecompositionMode.Immediate) {
       viewModel.state()
     }.test {
-      assertEquals(expected = BookOverviewViewState.Loading, actual = awaitItem())
       assertEquals(expected = false, actual = awaitItem().showFolderPickerIcon)
     }
   }
@@ -255,7 +250,6 @@ class BookOverviewViewModelTest {
     backgroundScope.launchMolecule(RecompositionMode.Immediate) {
       viewModel.state()
     }.test {
-      assertEquals(expected = BookOverviewViewState.Loading, actual = awaitItem())
       assertEquals(expected = false, actual = awaitItem().showFolderPickerIcon)
     }
   }
@@ -272,7 +266,6 @@ class BookOverviewViewModelTest {
     backgroundScope.launchMolecule(RecompositionMode.Immediate) {
       viewModel.state()
     }.test {
-      assertEquals(expected = BookOverviewViewState.Loading, actual = awaitItem())
       assertEquals(expected = null, actual = awaitItem().dialog)
 
       viewModel.onBookFolderClick()
@@ -295,7 +288,6 @@ class BookOverviewViewModelTest {
     backgroundScope.launchMolecule(RecompositionMode.Immediate) {
       viewModel.state()
     }.test {
-      assertEquals(expected = BookOverviewViewState.Loading, actual = awaitItem())
       assertEquals(expected = true, actual = awaitItem().showFolderPickerIcon)
 
       viewModel.onBookFolderClick()

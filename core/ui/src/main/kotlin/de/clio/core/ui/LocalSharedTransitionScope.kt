@@ -1,12 +1,16 @@
-﻿@file:Suppress("ktlint:compose:compositionlocal-allowlist")
+@file:Suppress("ktlint:compose:compositionlocal-allowlist")
 
 package de.clio.core.ui
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation3.ui.LocalNavAnimatedContentScope
 import de.clio.core.data.BookId
 
@@ -26,6 +30,10 @@ fun Modifier.sharedCoverElementModifier(bookId: BookId): Modifier {
     sharedElement(
       sharedContentState = rememberSharedContentState(key = sharedCoverKey(bookId)),
       animatedVisibilityScope = LocalNavAnimatedContentScope.current,
+      boundsTransform = { _, _ ->
+        tween(durationMillis = 350, easing = FastOutSlowInEasing)
+      },
+      clipInOverlayDuringTransition = OverlayClip(RoundedCornerShape(6.dp)),
     )
   }
 }

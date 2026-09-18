@@ -1,4 +1,4 @@
-﻿/*
+/*
  * This file contains code copied or adapted from:
  * https://github.com/c5inco/compose-pokedexer/blob/d516f64e62d29d14e5ea82fdd6bf0a7d274287cc/app/src/main/kotlin/des/c5inco/pokedexer/ui/common/Transitions.kt
  *
@@ -80,6 +80,14 @@ val CrossfadeEnterTransition: EnterTransition = fadeIn(
 
 val CrossfadeExitTransition: ExitTransition = fadeOut(
   animationSpec = tween(durationMillis = 150, easing = FastOutLinearInEasing),
+)
+
+val BookOverviewPlaybackEnterTransition: EnterTransition = fadeIn(
+  animationSpec = tween(durationMillis = 350, easing = LinearOutSlowInEasing),
+)
+
+val BookOverviewPlaybackExitTransition: ExitTransition = fadeOut(
+  animationSpec = tween(durationMillis = 350, easing = FastOutLinearInEasing),
 )
 
 val SharedZAxisEnterTransition =

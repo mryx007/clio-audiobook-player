@@ -78,6 +78,38 @@ class BookOverviewViewModel(
   private var dialog by mutableStateOf<BookOverviewViewState.Dialog?>(null)
   private var selectedBookIds by mutableStateOf<Set<BookId>>(emptySet())
 
+  private var lastGridMode: GridMode? = null
+  private var lastGridColumnCount: Int = 2
+  private var lastBooks: List<Book> = emptyList()
+  private var lastCurrentBookId: BookId? = null
+  private var lastPlayState = PlayStateManager.PlayState.Paused
+  private var lastScannerActive = false
+  private var lastFolderPickerMovedDialogShown = false
+
+  init {
+    scope.launch {
+      gridModeStore.data.collect { lastGridMode = it }
+    }
+    scope.launch {
+      gridColumnCountStore.data.collect { lastGridColumnCount = it }
+    }
+    scope.launch {
+      repo.flow().collect { lastBooks = it }
+    }
+    scope.launch {
+      currentBookStoreDataStore.data.collect { lastCurrentBookId = it }
+    }
+    scope.launch {
+      playStateManager.playStateFlow.collect { lastPlayState = it }
+    }
+    scope.launch {
+      mediaScanner.scannerActive.collect { lastScannerActive = it }
+    }
+    scope.launch {
+      folderPickerMovedDialogShownStore.data.collect { lastFolderPickerMovedDialogShown = it }
+    }
+  }
+
   fun attach() {
     mediaScanner.scan()
   }
@@ -88,22 +120,22 @@ class BookOverviewViewModel(
     if (kioskMode) return kioskModeState()
 
     val playState = remember { playStateManager.playStateFlow }
-      .collectAsState(initial = PlayStateManager.PlayState.Paused).value
+      .collectAsState(initial = lastPlayState).value
     val hasStoragePermissionBug = remember { deviceHasStoragePermissionBug.hasBug }
       .collectAsState().value
     val books = remember { repo.flow() }
-      .collectAsState(initial = emptyList()).value
+      .collectAsState(initial = lastBooks).value
     val currentBookId = remember { currentBookStoreDataStore.data }
-      .collectAsState(initial = null).value
+      .collectAsState(initial = lastCurrentBookId).value
     val scannerActive = remember { mediaScanner.scannerActive }
-      .collectAsState(initial = false).value
+      .collectAsState(initial = lastScannerActive).value
     val folderPickerMovedDialogShown = remember { folderPickerMovedDialogShownStore.data }
-      .collectAsState(initial = false).value
+      .collectAsState(initial = lastFolderPickerMovedDialogShown).value
     val gridMode = remember { gridModeStore.data }
-      .collectAsState(initial = null).value
+      .collectAsState(initial = lastGridMode).value
       ?: return BookOverviewViewState.Loading
     val gridColumnCount = remember { gridColumnCountStore.data }
-      .collectAsState(initial = 2).value
+      .collectAsState(initial = lastGridColumnCount).value
 
     val noBooks = !scannerActive && books.isEmpty()
 
