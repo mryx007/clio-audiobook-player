@@ -61,6 +61,12 @@ All original work is licensed under the **GNU General Public License v3.0 (GPLv3
 
 ---
 
+## Translations
+
+Translations are managed via [Weblate](https://hosted.weblate.org/). If you would like to contribute, please check the Weblate project page.
+
+---
+
 ## License
 
 This project is licensed under the [GNU General Public License v3.0](LICENSE).
