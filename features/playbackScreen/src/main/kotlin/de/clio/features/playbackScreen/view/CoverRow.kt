@@ -1,17 +1,23 @@
-﻿package de.clio.features.playbackScreen.view
+package de.clio.features.playbackScreen.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.isSpecified
 import de.clio.core.data.BookId
 import de.clio.core.strings.R
 import de.clio.core.ui.formatTime
@@ -26,12 +32,33 @@ internal fun CoverRow(
   modifier: Modifier = Modifier,
   contentAlignment: Alignment = Alignment.Center,
 ) {
-  Box(
+  var coverAspectRatio by remember(cover) { mutableFloatStateOf(1f) }
+
+  BoxWithConstraints(
     modifier = modifier,
     contentAlignment = contentAlignment,
   ) {
-    Box(modifier = Modifier.aspectRatio(1f)) {
-      Cover(bookId = bookId, onDoubleClick = onPlayClick, cover = cover)
+    val targetModifier = if (maxHeight.isSpecified && maxWidth.isSpecified && maxHeight.value > 0 && maxWidth.value > 0) {
+      val containerRatio = maxWidth.value / maxHeight.value
+      val (targetWidth, targetHeight) = if (coverAspectRatio > containerRatio) {
+        maxWidth to (maxWidth / coverAspectRatio)
+      } else {
+        (maxHeight * coverAspectRatio) to maxHeight
+      }
+      Modifier.size(width = targetWidth, height = targetHeight)
+    } else {
+      Modifier
+    }
+
+    Box(modifier = targetModifier) {
+      Cover(
+        bookId = bookId,
+        onDoubleClick = onPlayClick,
+        cover = cover,
+        onCoverLoaded = { ratio ->
+          coverAspectRatio = ratio
+        },
+      )
       when (sleepTimerState) {
         BookPlayViewState.SleepTimerViewState.Disabled -> {
         }

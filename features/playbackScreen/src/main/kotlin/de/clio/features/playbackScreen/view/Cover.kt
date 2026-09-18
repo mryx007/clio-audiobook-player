@@ -1,4 +1,4 @@
-﻿package de.clio.features.playbackScreen.view
+package de.clio.features.playbackScreen.view
 
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,6 +22,7 @@ internal fun Cover(
   bookId: BookId,
   onDoubleClick: () -> Unit,
   cover: String?,
+  onCoverLoaded: ((Float) -> Unit)? = null,
 ) {
   AsyncImage(
     modifier = Modifier
@@ -35,8 +36,14 @@ internal fun Cover(
           },
         )
       },
-    contentScale = ContentScale.Crop,
+    contentScale = ContentScale.Fit,
     model = cover,
+    onSuccess = { state ->
+      val drawable = state.result.drawable
+      if (drawable.intrinsicWidth > 0 && drawable.intrinsicHeight > 0) {
+        onCoverLoaded?.invoke(drawable.intrinsicWidth.toFloat() / drawable.intrinsicHeight.toFloat())
+      }
+    },
     placeholder = null,
     fallback = painterResource(id = UiR.drawable.album_art),
     error = painterResource(id = UiR.drawable.album_art),

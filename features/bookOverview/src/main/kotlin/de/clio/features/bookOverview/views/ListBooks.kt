@@ -69,10 +69,11 @@ internal fun ListBooks(
   allBookIds: Set<BookId> = emptySet(),
   onSelectAllClick: () -> Unit = {},
   onDeleteSelectedClick: () -> Unit = {},
+  contentPadding: PaddingValues = PaddingValues(top = 4.dp, start = 12.dp, end = 12.dp, bottom = 16.dp),
 ) {
   LazyColumn(
     verticalArrangement = Arrangement.spacedBy(12.dp),
-    contentPadding = PaddingValues(top = 24.dp, start = 12.dp, end = 12.dp, bottom = 16.dp),
+    contentPadding = contentPadding,
   ) {
     if (showPermissionBugCard) {
       item {

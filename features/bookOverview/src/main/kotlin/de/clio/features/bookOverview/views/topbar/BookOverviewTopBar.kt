@@ -1,9 +1,11 @@
 package de.clio.features.bookOverview.views.topbar
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -25,9 +27,15 @@ internal fun BookOverviewTopBar(
   onBookFolderClick: () -> Unit,
   onSettingsClick: () -> Unit,
   onQueryChange: (String) -> Unit,
+  modifier: Modifier = Modifier,
   onGridColumnCountChange: (Int) -> Unit = {},
 ) {
-  Column {
+  Column(
+    modifier = modifier
+      .fillMaxWidth()
+      .background(MaterialTheme.colorScheme.background)
+      .padding(bottom = 8.dp),
+  ) {
     BookOverviewSearchBar(
       query = viewState.searchQuery,
       onQueryChange = onQueryChange,
@@ -38,6 +46,7 @@ internal fun BookOverviewTopBar(
       showGridColumnsIcon = viewState.layoutMode == BookOverviewLayoutMode.Grid,
       gridColumnCount = viewState.gridColumnCount,
       onGridColumnCountChange = onGridColumnCountChange,
+      horizontalPadding = 8.dp,
     )
     var showLoading by remember { mutableStateOf(false) }
     LaunchedEffect(viewState.isLoading) {

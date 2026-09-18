@@ -5,14 +5,20 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
@@ -20,21 +26,33 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.retain.retain
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.NavEntry
+import kotlin.math.roundToInt
 import de.clio.core.common.rootGraphAs
 import de.clio.core.data.BookId
 import de.clio.core.ui.ClioTheme
@@ -172,18 +190,38 @@ internal fun BookOverview(
   modifier: Modifier = Modifier,
   onGridColumnCountChange: (Int) -> Unit = {},
 ) {
-  val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+  val density = LocalDensity.current
+  val statusBarTop = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
+  val initialTopBarHeightDp = statusBarTop + 72.dp
+
+  var topBarHeightPx by remember { mutableFloatStateOf(0f) }
+  var topBarOffsetHeightPx by remember { mutableFloatStateOf(0f) }
+
+  val topBarHeightDp = remember(topBarHeightPx, density) {
+    if (topBarHeightPx > 0f) with(density) { topBarHeightPx.toDp() } else initialTopBarHeightDp
+  }
+
+  val nestedScrollConnection = remember {
+    object : NestedScrollConnection {
+      override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+        val delta = available.y
+        val maxOffset = if (topBarHeightPx > 0f) topBarHeightPx else with(density) { initialTopBarHeightDp.toPx() }
+        if (maxOffset > 0f) {
+          topBarOffsetHeightPx = (topBarOffsetHeightPx + delta).coerceIn(-maxOffset, 0f)
+        }
+        return Offset.Zero
+      }
+    }
+  }
+
+  LaunchedEffect(viewState.searchQuery.isNotEmpty(), viewState.inSelectionMode) {
+    if (viewState.searchQuery.isNotEmpty() || viewState.inSelectionMode) {
+      topBarOffsetHeightPx = 0f
+    }
+  }
+
   Scaffold(
-    modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-    topBar = {
-      BookOverviewTopBar(
-        viewState = viewState,
-        onBookFolderClick = onBookFolderClick,
-        onSettingsClick = onSettingsClick,
-        onQueryChange = onSearchQueryChange,
-        onGridColumnCountChange = onGridColumnCountChange,
-      )
-    },
+    modifier = modifier,
     bottomBar = {
       Spacer(
         Modifier
@@ -196,62 +234,116 @@ internal fun BookOverview(
   ) { contentPadding ->
     Box(
       Modifier
+        .fillMaxSize()
         .padding(contentPadding)
         .consumeWindowInsets(contentPadding),
     ) {
+      @Composable
+      fun TopBarContent() {
+        BookOverviewTopBar(
+          viewState = viewState,
+          onBookFolderClick = onBookFolderClick,
+          onSettingsClick = onSettingsClick,
+          onQueryChange = onSearchQueryChange,
+          onGridColumnCountChange = onGridColumnCountChange,
+        )
+      }
+
       val hasBooks = viewState.books.values.any { it.isNotEmpty() }
       if (!hasBooks && viewState.searchQuery.isNotBlank()) {
+        Column(modifier = Modifier.fillMaxSize()) {
+          TopBarContent()
+          Box(
+            modifier = Modifier
+              .fillMaxSize()
+              .padding(horizontal = 32.dp, vertical = 64.dp),
+            contentAlignment = Alignment.TopCenter,
+          ) {
+            Text(
+              text = stringResource(StringsR.string.search_no_results, viewState.searchQuery),
+              style = MaterialTheme.typography.bodyLarge,
+              color = MaterialTheme.colorScheme.onSurfaceVariant,
+              textAlign = TextAlign.Center,
+            )
+          }
+        }
+      } else {
         Box(
           modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 32.dp, vertical = 64.dp),
-          contentAlignment = Alignment.TopCenter,
+            .nestedScroll(nestedScrollConnection),
         ) {
-          Text(
-            text = stringResource(StringsR.string.search_no_results, viewState.searchQuery),
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.Center,
+          val listContentPadding = PaddingValues(
+            top = topBarHeightDp + 4.dp,
+            start = 12.dp,
+            end = 12.dp,
+            bottom = 16.dp,
           )
-        }
-      } else {
-        when (viewState.layoutMode) {
-          BookOverviewLayoutMode.List -> {
-            ListBooks(
-              books = viewState.books,
-              onBookClick = onBookClick,
-              onBookLongClick = onBookLongClick,
-              selectedBookIds = viewState.selectedBookIds,
-              allBookIds = viewState.allBookIds,
-              inSelectionMode = viewState.inSelectionMode,
-              onSelectAllClick = onSelectAllClick,
-              onDeleteSelectedClick = onDeleteSelectedClick,
-              onBookMoreClick = onBookMoreClick,
-              selectedBookId = selectedBookId,
-              menuItems = menuItems,
-              onMenuItemClick = onMenuItemClick,
-              showPermissionBugCard = viewState.showStoragePermissionBugCard,
-              onPermissionBugCardClick = onPermissionBugCardClick,
-            )
+          when (viewState.layoutMode) {
+            BookOverviewLayoutMode.List -> {
+              ListBooks(
+                books = viewState.books,
+                onBookClick = onBookClick,
+                onBookLongClick = onBookLongClick,
+                selectedBookIds = viewState.selectedBookIds,
+                allBookIds = viewState.allBookIds,
+                inSelectionMode = viewState.inSelectionMode,
+                onSelectAllClick = onSelectAllClick,
+                onDeleteSelectedClick = onDeleteSelectedClick,
+                onBookMoreClick = onBookMoreClick,
+                selectedBookId = selectedBookId,
+                menuItems = menuItems,
+                onMenuItemClick = onMenuItemClick,
+                showPermissionBugCard = viewState.showStoragePermissionBugCard,
+                onPermissionBugCardClick = onPermissionBugCardClick,
+                contentPadding = listContentPadding,
+              )
+            }
+            BookOverviewLayoutMode.Grid -> {
+              GridBooks(
+                books = viewState.books,
+                gridColumnCount = viewState.gridColumnCount,
+                onBookClick = onBookClick,
+                onBookLongClick = onBookLongClick,
+                selectedBookIds = viewState.selectedBookIds,
+                allBookIds = viewState.allBookIds,
+                inSelectionMode = viewState.inSelectionMode,
+                onSelectAllClick = onSelectAllClick,
+                onDeleteSelectedClick = onDeleteSelectedClick,
+                onBookMoreClick = onBookMoreClick,
+                selectedBookId = selectedBookId,
+                menuItems = menuItems,
+                onMenuItemClick = onMenuItemClick,
+                showPermissionBugCard = viewState.showStoragePermissionBugCard,
+                onPermissionBugCardClick = onPermissionBugCardClick,
+                contentPadding = listContentPadding,
+              )
+            }
           }
-          BookOverviewLayoutMode.Grid -> {
-            GridBooks(
-              books = viewState.books,
-              gridColumnCount = viewState.gridColumnCount,
-              onBookClick = onBookClick,
-              onBookLongClick = onBookLongClick,
-              selectedBookIds = viewState.selectedBookIds,
-              allBookIds = viewState.allBookIds,
-              inSelectionMode = viewState.inSelectionMode,
-              onSelectAllClick = onSelectAllClick,
-              onDeleteSelectedClick = onDeleteSelectedClick,
-              onBookMoreClick = onBookMoreClick,
-              selectedBookId = selectedBookId,
-              menuItems = menuItems,
-              onMenuItemClick = onMenuItemClick,
-              showPermissionBugCard = viewState.showStoragePermissionBugCard,
-              onPermissionBugCardClick = onPermissionBugCardClick,
-            )
+
+          Box(
+            modifier = Modifier
+              .fillMaxWidth()
+              .align(Alignment.TopCenter)
+              .offset { IntOffset(0, topBarOffsetHeightPx.roundToInt()) }
+              .onSizeChanged { topBarHeightPx = it.height.toFloat() },
+          ) {
+            Column(modifier = Modifier.fillMaxWidth()) {
+              TopBarContent()
+              Spacer(
+                modifier = Modifier
+                  .fillMaxWidth()
+                  .height(16.dp)
+                  .background(
+                    Brush.verticalGradient(
+                      colors = listOf(
+                        MaterialTheme.colorScheme.background,
+                        Color.Transparent,
+                      ),
+                    ),
+                  ),
+              )
+            }
           }
         }
       }

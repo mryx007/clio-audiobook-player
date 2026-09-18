@@ -87,13 +87,14 @@ internal fun GridBooks(
   onMenuItemClick: (BookId, BottomSheetItem) -> Unit = { _, _ -> },
   showPermissionBugCard: Boolean = false,
   onPermissionBugCardClick: () -> Unit = {},
+  contentPadding: PaddingValues = PaddingValues(start = 12.dp, end = 12.dp, top = 4.dp, bottom = 12.dp),
 ) {
   LazyVerticalGrid(
     columns = GridCells.Fixed(gridColumnCount.coerceIn(1, 3)),
     modifier = modifier,
     verticalArrangement = Arrangement.spacedBy(16.dp),
     horizontalArrangement = Arrangement.spacedBy(12.dp),
-    contentPadding = PaddingValues(start = 12.dp, end = 12.dp, top = 20.dp, bottom = 12.dp),
+    contentPadding = contentPadding,
   ) {
     if (showPermissionBugCard) {
       item(
@@ -241,6 +242,14 @@ internal fun GridBook(
           error = painterResource(id = UiR.drawable.album_art),
           contentDescription = null,
         )
+
+        if (book.progress == 0f) {
+          NewBadge(
+            modifier = Modifier
+              .align(Alignment.TopEnd)
+              .padding(4.5.dp),
+          )
+        }
 
         if (isSelected) {
           Box(

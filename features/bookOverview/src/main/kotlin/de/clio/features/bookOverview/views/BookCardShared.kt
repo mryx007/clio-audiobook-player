@@ -71,19 +71,20 @@ internal fun BookCard(
 internal fun NewBadge(modifier: Modifier = Modifier) {
   val surfaceColor = MaterialTheme.colorScheme.surface
   val isDark = (0.299f * surfaceColor.red + 0.587f * surfaceColor.green + 0.114f * surfaceColor.blue) < 0.5f
-  val badgeBgColor = if (isDark) Color(0xFF1E3A24) else Color(0xFFE8F5E9)
+  val badgeBgColor = if (isDark) Color(0xFF1E3A24).copy(alpha = 0.72f) else Color(0xFFE8F5E9).copy(alpha = 0.8f)
   val badgeTextColor = if (isDark) Color(0xFF81C784) else Color(0xFF1B5E20)
   Box(
     modifier = modifier
-      .clip(RoundedCornerShape(4.dp))
+      .clip(RoundedCornerShape(3.5.dp))
       .background(badgeBgColor)
-      .padding(horizontal = 6.dp, vertical = 2.dp),
+      .padding(horizontal = 4.5.dp, vertical = 1.dp),
   ) {
     Text(
       text = stringResource(StringsR.string.book_badge_new),
       style = MaterialTheme.typography.labelSmall.copy(
-        fontSize = 10.sp,
+        fontSize = 8.5.sp,
         fontWeight = FontWeight.Bold,
+        letterSpacing = 0.3.sp,
       ),
       color = badgeTextColor,
     )
