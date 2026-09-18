@@ -1,4 +1,4 @@
-﻿package de.clio.navigation
+package de.clio.navigation
 
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
@@ -32,6 +32,12 @@ class Navigator {
   fun setRoot(destination: Destination.Compose) {
     scope.launch {
       _navigationCommands.emit(NavigationCommand.SetRoot(destination))
+    }
+  }
+
+  fun minimizeApp() {
+    scope.launch {
+      _navigationCommands.emit(NavigationCommand.MinimizeApp)
     }
   }
 }

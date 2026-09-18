@@ -1,4 +1,4 @@
-﻿package de.clio.core.playback.player
+package de.clio.core.playback.player
 
 import androidx.datastore.core.DataStore
 import androidx.media3.common.C

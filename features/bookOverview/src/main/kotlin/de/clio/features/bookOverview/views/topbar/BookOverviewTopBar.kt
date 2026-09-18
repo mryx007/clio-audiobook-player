@@ -1,4 +1,4 @@
-﻿package de.clio.features.bookOverview.views.topbar
+package de.clio.features.bookOverview.views.topbar
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,6 +25,7 @@ internal fun BookOverviewTopBar(
   onBookFolderClick: () -> Unit,
   onSettingsClick: () -> Unit,
   onQueryChange: (String) -> Unit,
+  onGridColumnCountChange: (Int) -> Unit = {},
 ) {
   Column {
     BookOverviewSearchBar(
@@ -34,6 +35,9 @@ internal fun BookOverviewTopBar(
       onSettingsClick = onSettingsClick,
       showAddBookHint = viewState.showAddBookHint,
       showFolderPickerIcon = viewState.showFolderPickerIcon,
+      showGridColumnsIcon = viewState.layoutMode == BookOverviewLayoutMode.Grid,
+      gridColumnCount = viewState.gridColumnCount,
+      onGridColumnCountChange = onGridColumnCountChange,
     )
     var showLoading by remember { mutableStateOf(false) }
     LaunchedEffect(viewState.isLoading) {

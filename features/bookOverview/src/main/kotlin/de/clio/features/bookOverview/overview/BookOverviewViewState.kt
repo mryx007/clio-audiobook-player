@@ -1,4 +1,4 @@
-﻿package de.clio.features.bookOverview.overview
+package de.clio.features.bookOverview.overview
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.State
@@ -16,7 +16,12 @@ data class BookOverviewViewState(
   val showStoragePermissionBugCard: Boolean,
   val showFolderPickerIcon: Boolean,
   val dialog: Dialog?,
+  val selectedBookIds: Set<BookId> = emptySet(),
+  val gridColumnCount: Int = 2,
 ) {
+
+  val inSelectionMode: Boolean = selectedBookIds.isNotEmpty()
+  val allBookIds: Set<BookId> get() = books.values.flatMap { it.keys }.toSet()
 
   companion object {
     val Loading = BookOverviewViewState(
@@ -30,6 +35,7 @@ data class BookOverviewViewState(
       showStoragePermissionBugCard = false,
       showFolderPickerIcon = true,
       dialog = null,
+      gridColumnCount = 2,
     )
   }
 

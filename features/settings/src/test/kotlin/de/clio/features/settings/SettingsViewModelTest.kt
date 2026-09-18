@@ -1,15 +1,16 @@
-﻿package de.clio.features.settings
+package de.clio.features.settings
 
-import androidx.datastore.core.DataStore
 import app.cash.molecule.RecompositionMode
 import app.cash.molecule.launchMolecule
 import app.cash.turbine.test
 import de.clio.core.common.AppInfoProvider
 import de.clio.core.common.DispatcherProvider
+import de.clio.core.data.BackButtonBehavior
 import de.clio.core.data.GridMode
 import de.clio.core.data.PlaybackBackgroundStyle
 import de.clio.core.data.ThemeColor
 import de.clio.core.data.ThemeMode
+import de.clio.core.data.repo.UserSettingsRepository
 import de.clio.core.data.sleeptimer.SleepTimerPreference
 import de.clio.core.featureflag.MemoryFeatureFlag
 import de.clio.core.ui.GridCount
@@ -24,7 +25,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
@@ -35,17 +35,7 @@ import kotlin.time.Instant
 class SettingsViewModelTest {
 
   private val scope = TestScope()
-  private val themeModeStore = MemoryDataStore(ThemeMode.FollowSystem)
-  private val themeColorStore = MemoryDataStore(ThemeColor())
-  private val autoRewindAmountStore = MemoryDataStore(10)
-  private val rewindTimeStore = MemoryDataStore(20)
-  private val fastForwardTimeStore = MemoryDataStore(30)
-  private val gridModeStore = MemoryDataStore(GridMode.GRID)
-  private val sleepTimerPreferenceStore = MemoryDataStore(SleepTimerPreference.Default)
-  private val analyticsConsentStore = MemoryDataStore(false)
-  private val developerMenuUnlockedStore = MemoryDataStore(false)
-  private val openLastBookOnStartupStore = MemoryDataStore(false)
-  private val playbackBackgroundStyleStore = MemoryDataStore(PlaybackBackgroundStyle.Solid)
+  private val userSettingsRepository = MemoryUserSettingsRepository()
   private val navigator = mockk<Navigator> {
     every { goTo(any()) } just Runs
   }
@@ -61,21 +51,11 @@ class SettingsViewModelTest {
   private val kioskModeFeatureFlag = MemoryFeatureFlag(false)
 
   private val viewModel = SettingsViewModel(
-    themeModeStore = themeModeStore,
-    themeColorStore = themeColorStore,
-    autoRewindAmountStore = autoRewindAmountStore,
-    rewindTimeStore = rewindTimeStore,
-    fastForwardTimeStore = fastForwardTimeStore,
+    userSettingsRepository = userSettingsRepository,
     navigator = navigator,
     appInfoProvider = appInfoProvider,
-    gridModeStore = gridModeStore,
-    sleepTimerPreferenceStore = sleepTimerPreferenceStore,
-    analyticsConsentStore = analyticsConsentStore,
     gridCount = gridCount,
     kioskModeFeatureFlag = kioskModeFeatureFlag,
-    developerMenuUnlockedStore = developerMenuUnlockedStore,
-    openLastBookOnStartupStore = openLastBookOnStartupStore,
-    playbackBackgroundStyleStore = playbackBackgroundStyleStore,
     dispatcherProvider = DispatcherProvider(scope.coroutineContext, scope.coroutineContext, scope.coroutineContext),
   )
 
@@ -119,7 +99,7 @@ class SettingsViewModelTest {
     viewModel.setThemeMode(ThemeMode.CatppuccinMocha)
     testScheduler.advanceUntilIdle()
 
-    assertEquals(expected = ThemeMode.CatppuccinMocha, actual = themeModeStore.data.first())
+    assertEquals(expected = ThemeMode.CatppuccinMocha, actual = userSettingsRepository.themeMode.first())
   }
 
   @Test
@@ -127,8 +107,8 @@ class SettingsViewModelTest {
     viewModel.setCustomThemeHex("#123456")
     testScheduler.advanceUntilIdle()
 
-    assertEquals(expected = "#123456", actual = themeColorStore.data.first().hex)
-    assertEquals(expected = ThemeMode.Custom, actual = themeModeStore.data.first())
+    assertEquals(expected = "#123456", actual = userSettingsRepository.themeColor.first().hex)
+    assertEquals(expected = ThemeMode.Custom, actual = userSettingsRepository.themeMode.first())
   }
 
   @Test
@@ -236,15 +216,80 @@ class SettingsViewModelTest {
       assertEquals(expected = SettingsViewState.Dialog.FastForwardTime, actual = awaitItem().dialog)
     }
   }
+
+  @Test
+  fun `back button behavior updates and row click opens dialog`() = scope.runTest {
+    viewStateFlow().test {
+      assertEquals(expected = BackButtonBehavior.BookOverview, actual = awaitItem().backButtonBehavior)
+
+      viewModel.setBackButtonBehavior(BackButtonBehavior.MinimizeApp)
+      assertEquals(expected = BackButtonBehavior.MinimizeApp, actual = awaitItem().backButtonBehavior)
+
+      viewModel.onBackButtonBehaviorRowClick()
+      assertEquals(expected = SettingsViewState.Dialog.BackButtonBehavior, actual = awaitItem().dialog)
+    }
+  }
 }
 
-private class MemoryDataStore<T>(initial: T) : DataStore<T> {
+private class MemoryUserSettingsRepository : UserSettingsRepository {
+  override val themeMode = MutableStateFlow(ThemeMode.FollowSystem)
+  override val themeColor = MutableStateFlow(ThemeColor())
+  override val autoRewindAmount = MutableStateFlow(10)
+  override val rewindTime = MutableStateFlow(20)
+  override val fastForwardTime = MutableStateFlow(30)
+  override val gridMode = MutableStateFlow(GridMode.GRID)
+  override val sleepTimerPreference = MutableStateFlow(SleepTimerPreference.Default)
+  override val analyticsConsent = MutableStateFlow(false)
+  override val openLastBookOnStartup = MutableStateFlow(false)
+  override val playbackBackgroundStyle = MutableStateFlow(PlaybackBackgroundStyle.Solid)
+  override val backButtonBehavior = MutableStateFlow(BackButtonBehavior.BookOverview)
+  override val developerMenuUnlocked = MutableStateFlow(false)
 
-  private val value = MutableStateFlow(initial)
+  override suspend fun setThemeMode(themeMode: ThemeMode) {
+    this.themeMode.value = themeMode
+  }
 
-  override val data: Flow<T> get() = value
+  override suspend fun setThemeColor(themeColor: ThemeColor) {
+    this.themeColor.value = themeColor
+  }
 
-  override suspend fun updateData(transform: suspend (t: T) -> T): T {
-    return value.updateAndGet { transform(it) }
+  override suspend fun setAutoRewindAmount(seconds: Int) {
+    this.autoRewindAmount.value = seconds
+  }
+
+  override suspend fun setRewindTime(seconds: Int) {
+    this.rewindTime.value = seconds
+  }
+
+  override suspend fun setFastForwardTime(seconds: Int) {
+    this.fastForwardTime.value = seconds
+  }
+
+  override suspend fun setGridMode(gridMode: GridMode) {
+    this.gridMode.value = gridMode
+  }
+
+  override suspend fun setSleepTimerPreference(preference: SleepTimerPreference) {
+    this.sleepTimerPreference.value = preference
+  }
+
+  override suspend fun setAnalyticsConsent(enabled: Boolean) {
+    this.analyticsConsent.value = enabled
+  }
+
+  override suspend fun setOpenLastBookOnStartup(enabled: Boolean) {
+    this.openLastBookOnStartup.value = enabled
+  }
+
+  override suspend fun setPlaybackBackgroundStyle(style: PlaybackBackgroundStyle) {
+    this.playbackBackgroundStyle.value = style
+  }
+
+  override suspend fun setBackButtonBehavior(behavior: BackButtonBehavior) {
+    this.backButtonBehavior.value = behavior
+  }
+
+  override suspend fun setDeveloperMenuUnlocked(unlocked: Boolean) {
+    this.developerMenuUnlocked.value = unlocked
   }
 }

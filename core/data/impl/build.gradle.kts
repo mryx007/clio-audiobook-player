@@ -1,4 +1,4 @@
-﻿plugins {
+plugins {
   id("de.clio.library")
   alias(libs.plugins.kotlin.serialization)
   alias(libs.plugins.metro)
@@ -39,6 +39,7 @@ dependencies {
   implementation(libs.serialization.json)
   implementation(libs.coroutines.core)
   implementation(projects.core.analytics.api)
+  implementation(projects.core.initializer)
 
   api(libs.room.runtime)
   ksp(libs.room.compiler)

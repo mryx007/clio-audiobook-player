@@ -1,4 +1,4 @@
-﻿package de.clio.core.sleeptimer
+package de.clio.core.sleeptimer
 
 import androidx.datastore.core.DataStore
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
@@ -41,6 +41,7 @@ class SleepTimerImpl internal constructor(
 ) : SleepTimer {
 
   private val scope = MainScope(dispatcherProvider)
+  private val interpolator = FastOutSlowInInterpolator()
   override val state: StateFlow<SleepTimerState>
     field = MutableStateFlow<SleepTimerState>(SleepTimerState.Disabled)
 
@@ -118,7 +119,7 @@ class SleepTimerImpl internal constructor(
     fadeOutDuration: Duration,
   ) {
     val percentage = (left / fadeOutDuration).toFloat().coerceIn(0f, 1f)
-    val volume = 1 - FastOutSlowInInterpolator().getInterpolation(1 - percentage)
+    val volume = 1 - interpolator.getInterpolation(1 - percentage)
     playerController.setVolume(volume)
   }
 

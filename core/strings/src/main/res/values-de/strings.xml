@@ -7,6 +7,16 @@
     <string name="book.delete.dialog.confirm_files">Lösche meine Dateien</string>
     <string name="book.delete.dialog.message">Dies wird die Dateien auf Deinem Gerät löschen.</string>
     <string name="book.delete.dialog.title">Buch löschen</string>
+    <string name="selection.title">%1$d ausgewählt</string>
+    <string name="selection.title_all">Alle ausgewählt</string>
+    <string name="selection.action.select_all">Alle auswählen</string>
+    <string name="selection.action.deselect_all">Auswahl aufheben</string>
+    <string name="grid.columns.title">Raster-Spalten</string>
+    <string name="grid.columns.one">1 Buch</string>
+    <string name="grid.columns.two">2 Bücher</string>
+    <string name="grid.columns.three">3 Bücher</string>
+    <string name="book.bulk_delete.dialog.title">Bücher löschen</string>
+    <string name="book.bulk_delete.dialog.message">Möchtest Du die %1$d ausgewählten Bücher wirklich löschen? Dies wird die Dateien auf Deinem Gerät löschen.</string>
     <string name="book.edit.cover.file">Cover aus dem Dateisystem</string>
     <string name="book.edit.cover.internet">Cover aus dem Internet</string>
     <string name="book.edit.name.label">Name</string>
@@ -148,6 +158,9 @@
     <string name="settings.auto_sleep_timer.title">Automatischer Einschlaf-Timer</string>
     <string name="settings.library.folders.summary">Ordner verwalten, die nach Hörbüchern durchsucht werden sollen</string>
     <string name="settings.library.use_grid.title">Raster-Layout verwenden</string>
+    <string name="settings.playback.back_button_behavior.title">Verhalten der Zurück-Taste</string>
+    <string name="settings.playback.back_button_behavior.book_overview">Zurück zur Bücherübersicht</string>
+    <string name="settings.playback.back_button_behavior.minimize_app">App minimieren</string>
     <string name="settings.playback.auto_rewind.title">Automatisch zurückspulen</string>
     <string name="settings.playback.seek_time.title">Vor- und zurückspulen</string>
     <string name="settings.support.faq.title">Häufige Fragen</string>

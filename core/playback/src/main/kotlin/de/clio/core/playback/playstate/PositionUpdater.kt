@@ -1,4 +1,4 @@
-﻿package de.clio.core.playback.playstate
+package de.clio.core.playback.playstate
 
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
@@ -45,6 +45,7 @@ class PositionUpdater(
     this.player = player
     player.addListener(this)
 
+    updateJob?.cancel()
     updateJob = scope.launch {
       playStateManager.playStateFlow
         .map { it == PlayStateManager.PlayState.Playing }

@@ -1,4 +1,4 @@
-﻿package de.clio.core.data.store
+package de.clio.core.data.store
 
 import android.app.Application
 import android.content.Context
@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import androidx.core.content.edit
 import androidx.datastore.core.DataMigration
 import androidx.datastore.core.DataStore
+import de.clio.core.data.BackButtonBehavior
 import de.clio.core.data.BookId
 import de.clio.core.data.GridMode
 import de.clio.core.data.PlaybackBackgroundStyle
@@ -160,6 +161,16 @@ public interface StoreModule {
 
   @Provides
   @SingleIn(AppScope::class)
+  @GridColumnCountStore
+  private fun gridColumnCount(factory: ClioDataStoreFactory): DataStore<Int> {
+    return factory.int(
+      fileName = "gridColumnCount",
+      defaultValue = 2,
+    )
+  }
+
+  @Provides
+  @SingleIn(AppScope::class)
   @OnboardingCompletedStore
   private fun onboardingCompleted(factory: ClioDataStoreFactory): DataStore<Boolean> {
     return factory.boolean("onboardingCompleted", defaultValue = false)
@@ -248,6 +259,24 @@ public interface StoreModule {
       serializer = PlayerButtonVisibility.serializer(),
       fileName = "playerButtonVisibility",
       defaultValue = PlayerButtonVisibility(),
+    )
+  }
+
+  @Provides
+  @SingleIn(AppScope::class)
+  @PlayerLockedStore
+  private fun playerLocked(factory: ClioDataStoreFactory): DataStore<Boolean> {
+    return factory.boolean("playerLocked", defaultValue = false)
+  }
+
+  @Provides
+  @SingleIn(AppScope::class)
+  @BackButtonBehaviorStore
+  private fun backButtonBehavior(factory: ClioDataStoreFactory): DataStore<BackButtonBehavior> {
+    return factory.create(
+      serializer = BackButtonBehavior.serializer(),
+      fileName = "backButtonBehavior",
+      defaultValue = BackButtonBehavior.BookOverview,
     )
   }
 }

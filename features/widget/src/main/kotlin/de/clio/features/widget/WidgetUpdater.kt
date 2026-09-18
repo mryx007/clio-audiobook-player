@@ -1,4 +1,4 @@
-﻿package de.clio.features.widget
+package de.clio.features.widget
 
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
@@ -25,6 +25,8 @@ import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import de.clio.core.ui.R as UiR
@@ -43,9 +45,12 @@ class WidgetUpdater(
   private val appWidgetManager = AppWidgetManager.getInstance(context)
 
   private val scope = CoroutineScope(Dispatchers.IO)
+  private var updateJob: Job? = null
 
   fun update() {
-    scope.launch {
+    val previousJob = updateJob
+    updateJob = scope.launch {
+      previousJob?.cancelAndJoin()
       val book = currentBookStore.data.first()?.let {
         repo.get(it)
       }
@@ -152,7 +157,7 @@ class WidgetUpdater(
 
     val coverFile = book.content.cover
     if (coverFile != null && coverSize > 0) {
-      val bitmap = context.imageLoader
+      val drawable = context.imageLoader
         .execute(
           ImageRequest.Builder(context)
             .data(coverFile)
@@ -162,8 +167,12 @@ class WidgetUpdater(
             .allowHardware(false)
             .build(),
         )
-        .drawable!!.toBitmap()
-      remoteViews.setImageViewBitmap(R.id.imageView, bitmap)
+        .drawable
+      if (drawable != null) {
+        remoteViews.setImageViewBitmap(R.id.imageView, drawable.toBitmap())
+      } else {
+        remoteViews.setImageViewResource(R.id.imageView, UiR.drawable.album_art)
+      }
     } else {
       remoteViews.setImageViewResource(R.id.imageView, UiR.drawable.album_art)
     }

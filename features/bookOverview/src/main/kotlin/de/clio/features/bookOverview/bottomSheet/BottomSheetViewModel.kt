@@ -1,4 +1,4 @@
-﻿package de.clio.features.bookOverview.bottomSheet
+package de.clio.features.bookOverview.bottomSheet
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
@@ -28,12 +28,12 @@ class BottomSheetViewModel(private val viewModels: Set<@JvmSuppressWildcards Bot
 
   internal fun bookSelected(bookId: BookId) {
     this.bookId = bookId
-    this.selectedBookId = bookId
     scope.launch {
       val items = viewModels.flatMap { it.items(bookId) }
         .toSet()
         .sorted()
       state.value = EditBookBottomSheetState(items)
+      selectedBookId = bookId
     }
   }
 

@@ -1,4 +1,4 @@
-﻿package de.clio.features.playbackScreen
+package de.clio.features.playbackScreen
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
@@ -9,6 +9,7 @@ import androidx.compose.runtime.remember
 import androidx.datastore.core.DataStore
 import de.clio.core.common.DispatcherProvider
 import de.clio.core.common.MainScope
+import de.clio.core.data.BackButtonBehavior
 import de.clio.core.data.Book
 import de.clio.core.data.BookId
 import de.clio.core.data.EqualizerSetting
@@ -20,10 +21,12 @@ import de.clio.core.data.markForPosition
 import de.clio.core.data.repo.BookRepository
 import de.clio.core.data.repo.BookmarkRepo
 import de.clio.core.data.sleeptimer.SleepTimerPreference
+import de.clio.core.data.store.BackButtonBehaviorStore
 import de.clio.core.data.store.CurrentBookStore
 import de.clio.core.data.store.FastForwardTimeStore
 import de.clio.core.data.store.PlaybackBackgroundStyleStore
 import de.clio.core.data.store.PlayerButtonVisibilityStore
+import de.clio.core.data.store.PlayerLockedStore
 import de.clio.core.data.store.RewindTimeStore
 import de.clio.core.data.store.SleepTimerPreferenceStore
 import de.clio.core.featureflag.ExperimentalPlaybackPersistenceQualifier
@@ -82,6 +85,10 @@ class BookPlayViewModel(
   private val sleepTimerPreferenceStore: DataStore<SleepTimerPreference>,
   @PlayerButtonVisibilityStore
   private val playerButtonVisibilityStore: DataStore<PlayerButtonVisibility>,
+  @PlayerLockedStore
+  private val playerLockedStore: DataStore<Boolean>,
+  @BackButtonBehaviorStore
+  private val backButtonBehaviorStore: DataStore<BackButtonBehavior>,
   @ExperimentalPlaybackPersistenceQualifier
   private val experimentalPlaybackPersistenceFeatureFlag: FeatureFlag<Boolean>,
   @KioskModeFeatureFlagQualifier
@@ -97,8 +104,6 @@ class BookPlayViewModel(
 
   internal val dialogState: State<BookPlayDialogViewState?>
     field = mutableStateOf<BookPlayDialogViewState?>(null)
-
-  private val isLocked = mutableStateOf(false)
 
   init {
     scope.launch {
@@ -149,6 +154,8 @@ class BookPlayViewModel(
     val fastForwardTime = remember { fastForwardTimeStore.data }.collectAsState(initial = 30).value
     val playerButtonVisibility = remember { playerButtonVisibilityStore.data }
       .collectAsState(initial = PlayerButtonVisibility()).value
+    val isLocked = remember { playerLockedStore.data }
+      .collectAsState(initial = false).value
     val hasMoreThanOneChapter = book.chapters.sumOf { it.chapterMarks.count() } > 1
     return BookPlayViewState(
       sleepTimerState = sleepTime.toViewState(),
@@ -160,7 +167,7 @@ class BookPlayViewModel(
       playedTime = positionInCurrentMark.milliseconds,
       totalDuration = book.duration.milliseconds,
       totalPlayedTime = book.position.milliseconds,
-      isLocked = isLocked.value,
+      isLocked = isLocked,
       backgroundStyle = backgroundStyle,
       cover = book.content.coverUrl,
       skipSilence = book.content.skipSilence,
@@ -290,11 +297,23 @@ class BookPlayViewModel(
   }
 
   fun toggleLock() {
-    isLocked.value = !isLocked.value
+    scope.launch {
+      playerLockedStore.updateData { !it }
+    }
   }
 
   fun onCloseClick() {
     navigator.goBack()
+  }
+
+  fun onSystemBackClick() {
+    scope.launch {
+      if (backButtonBehaviorStore.data.first() == BackButtonBehavior.MinimizeApp) {
+        navigator.minimizeApp()
+      } else {
+        navigator.goBack()
+      }
+    }
   }
 
   fun onCurrentChapterClick() {

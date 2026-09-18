@@ -1,8 +1,9 @@
-﻿package de.clio.core.data.store
+package de.clio.core.data.store
 
 import androidx.datastore.core.Serializer
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import kotlinx.serialization.json.encodeToStream
@@ -16,7 +17,11 @@ internal class KotlinxDataStoreSerializer<T>(
 ) : Serializer<T> {
 
   @OptIn(ExperimentalSerializationApi::class)
-  override suspend fun readFrom(input: InputStream): T = json.decodeFromStream(serializer, input)
+  override suspend fun readFrom(input: InputStream): T = try {
+    json.decodeFromStream(serializer, input)
+  } catch (e: SerializationException) {
+    defaultValue
+  }
 
   @OptIn(ExperimentalSerializationApi::class)
   override suspend fun writeTo(

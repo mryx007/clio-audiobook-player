@@ -1,4 +1,4 @@
-﻿package de.clio.features.bookOverview.views
+package de.clio.features.bookOverview.views
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -52,10 +52,18 @@ import de.clio.features.bookOverview.overview.BookOverviewCategory
 import de.clio.features.bookOverview.overview.BookOverviewItemViewState
 import de.clio.core.ui.R as UiR
 
+import androidx.compose.material3.Checkbox
+
 @Composable
 internal fun ListBooks(
   books: Map<BookOverviewCategory, Map<BookId, State<BookOverviewItemViewState>>>,
   onBookClick: (BookId) -> Unit,
+  onBookLongClick: (BookId) -> Unit,
+  selectedBookIds: Set<BookId>,
+  allBookIds: Set<BookId> = emptySet(),
+  inSelectionMode: Boolean,
+  onSelectAllClick: () -> Unit = {},
+  onDeleteSelectedClick: () -> Unit = {},
   onBookMoreClick: (BookId) -> Unit,
   selectedBookId: BookId?,
   menuItems: List<BottomSheetItem>,
@@ -78,12 +86,18 @@ internal fun ListBooks(
         key = category,
         contentType = "header",
       ) {
+        val allSelected = selectedBookIds.size == allBookIds.size && allBookIds.isNotEmpty()
         Header(
           modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.background)
             .padding(vertical = 8.dp, horizontal = 4.dp),
           category = category,
+          inSelectionMode = inSelectionMode,
+          selectedCount = selectedBookIds.size,
+          allSelected = allSelected,
+          onSelectAllClick = onSelectAllClick,
+          onDeleteSelectedClick = onDeleteSelectedClick,
         )
       }
       items(
@@ -94,6 +108,9 @@ internal fun ListBooks(
         ListBookRow(
           book = bookState.value,
           onBookClick = onBookClick,
+          onBookLongClick = onBookLongClick,
+          isSelected = bookState.value.id in selectedBookIds,
+          inSelectionMode = inSelectionMode,
           onBookMoreClick = onBookMoreClick,
           selectedBookId = selectedBookId,
           menuItems = menuItems,
@@ -112,6 +129,9 @@ internal fun ListBooks(
 internal fun ListBookRow(
   book: BookOverviewItemViewState,
   onBookClick: (BookId) -> Unit,
+  onBookLongClick: (BookId) -> Unit,
+  isSelected: Boolean,
+  inSelectionMode: Boolean,
   onBookMoreClick: (BookId) -> Unit,
   selectedBookId: BookId?,
   menuItems: List<BottomSheetItem>,
@@ -123,6 +143,8 @@ internal fun ListBookRow(
   BookCard(
     bookId = book.id,
     onBookClick = onBookClick,
+    onBookLongClick = onBookLongClick,
+    isSelected = isSelected,
     modifier = modifier,
   ) {
     Column(Modifier.padding()) {
@@ -197,41 +219,49 @@ internal fun ListBookRow(
               }
             }
 
-            Box(
-              modifier = Modifier.padding(start = 4.dp),
-            ) {
-              IconButton(
-                onClick = {
-                  onBookMoreClick(book.id)
-                  menuExpanded = true
-                },
-                modifier = Modifier.size(36.dp),
+            if (inSelectionMode) {
+              Checkbox(
+                checked = isSelected,
+                onCheckedChange = { onBookClick(book.id) },
+                modifier = Modifier.padding(start = 4.dp),
+              )
+            } else {
+              Box(
+                modifier = Modifier.padding(start = 4.dp),
               ) {
-                Icon(
-                  imageVector = ClioIcons.MoreVert,
-                  contentDescription = null,
-                  tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-              }
-
-              DropdownMenu(
-                expanded = menuExpanded && selectedBookId == book.id,
-                onDismissRequest = { menuExpanded = false },
-              ) {
-                menuItems.forEach { item ->
-                  DropdownMenuItem(
-                    text = { Text(stringResource(item.titleRes)) },
-                    leadingIcon = {
-                      Icon(
-                        imageVector = item.icon,
-                        contentDescription = null,
-                      )
-                    },
-                    onClick = {
-                      menuExpanded = false
-                      onMenuItemClick(book.id, item)
-                    },
+                IconButton(
+                  onClick = {
+                    onBookMoreClick(book.id)
+                    menuExpanded = true
+                  },
+                  modifier = Modifier.size(36.dp),
+                ) {
+                  Icon(
+                    imageVector = ClioIcons.MoreVert,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
                   )
+                }
+
+                SmoothDropdownMenu(
+                  expanded = menuExpanded && selectedBookId == book.id && menuItems.isNotEmpty(),
+                  onDismissRequest = { menuExpanded = false },
+                ) {
+                  menuItems.forEach { item ->
+                    DropdownMenuItem(
+                      text = { Text(stringResource(item.titleRes)) },
+                      leadingIcon = {
+                        Icon(
+                          imageVector = item.icon,
+                          contentDescription = null,
+                        )
+                      },
+                      onClick = {
+                        menuExpanded = false
+                        onMenuItemClick(book.id, item)
+                      },
+                    )
+                  }
                 }
               }
             }
@@ -290,11 +320,12 @@ private fun CoverImage(
 @Composable
 @Preview
 private fun ListBookRowPreviewWithProgress() {
-  ListBookRow(BookOverviewPreviewParameterProvider().book().copy(progress = 0.6f), {}, {}, null, emptyList(), { _, _ -> })
+  ListBookRow(BookOverviewPreviewParameterProvider().book().copy(progress = 0.6f), {}, {}, false, false, {}, null, emptyList(), { _, _ -> })
 }
 
 @Composable
 @Preview
 private fun ListBookRowPreviewWithoutProgress() {
-  ListBookRow(BookOverviewPreviewParameterProvider().book().copy(progress = 0f), {}, {}, null, emptyList(), { _, _ -> })
+  ListBookRow(BookOverviewPreviewParameterProvider().book().copy(progress = 0f), {}, {}, false, false, {}, null, emptyList(), { _, _ -> })
 }
+

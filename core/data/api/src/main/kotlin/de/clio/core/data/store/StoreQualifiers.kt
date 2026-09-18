@@ -1,4 +1,4 @@
-﻿package de.clio.core.data.store
+package de.clio.core.data.store
 
 import dev.zacsweers.metro.Qualifier
 
@@ -61,3 +61,12 @@ public annotation class PlaybackBackgroundStyleStore
 
 @Qualifier
 public annotation class PlayerButtonVisibilityStore
+
+@Qualifier
+public annotation class PlayerLockedStore
+
+@Qualifier
+public annotation class BackButtonBehaviorStore
+
+@Qualifier
+public annotation class GridColumnCountStore

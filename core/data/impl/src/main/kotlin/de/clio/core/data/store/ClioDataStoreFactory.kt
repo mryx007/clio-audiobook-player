@@ -1,4 +1,4 @@
-﻿package de.clio.core.data.store
+package de.clio.core.data.store
 
 import android.app.Application
 import androidx.datastore.core.DataMigration
@@ -60,3 +60,4 @@ internal class ClioDataStoreFactory(
     )
   }
 }
+

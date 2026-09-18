@@ -1,4 +1,4 @@
-﻿package de.clio.core.playback.session
+package de.clio.core.playback.session
 
 import android.os.Bundle
 import androidx.datastore.core.DataStore
@@ -96,14 +96,14 @@ class LibrarySessionCallback(
     session: MediaLibrarySession,
     browser: ControllerInfo,
     params: LibraryParams?,
-  ): ListenableFuture<LibraryResult<MediaItem>> {
+  ): ListenableFuture<LibraryResult<MediaItem>> = scope.future {
     val mediaItem = if (params?.isRecent == true) {
       mediaItemProvider.recent() ?: mediaItemProvider.root()
     } else {
       mediaItemProvider.root()
     }
     Logger.d("onGetLibraryRoot(isRecent=${params?.isRecent == true}). Returning ${mediaItem.mediaId}")
-    return Futures.immediateFuture(LibraryResult.ofItem(mediaItem, params))
+    LibraryResult.ofItem(mediaItem, params)
   }
 
   override fun onGetItem(

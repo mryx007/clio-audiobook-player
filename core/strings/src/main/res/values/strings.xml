@@ -14,6 +14,23 @@
     <string name="book.delete.dialog.message">This will delete the files on your device.</string>
     <!-- Title for the delete-book confirmation dialog. -->
     <string name="book.delete.dialog.title">Delete Book</string>
+    <!-- Title showing count of selected books in multi-select mode. -->
+    <string name="selection.title">%1$d selected</string>
+    <!-- Title showing that all books are selected in multi-select mode. -->
+    <string name="selection.title_all">All selected</string>
+    <!-- Action to select all items. -->
+    <string name="selection.action.select_all">Select all</string>
+    <!-- Action to deselect all items. -->
+    <string name="selection.action.deselect_all">Deselect all</string>
+    <!-- Grid columns settings and options. -->
+    <string name="grid.columns.title">Grid columns</string>
+    <string name="grid.columns.one">1 book</string>
+    <string name="grid.columns.two">2 books</string>
+    <string name="grid.columns.three">3 books</string>
+    <!-- Title for bulk deleting multiple books. -->
+    <string name="book.bulk_delete.dialog.title">Delete books</string>
+    <!-- Warning message for bulk deleting multiple books. -->
+    <string name="book.bulk_delete.dialog.message">Do you really want to delete the %1$d selected books? This will delete the files on your device.</string>
     <!-- Bottom-sheet item for choosing a cover from local files. -->
     <string name="book.edit.cover.file">Cover from the file system</string>
     <!-- Bottom-sheet item for choosing a cover from an internet search. -->
@@ -238,6 +255,12 @@
     <string name="settings.playback.open_last_book_on_startup.title">Open last book on startup</string>
     <!-- Settings summary for automatically opening the last book on startup. -->
     <string name="settings.playback.open_last_book_on_startup.summary">Skip the overview and go directly to the playback screen</string>
+    <!-- Settings title for back button behavior in playback screen. -->
+    <string name="settings.playback.back_button_behavior.title">Back button behavior</string>
+    <!-- Option for back button behavior: return to library overview. -->
+    <string name="settings.playback.back_button_behavior.book_overview">Go to book overview</string>
+    <!-- Option for back button behavior: minimize app immediately. -->
+    <string name="settings.playback.back_button_behavior.minimize_app">Minimize app</string>
     <!-- Label for using system dynamic colors as the app design. -->
     <string name="settings.appearance.theme.dynamic">Material You</string>
     <!-- Label for selecting a custom theme color. -->

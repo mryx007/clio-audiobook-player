@@ -1,4 +1,4 @@
-﻿package de.clio.core.data
+package de.clio.core.data
 
 import de.clio.core.documentfile.CachedDocumentFile
 import de.clio.core.documentfile.walk
@@ -31,11 +31,26 @@ private val supportedAudioFormats = setOf(
   "xmf",
 )
 
+private val supportedImageFormats = setOf(
+  "jpg",
+  "jpeg",
+  "png",
+  "webp",
+  "bmp",
+)
+
 public fun CachedDocumentFile.isAudioFile(): Boolean {
   if (!isFile) return false
   val name = name ?: return false
   val extension = name.substringAfterLast(".").lowercase()
   return extension in supportedAudioFormats
+}
+
+public fun CachedDocumentFile.isImageFile(): Boolean {
+  if (!isFile) return false
+  val name = name ?: return false
+  val extension = name.substringAfterLast(".").lowercase()
+  return extension in supportedImageFormats
 }
 
 public fun CachedDocumentFile.audioFileCount(): Int {
@@ -45,3 +60,4 @@ public fun CachedDocumentFile.audioFileCount(): Int {
     walk().count { it.isAudioFile() }
   }
 }
+

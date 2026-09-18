@@ -1,5 +1,6 @@
-﻿package de.clio.features.settings
+package de.clio.features.settings
 
+import de.clio.core.data.BackButtonBehavior
 import de.clio.core.data.PlaybackBackgroundStyle
 import de.clio.core.data.ThemeMode
 import java.time.LocalTime
@@ -8,6 +9,7 @@ interface SettingsListener {
   fun close()
   fun onThemeModeRowClick()
   fun onPlaybackBackgroundStyleRowClick()
+  fun onBackButtonBehaviorRowClick()
   fun setThemeMode(themeMode: ThemeMode)
   fun setCustomThemeHex(hex: String)
   fun setCustomTheme(
@@ -15,6 +17,7 @@ interface SettingsListener {
     hue: Int,
   ) = setCustomThemeHex(hex)
   fun setPlaybackBackgroundStyle(style: PlaybackBackgroundStyle)
+  fun setBackButtonBehavior(behavior: BackButtonBehavior)
   fun toggleGrid()
   fun rewindAmountChanged(seconds: Int)
   fun onRewindRowClick()
@@ -46,9 +49,11 @@ interface SettingsListener {
       override fun close() {}
       override fun onThemeModeRowClick() {}
       override fun onPlaybackBackgroundStyleRowClick() {}
+      override fun onBackButtonBehaviorRowClick() {}
       override fun setThemeMode(themeMode: ThemeMode) {}
       override fun setCustomThemeHex(hex: String) {}
       override fun setPlaybackBackgroundStyle(style: PlaybackBackgroundStyle) {}
+      override fun setBackButtonBehavior(behavior: BackButtonBehavior) {}
       override fun toggleGrid() {}
       override fun rewindAmountChanged(seconds: Int) {}
       override fun onRewindRowClick() {}

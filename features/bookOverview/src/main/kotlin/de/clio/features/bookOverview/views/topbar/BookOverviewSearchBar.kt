@@ -1,4 +1,4 @@
-﻿package de.clio.features.bookOverview.views.topbar
+package de.clio.features.bookOverview.views.topbar
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ColumnScope
@@ -28,6 +28,9 @@ internal fun ColumnScope.BookOverviewSearchBar(
   onSettingsClick: () -> Unit,
   showAddBookHint: Boolean,
   showFolderPickerIcon: Boolean,
+  showGridColumnsIcon: Boolean = false,
+  gridColumnCount: Int = 2,
+  onGridColumnCountChange: (Int) -> Unit = {},
   horizontalPadding: Dp = 16.dp,
 ) {
   SearchBar(
@@ -61,6 +64,9 @@ internal fun ColumnScope.BookOverviewSearchBar(
             TopBarTrailingIcon(
               showAddBookHint = showAddBookHint,
               showFolderPickerIcon = showFolderPickerIcon,
+              showGridColumnsIcon = showGridColumnsIcon,
+              gridColumnCount = gridColumnCount,
+              onGridColumnCountChange = onGridColumnCountChange,
               onBookFolderClick = onBookFolderClick,
               onSettingsClick = onSettingsClick,
             )

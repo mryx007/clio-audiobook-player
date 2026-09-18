@@ -1,4 +1,4 @@
-﻿package de.clio.features.settings
+package de.clio.features.settings
 
 import android.os.Build
 import androidx.compose.runtime.Composable
@@ -7,26 +7,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.core.net.toUri
-import androidx.datastore.core.DataStore
 import de.clio.core.common.AppInfoProvider
 import de.clio.core.common.DispatcherProvider
 import de.clio.core.common.MainScope
+import de.clio.core.data.BackButtonBehavior
 import de.clio.core.data.GridMode
 import de.clio.core.data.PlaybackBackgroundStyle
 import de.clio.core.data.ThemeColor
 import de.clio.core.data.ThemeMode
+import de.clio.core.data.repo.UserSettingsRepository
 import de.clio.core.data.sleeptimer.SleepTimerPreference
-import de.clio.core.data.store.AnalyticsConsentStore
-import de.clio.core.data.store.AutoRewindAmountStore
-import de.clio.core.data.store.DeveloperMenuUnlockedStore
-import de.clio.core.data.store.FastForwardTimeStore
-import de.clio.core.data.store.GridModeStore
-import de.clio.core.data.store.OpenLastBookOnStartupStore
-import de.clio.core.data.store.PlaybackBackgroundStyleStore
-import de.clio.core.data.store.RewindTimeStore
-import de.clio.core.data.store.SleepTimerPreferenceStore
-import de.clio.core.data.store.ThemeColorStore
-import de.clio.core.data.store.ThemeModeStore
 import de.clio.core.featureflag.FeatureFlag
 import de.clio.core.featureflag.KioskModeFeatureFlagQualifier
 import de.clio.core.ui.GridCount
@@ -35,39 +25,17 @@ import de.clio.navigation.Navigator
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.LocalTime
 
 @Inject
 class SettingsViewModel(
-  @ThemeModeStore
-  private val themeModeStore: DataStore<ThemeMode>,
-  @ThemeColorStore
-  private val themeColorStore: DataStore<ThemeColor>,
-  @AutoRewindAmountStore
-  private val autoRewindAmountStore: DataStore<Int>,
-  @RewindTimeStore
-  private val rewindTimeStore: DataStore<Int>,
-  @FastForwardTimeStore
-  private val fastForwardTimeStore: DataStore<Int>,
+  private val userSettingsRepository: UserSettingsRepository,
   private val navigator: Navigator,
   private val appInfoProvider: AppInfoProvider,
-  @GridModeStore
-  private val gridModeStore: DataStore<GridMode>,
-  @SleepTimerPreferenceStore
-  private val sleepTimerPreferenceStore: DataStore<SleepTimerPreference>,
-  @AnalyticsConsentStore
-  private val analyticsConsentStore: DataStore<Boolean>,
   private val gridCount: GridCount,
   @KioskModeFeatureFlagQualifier
   private val kioskModeFeatureFlag: FeatureFlag<Boolean>,
-  @DeveloperMenuUnlockedStore
-  private val developerMenuUnlockedStore: DataStore<Boolean>,
-  @OpenLastBookOnStartupStore
-  private val openLastBookOnStartupStore: DataStore<Boolean>,
-  @PlaybackBackgroundStyleStore
-  private val playbackBackgroundStyleStore: DataStore<PlaybackBackgroundStyle>,
   dispatcherProvider: DispatcherProvider,
 ) : SettingsListener {
 
@@ -78,27 +46,27 @@ class SettingsViewModel(
   private var appVersionTapCount = 0
 
   @Composable
-  fun viewState(): SettingsViewState? {
-    val themeMode by remember { themeModeStore.data }.collectAsState(initial = ThemeMode.FollowSystem)
-    val customThemeColor by remember { themeColorStore.data }.collectAsState(initial = ThemeColor())
-    val autoRewindAmount by remember { autoRewindAmountStore.data }.collectAsState(initial = 2)
-    val rewindTime by remember { rewindTimeStore.data }.collectAsState(initial = 20)
-    val fastForwardTime by remember { fastForwardTimeStore.data }.collectAsState(initial = 30)
-    val gridMode = remember { gridModeStore.data }.collectAsState(initial = null).value ?: return null
-    val autoSleepTimer by remember { sleepTimerPreferenceStore.data }.collectAsState(
-      initial = SleepTimerPreference.Default,
-    )
-    val analyticsEnabled by remember { analyticsConsentStore.data }.collectAsState(initial = false)
-    val openLastBookOnStartup by remember { openLastBookOnStartupStore.data }.collectAsState(initial = false)
-    val playbackBackgroundStyle by remember { playbackBackgroundStyleStore.data }.collectAsState(initial = PlaybackBackgroundStyle.Solid)
+  fun viewState(): SettingsViewState {
+    val themeMode by userSettingsRepository.themeMode.collectAsState()
+    val customThemeColor by userSettingsRepository.themeColor.collectAsState()
+    val autoRewindAmount by userSettingsRepository.autoRewindAmount.collectAsState()
+    val rewindTime by userSettingsRepository.rewindTime.collectAsState()
+    val fastForwardTime by userSettingsRepository.fastForwardTime.collectAsState()
+    val gridMode by userSettingsRepository.gridMode.collectAsState()
+    val autoSleepTimer by userSettingsRepository.sleepTimerPreference.collectAsState()
+    val analyticsEnabled by userSettingsRepository.analyticsConsent.collectAsState()
+    val openLastBookOnStartup by userSettingsRepository.openLastBookOnStartup.collectAsState()
+    val playbackBackgroundStyle by userSettingsRepository.playbackBackgroundStyle.collectAsState()
+    val backButtonBehavior by userSettingsRepository.backButtonBehavior.collectAsState()
+    val showDeveloperMenu by userSettingsRepository.developerMenuUnlocked.collectAsState()
     val kioskMode = remember {
       kioskModeFeatureFlag.get()
     }
-    val showDeveloperMenu by remember { developerMenuUnlockedStore.data }.collectAsState(initial = false)
     return SettingsViewState(
       themeMode = themeMode,
       customThemeColor = customThemeColor,
       playbackBackgroundStyle = playbackBackgroundStyle,
+      backButtonBehavior = backButtonBehavior,
       rewindTimeInSeconds = rewindTime,
       fastForwardTimeInSeconds = fastForwardTime,
       autoRewindInSeconds = autoRewindAmount,
@@ -135,9 +103,20 @@ class SettingsViewModel(
     dialog.value = SettingsViewState.Dialog.BackgroundStyle
   }
 
+  override fun onBackButtonBehaviorRowClick() {
+    dialog.value = SettingsViewState.Dialog.BackButtonBehavior
+  }
+
   override fun setThemeMode(themeMode: ThemeMode) {
     mainScope.launch {
-      themeModeStore.updateData { themeMode }
+      userSettingsRepository.setThemeMode(themeMode)
+    }
+    dialog.value = null
+  }
+
+  override fun setBackButtonBehavior(behavior: BackButtonBehavior) {
+    mainScope.launch {
+      userSettingsRepository.setBackButtonBehavior(behavior)
     }
     dialog.value = null
   }
@@ -148,8 +127,8 @@ class SettingsViewModel(
   ) {
     val formatted = if (hex.startsWith("#")) hex else "#$hex"
     mainScope.launch {
-      themeColorStore.updateData { it.copy(hex = formatted, hue = hue) }
-      themeModeStore.updateData { ThemeMode.Custom }
+      userSettingsRepository.setThemeColor(userSettingsRepository.themeColor.value.copy(hex = formatted, hue = hue))
+      userSettingsRepository.setThemeMode(ThemeMode.Custom)
     }
     dialog.value = null
   }
@@ -169,30 +148,30 @@ class SettingsViewModel(
 
   override fun setPlaybackBackgroundStyle(style: PlaybackBackgroundStyle) {
     mainScope.launch {
-      playbackBackgroundStyleStore.updateData { style }
+      userSettingsRepository.setPlaybackBackgroundStyle(style)
     }
     dialog.value = null
   }
 
   override fun toggleGrid() {
     mainScope.launch {
-      gridModeStore.updateData { currentMode ->
-        when (currentMode) {
-          GridMode.LIST -> GridMode.GRID
-          GridMode.GRID -> GridMode.LIST
-          GridMode.FOLLOW_DEVICE -> if (gridCount.useGridAsDefault()) {
-            GridMode.LIST
-          } else {
-            GridMode.GRID
-          }
+      val currentMode = userSettingsRepository.gridMode.value
+      val nextMode = when (currentMode) {
+        GridMode.LIST -> GridMode.GRID
+        GridMode.GRID -> GridMode.LIST
+        GridMode.FOLLOW_DEVICE -> if (gridCount.useGridAsDefault()) {
+          GridMode.LIST
+        } else {
+          GridMode.GRID
         }
       }
+      userSettingsRepository.setGridMode(nextMode)
     }
   }
 
   override fun rewindAmountChanged(seconds: Int) {
     mainScope.launch {
-      rewindTimeStore.updateData { seconds }
+      userSettingsRepository.setRewindTime(seconds)
     }
   }
 
@@ -202,7 +181,7 @@ class SettingsViewModel(
 
   override fun fastForwardAmountChanged(seconds: Int) {
     mainScope.launch {
-      fastForwardTimeStore.updateData { seconds }
+      userSettingsRepository.setFastForwardTime(seconds)
     }
   }
 
@@ -212,7 +191,7 @@ class SettingsViewModel(
 
   override fun autoRewindAmountChang(seconds: Int) {
     mainScope.launch {
-      autoRewindAmountStore.updateData { seconds }
+      userSettingsRepository.setAutoRewindAmount(seconds)
     }
   }
 
@@ -266,47 +245,44 @@ class SettingsViewModel(
 
   override fun setAutoSleepTimer(checked: Boolean) {
     mainScope.launch {
-      sleepTimerPreferenceStore.updateData { currentPrefs ->
-        currentPrefs.copy(autoSleepTimerEnabled = checked)
-      }
+      val currentPrefs = userSettingsRepository.sleepTimerPreference.value
+      userSettingsRepository.setSleepTimerPreference(currentPrefs.copy(autoSleepTimerEnabled = checked))
     }
   }
 
   override fun setAutoSleepTimerStart(time: LocalTime) {
     mainScope.launch {
-      sleepTimerPreferenceStore.updateData { currentPrefs ->
-        currentPrefs.copy(autoSleepStartTime = time)
-      }
+      val currentPrefs = userSettingsRepository.sleepTimerPreference.value
+      userSettingsRepository.setSleepTimerPreference(currentPrefs.copy(autoSleepStartTime = time))
     }
   }
 
   override fun setAutoSleepTimerEnd(time: LocalTime) {
     mainScope.launch {
-      sleepTimerPreferenceStore.updateData { currentPrefs ->
-        currentPrefs.copy(autoSleepEndTime = time)
-      }
+      val currentPrefs = userSettingsRepository.sleepTimerPreference.value
+      userSettingsRepository.setSleepTimerPreference(currentPrefs.copy(autoSleepEndTime = time))
     }
   }
 
   override fun toggleAnalytics() {
     mainScope.launch {
-      analyticsConsentStore.updateData { !it }
+      userSettingsRepository.setAnalyticsConsent(!userSettingsRepository.analyticsConsent.value)
     }
   }
 
   override fun toggleOpenLastBookOnStartup() {
     mainScope.launch {
-      openLastBookOnStartupStore.updateData { !it }
+      userSettingsRepository.setOpenLastBookOnStartup(!userSettingsRepository.openLastBookOnStartup.value)
     }
   }
 
   override fun onAppVersionClick() {
     mainScope.launch {
-      if (developerMenuUnlockedStore.data.first()) {
+      if (userSettingsRepository.developerMenuUnlocked.value) {
         return@launch
       }
       if (++appVersionTapCount >= 13) {
-        developerMenuUnlockedStore.updateData { true }
+        userSettingsRepository.setDeveloperMenuUnlocked(true)
         viewEffects.emit(SettingsViewEffect.DeveloperMenuUnlocked)
       }
     }

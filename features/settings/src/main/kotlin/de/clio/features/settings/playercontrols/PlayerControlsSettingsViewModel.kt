@@ -1,4 +1,4 @@
-﻿package de.clio.features.settings.playercontrols
+package de.clio.features.settings.playercontrols
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -52,12 +52,12 @@ class PlayerControlsSettingsViewModel(
   fun viewState(): PlayerControlsSettingsViewState? {
     val buttonVisibility = remember { playerButtonVisibilityStore.data }
       .collectAsState(initial = null).value ?: return null
-    val rewindTime by remember { rewindTimeStore.data }
-      .collectAsState(initial = 20)
-    val fastForwardTime by remember { fastForwardTimeStore.data }
-      .collectAsState(initial = 30)
-    val autoRewindAmount by remember { autoRewindAmountStore.data }
-      .collectAsState(initial = 2)
+    val rewindTime = remember { rewindTimeStore.data }
+      .collectAsState(initial = null).value ?: return null
+    val fastForwardTime = remember { fastForwardTimeStore.data }
+      .collectAsState(initial = null).value ?: return null
+    val autoRewindAmount = remember { autoRewindAmountStore.data }
+      .collectAsState(initial = null).value ?: return null
     return PlayerControlsSettingsViewState(
       buttonVisibility = buttonVisibility,
       rewindTimeInSeconds = rewindTime,

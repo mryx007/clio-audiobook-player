@@ -1,4 +1,4 @@
-﻿package de.clio.features.settings.views
+package de.clio.features.settings.views
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -647,7 +647,7 @@ internal fun PlaybackBackgroundStyleDialog(
 }
 
 @Composable
-private fun SelectionRow(
+internal fun SelectionRow(
   title: String,
   value: String,
   leadingIcon: ImageVector? = null,
@@ -678,7 +678,7 @@ private fun SelectionRow(
 }
 
 @Composable
-private fun SelectionDialogItem(
+internal fun SelectionDialogItem(
   text: String,
   selected: Boolean,
   supportingText: String? = null,

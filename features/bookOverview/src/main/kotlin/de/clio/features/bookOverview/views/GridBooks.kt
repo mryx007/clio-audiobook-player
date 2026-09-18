@@ -15,8 +15,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -58,12 +60,28 @@ import de.clio.features.bookOverview.bottomSheet.BottomSheetItem
 import de.clio.features.bookOverview.overview.BookOverviewCategory
 import de.clio.features.bookOverview.overview.BookOverviewItemViewState
 import kotlin.math.roundToInt
+import de.clio.core.strings.R as StringsR
 import de.clio.core.ui.R as UiR
+
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.LocalMinimumInteractiveComponentSize
+import androidx.compose.runtime.CompositionLocalProvider
 
 @Composable
 internal fun GridBooks(
   books: Map<BookOverviewCategory, Map<BookId, State<BookOverviewItemViewState>>>,
   onBookClick: (BookId) -> Unit,
+  modifier: Modifier = Modifier,
+  gridColumnCount: Int = 2,
+  onBookLongClick: (BookId) -> Unit = {},
+  selectedBookIds: Set<BookId> = emptySet(),
+  allBookIds: Set<BookId> = emptySet(),
+  inSelectionMode: Boolean = false,
+  onSelectAllClick: () -> Unit = {},
+  onDeleteSelectedClick: () -> Unit = {},
   onBookMoreClick: (BookId) -> Unit = {},
   selectedBookId: BookId? = null,
   menuItems: List<BottomSheetItem> = emptyList(),
@@ -71,9 +89,9 @@ internal fun GridBooks(
   showPermissionBugCard: Boolean = false,
   onPermissionBugCardClick: () -> Unit = {},
 ) {
-  val cellCount = gridColumnCount()
   LazyVerticalGrid(
-    columns = GridCells.Fixed(cellCount),
+    columns = GridCells.Fixed(gridColumnCount.coerceIn(1, 3)),
+    modifier = modifier,
     verticalArrangement = Arrangement.spacedBy(16.dp),
     horizontalArrangement = Arrangement.spacedBy(12.dp),
     contentPadding = PaddingValues(start = 12.dp, end = 12.dp, top = 20.dp, bottom = 12.dp),
@@ -92,9 +110,15 @@ internal fun GridBooks(
         key = category,
         contentType = "header",
       ) {
+        val allSelected = selectedBookIds.size == allBookIds.size && allBookIds.isNotEmpty()
         Header(
           modifier = Modifier.padding(top = 8.dp, bottom = 4.dp, start = 4.dp, end = 4.dp),
           category = category,
+          inSelectionMode = inSelectionMode,
+          selectedCount = selectedBookIds.size,
+          allSelected = allSelected,
+          onSelectAllClick = onSelectAllClick,
+          onDeleteSelectedClick = onDeleteSelectedClick,
         )
       }
       items(
@@ -105,6 +129,9 @@ internal fun GridBooks(
         GridBook(
           book = bookState.value,
           onBookClick = onBookClick,
+          onBookLongClick = onBookLongClick,
+          isSelected = bookState.value.id in selectedBookIds,
+          inSelectionMode = inSelectionMode,
           onBookMoreClick = onBookMoreClick,
           selectedBookId = selectedBookId,
           menuItems = menuItems,
@@ -121,11 +148,15 @@ internal fun GridBooks(
   }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun GridBook(
   book: BookOverviewItemViewState,
   onBookClick: (BookId) -> Unit,
   modifier: Modifier = Modifier,
+  onBookLongClick: (BookId) -> Unit = {},
+  isSelected: Boolean = false,
+  inSelectionMode: Boolean = false,
   onBookMoreClick: (BookId) -> Unit = {},
   selectedBookId: BookId? = null,
   menuItems: List<BottomSheetItem> = emptyList(),
@@ -136,40 +167,67 @@ internal fun GridBook(
     modifier = modifier
       .fillMaxWidth()
       .clip(MaterialTheme.shapes.medium)
-      .clickable { onBookClick(book.id) }
+      .combinedClickable(
+        onClick = { onBookClick(book.id) },
+        onLongClick = { onBookLongClick(book.id) },
+      )
       .padding(4.dp),
   ) {
-    Text(
-      text = book.author ?: "",
-      style = MaterialTheme.typography.labelMedium.copy(
-        fontSize = 14.sp,
-        fontWeight = FontWeight.Bold,
-      ),
-      color = MaterialTheme.colorScheme.onSurface,
-      minLines = 1,
-      maxLines = 1,
-      overflow = TextOverflow.Ellipsis,
-    )
+    Row(
+      modifier = Modifier.fillMaxWidth(),
+      verticalAlignment = Alignment.CenterVertically,
+    ) {
+      Column(
+        modifier = Modifier.weight(1f),
+      ) {
+        Text(
+          text = book.author ?: "",
+          style = MaterialTheme.typography.labelMedium.copy(
+            fontSize = 15.sp,
+            fontWeight = FontWeight.Bold,
+          ),
+          color = MaterialTheme.colorScheme.onSurface,
+          minLines = 1,
+          maxLines = 1,
+          overflow = TextOverflow.Ellipsis,
+        )
 
-    Spacer(Modifier.height(1.dp))
+        Spacer(Modifier.height(1.dp))
 
-    Text(
-      text = book.name,
-      style = MaterialTheme.typography.bodySmall.copy(
-        fontSize = 11.5.sp,
-        lineHeight = 15.sp,
-      ),
-      color = MaterialTheme.colorScheme.onSurfaceVariant,
-      minLines = 1,
-      maxLines = 1,
-      overflow = TextOverflow.Ellipsis,
-    )
+        Text(
+          text = book.name,
+          style = MaterialTheme.typography.bodySmall.copy(
+            fontSize = 12.5.sp,
+            lineHeight = 16.sp,
+          ),
+          color = MaterialTheme.colorScheme.onSurfaceVariant,
+          minLines = 1,
+          maxLines = 1,
+          overflow = TextOverflow.Ellipsis,
+        )
+      }
+
+      if (inSelectionMode) {
+        CompositionLocalProvider(
+          LocalMinimumInteractiveComponentSize provides 0.dp,
+        ) {
+          Checkbox(
+            checked = isSelected,
+            onCheckedChange = { onBookClick(book.id) },
+            modifier = Modifier
+              .size(20.dp)
+              .padding(start = 2.dp),
+          )
+        }
+      }
+    }
 
     Spacer(Modifier.height(4.dp))
 
     Surface(
       shape = RoundedCornerShape(6.dp),
       shadowElevation = 3.dp,
+      border = if (isSelected) BorderStroke(2.5.dp, MaterialTheme.colorScheme.primary) else null,
       modifier = Modifier
         .fillMaxWidth()
         .aspectRatio(1f)
@@ -186,50 +244,12 @@ internal fun GridBook(
           contentDescription = null,
         )
 
-        Box(
-          modifier = Modifier
-            .align(Alignment.TopEnd)
-            .padding(4.dp),
-        ) {
+        if (isSelected) {
           Box(
-            contentAlignment = Alignment.Center,
             modifier = Modifier
-              .size(28.dp)
-              .clip(CircleShape)
-              .background(Color.Black.copy(alpha = 0.35f))
-              .clickable {
-                onBookMoreClick(book.id)
-                menuExpanded = true
-              },
-          ) {
-            Icon(
-              imageVector = ClioIcons.MoreVert,
-              contentDescription = null,
-              tint = Color.White,
-              modifier = Modifier.size(18.dp),
-            )
-          }
-
-          DropdownMenu(
-            expanded = menuExpanded && selectedBookId == book.id,
-            onDismissRequest = { menuExpanded = false },
-          ) {
-            menuItems.forEach { item ->
-              DropdownMenuItem(
-                text = { Text(stringResource(item.titleRes)) },
-                leadingIcon = {
-                  Icon(
-                    imageVector = item.icon,
-                    contentDescription = null,
-                  )
-                },
-                onClick = {
-                  menuExpanded = false
-                  onMenuItemClick(book.id, item)
-                },
-              )
-            }
-          }
+              .fillMaxSize()
+              .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.25f)),
+          )
         }
 
         if (book.progress > 0.05f) {
@@ -253,13 +273,82 @@ internal fun GridBook(
 
     Spacer(Modifier.height(4.dp))
 
-    BookRemainingProgressRow(
-      remainingTime = book.remainingTime,
-      progress = book.progress,
-      textStyle = MaterialTheme.typography.labelSmall.copy(
-        fontSize = 11.sp,
-      ),
-    )
+    Row(
+      modifier = Modifier.fillMaxWidth(),
+      horizontalArrangement = Arrangement.SpaceBetween,
+      verticalAlignment = Alignment.CenterVertically,
+    ) {
+      Text(
+        text = book.remainingTime,
+        style = MaterialTheme.typography.labelSmall.copy(fontSize = 13.sp),
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+        modifier = Modifier.weight(1f, fill = false),
+      )
+
+      Row(
+        verticalAlignment = Alignment.CenterVertically,
+      ) {
+        Text(
+          text = "${(book.progress * 100).toInt()}%",
+          style = MaterialTheme.typography.labelSmall.copy(fontSize = 13.sp),
+          color = MaterialTheme.colorScheme.onSurfaceVariant,
+          maxLines = 1,
+        )
+
+        if (!inSelectionMode) {
+          Box {
+            Box(
+              contentAlignment = Alignment.Center,
+              modifier = Modifier
+                .padding(start = 6.dp)
+                .clip(RoundedCornerShape(3.dp))
+                .clickable {
+                  onBookMoreClick(book.id)
+                  menuExpanded = true
+                }
+                .padding(vertical = 2.dp),
+            ) {
+              Box(
+                modifier = Modifier
+                  .width(7.dp)
+                  .height(18.dp),
+                contentAlignment = Alignment.Center,
+              ) {
+                Icon(
+                  imageVector = ClioIcons.MoreVert,
+                  contentDescription = null,
+                  tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                  modifier = Modifier.requiredSize(20.dp),
+                )
+              }
+            }
+
+            SmoothDropdownMenu(
+              expanded = menuExpanded && selectedBookId == book.id && menuItems.isNotEmpty(),
+              onDismissRequest = { menuExpanded = false },
+            ) {
+              menuItems.forEach { item ->
+                DropdownMenuItem(
+                  text = { Text(stringResource(item.titleRes)) },
+                  leadingIcon = {
+                    Icon(
+                      imageVector = item.icon,
+                      contentDescription = null,
+                    )
+                  },
+                  onClick = {
+                    menuExpanded = false
+                    onMenuItemClick(book.id, item)
+                  },
+                )
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
 

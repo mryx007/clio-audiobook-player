@@ -1,4 +1,4 @@
-﻿package de.clio.features.widget
+package de.clio.features.widget
 
 import android.app.Application
 import androidx.datastore.core.DataStore
@@ -12,6 +12,7 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoSet
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
@@ -31,6 +32,7 @@ class TriggerWidgetOnChange(
 
   override fun onAppStart(application: Application) {
     anythingChanged()
+      .debounce(100L)
       .onEach {
         widgetUpdater.update()
       }

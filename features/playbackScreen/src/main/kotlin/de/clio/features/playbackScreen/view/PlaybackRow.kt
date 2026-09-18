@@ -1,4 +1,4 @@
-﻿package de.clio.features.playbackScreen.view
+package de.clio.features.playbackScreen.view
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -36,8 +36,10 @@ internal fun PlaybackRow(
 ) {
   val iconColor = if (isCustomBackground) Color.White else MaterialTheme.colorScheme.onSurface
   val isDarkSurface = MaterialTheme.colorScheme.surface.luminance() < 0.5f
-  val playButtonContainerColor = if (isCustomBackground || isDarkSurface) Color.White else Color(0xFF1C1B1F)
-  val playButtonContentColor = if (isCustomBackground || isDarkSurface) Color(0xFF1C1B1F) else Color.White
+  val baseContainerColor = if (isCustomBackground || isDarkSurface) Color.White else Color(0xFF1C1B1F)
+  val baseContentColor = if (isCustomBackground || isDarkSurface) Color(0xFF1C1B1F) else Color.White
+  val playButtonContainerColor = if (playing) MaterialTheme.colorScheme.primary else baseContainerColor
+  val playButtonContentColor = if (playing) MaterialTheme.colorScheme.onPrimary else baseContentColor
 
   Row(
     modifier = Modifier

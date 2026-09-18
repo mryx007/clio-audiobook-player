@@ -1,4 +1,4 @@
-﻿package de.clio.features.bookOverview.views
+package de.clio.features.bookOverview.views
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -26,22 +26,42 @@ import androidx.compose.ui.unit.sp
 import de.clio.core.data.BookId
 import de.clio.core.strings.R as StringsR
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
+
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun BookCard(
   bookId: BookId,
   onBookClick: (BookId) -> Unit,
   modifier: Modifier = Modifier,
+  onBookLongClick: ((BookId) -> Unit)? = null,
+  isSelected: Boolean = false,
   content: @Composable () -> Unit,
 ) {
+  val containerColor = if (isSelected) {
+    MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.45f)
+  } else {
+    MaterialTheme.colorScheme.surfaceContainer
+  }
+  val border = if (isSelected) {
+    BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
+  } else {
+    null
+  }
+
   Card(
     shape = MaterialTheme.shapes.medium,
     colors = CardDefaults.cardColors(
-      containerColor = MaterialTheme.colorScheme.surfaceContainer,
+      containerColor = containerColor,
     ),
+    border = border,
     modifier = modifier
       .fillMaxWidth()
-      .clickable(
+      .combinedClickable(
         onClick = { onBookClick(bookId) },
+        onLongClick = onBookLongClick?.let { { it(bookId) } },
       ),
   ) {
     content()

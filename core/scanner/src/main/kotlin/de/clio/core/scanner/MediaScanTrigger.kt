@@ -1,4 +1,4 @@
-﻿package de.clio.core.scanner
+package de.clio.core.scanner
 
 import de.clio.core.data.folders.AudiobookFolders
 import de.clio.core.data.folders.FolderType
@@ -43,25 +43,30 @@ internal constructor(
     }
     val oldJob = scanningJob
     scanningJob = scope.launch {
-      scannerActive.value = true
-      oldJob?.cancelAndJoin()
+      try {
+        oldJob?.cancelAndJoin()
+        scannerActive.value = true
 
-      measureTime {
-        val folders: Map<FolderType, List<CachedDocumentFile>> = audiobookFolders.all()
-          .first()
-          .mapValues { (_, documentFilesWithUri) ->
-            documentFilesWithUri.map {
-              documentFileFactory.create(it.documentFile.uri)
+        measureTime {
+          val folders: Map<FolderType, List<CachedDocumentFile>> = audiobookFolders.all()
+            .first()
+            .mapValues { (_, documentFilesWithUri) ->
+              documentFilesWithUri.map {
+                documentFileFactory.create(it.documentFile.uri)
+              }
             }
-          }
-        scanner.scan(folders)
-      }.also {
-        Logger.i("scan took $it")
-      }
-      scannerActive.value = false
+          scanner.scan(folders)
+        }.also {
+          Logger.i("scan took $it")
+        }
 
-      val books = bookRepo.all()
-      coverScanner.scan(books)
+        scannerActive.value = false
+
+        val books = bookRepo.all()
+        coverScanner.scan(books)
+      } finally {
+        scannerActive.value = false
+      }
     }
   }
 }

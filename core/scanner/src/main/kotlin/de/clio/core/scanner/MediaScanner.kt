@@ -1,7 +1,6 @@
-﻿package de.clio.core.scanner
+package de.clio.core.scanner
 
 import de.clio.core.data.BookId
-import de.clio.core.data.audioFileCount
 import de.clio.core.data.folders.FolderType
 import de.clio.core.data.isAudioFile
 import de.clio.core.data.repo.BookContentRepo
@@ -59,10 +58,10 @@ internal class MediaScanner(
       }
     }
 
-    val semaphore = Semaphore(4)
+    val concurrency = (Runtime.getRuntime().availableProcessors() * 2).coerceIn(4, 16)
+    val semaphore = Semaphore(concurrency)
     coroutineScope {
       files
-        .sortedBy { it.audioFileCount() }
         .map { file ->
           async(Dispatchers.IO) {
             semaphore.withPermit {

@@ -1,9 +1,10 @@
-﻿package de.clio.core.scanner
+package de.clio.core.scanner
 
 import android.content.Context
-import androidx.documentfile.provider.DocumentFile
 import de.clio.core.data.Book
+import de.clio.core.data.isImageFile
 import de.clio.core.data.toUri
+import de.clio.core.documentfile.CachedDocumentFileFactory
 import de.clio.core.logging.api.Logger
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.Dispatchers
@@ -20,10 +21,12 @@ internal class CoverScanner(
   private val context: Context,
   private val coverSaver: CoverSaver,
   private val coverExtractor: CoverExtractor,
+  private val documentFileFactory: CachedDocumentFileFactory,
 ) {
 
   suspend fun scan(books: List<Book>): Unit = coroutineScope {
-    val semaphore = Semaphore(4)
+    val concurrency = (Runtime.getRuntime().availableProcessors() * 2).coerceIn(4, 16)
+    val semaphore = Semaphore(concurrency)
     books.map { book ->
       async(Dispatchers.IO) {
         semaphore.withPermit {
@@ -49,7 +52,7 @@ internal class CoverScanner(
 
   private suspend fun findAndSaveCoverFromDisc(book: Book): Boolean = withContext(Dispatchers.IO) {
     val documentFile = try {
-      DocumentFile.fromTreeUri(context, book.id.toUri())
+      documentFileFactory.create(book.id.toUri())
     } catch (_: IllegalArgumentException) {
       null
     } ?: return@withContext false
@@ -58,29 +61,26 @@ internal class CoverScanner(
       return@withContext false
     }
 
-    documentFile.listFiles().forEach { child ->
-      if (child.isFile && child.canRead() && child.type?.startsWith("image/") == true) {
-        val coverFile = coverSaver.newBookCoverFile()
-        val worked = try {
-          context.contentResolver.openInputStream(child.uri)?.use { input ->
-            coverFile.outputStream().use { output ->
-              input.copyTo(output)
-            }
-          }
-          true
-        } catch (e: IOException) {
-          Logger.w(e, "Error while copying the cover from ${child.uri}")
-          false
-        } catch (e: IllegalStateException) {
-          // On some Samsung Devices, openInputStream throws this exception, though it should not.
-          Logger.w(e, "Error while copying the cover from ${child.uri}")
-          false
-        }
-        if (worked) {
-          coverSaver.setBookCover(coverFile, book.id)
-          return@withContext true
+    val imageFile = documentFile.children.firstOrNull { it.isImageFile() } ?: return@withContext false
+    val coverFile = coverSaver.newBookCoverFile()
+    val worked = try {
+      context.contentResolver.openInputStream(imageFile.uri)?.use { input ->
+        coverFile.outputStream().use { output ->
+          input.copyTo(output)
         }
       }
+      true
+    } catch (e: IOException) {
+      Logger.w(e, "Error while copying the cover from ${imageFile.uri}")
+      false
+    } catch (e: IllegalStateException) {
+      // On some Samsung Devices, openInputStream throws this exception, though it should not.
+      Logger.w(e, "Error while copying the cover from ${imageFile.uri}")
+      false
+    }
+    if (worked) {
+      coverSaver.setBookCover(coverFile, book.id)
+      return@withContext true
     }
 
     false

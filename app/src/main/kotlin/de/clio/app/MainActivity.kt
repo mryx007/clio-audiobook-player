@@ -1,4 +1,4 @@
-﻿package de.clio.app
+package de.clio.app
 
 import android.content.ActivityNotFoundException
 import android.content.Context
@@ -9,6 +9,8 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.togetherWith
@@ -40,6 +42,7 @@ import de.clio.core.data.ThemeMode
 import de.clio.core.data.store.ThemeColorStore
 import de.clio.core.data.store.ThemeModeStore
 import de.clio.core.logging.api.Logger
+import de.clio.core.scanner.MediaScanTrigger
 import de.clio.core.ui.ClioTheme
 import de.clio.core.ui.LocalAppReady
 import de.clio.core.ui.LocalSharedTransitionScope
@@ -50,10 +53,6 @@ import de.clio.navigation.Navigator
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.Inject
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 
 @ContributesTo(AppScope::class)
 interface MainActivityGraph {
@@ -81,6 +80,9 @@ class MainActivity : AppCompatActivity() {
   @Inject
   @ThemeColorStore
   private lateinit var themeColorStore: DataStore<ThemeColor>
+
+  @Inject
+  private lateinit var mediaScanTrigger: MediaScanTrigger
 
   private var isAppReady = false
 
@@ -115,20 +117,16 @@ class MainActivity : AppCompatActivity() {
       },
     )
 
-    val (initialThemeMode, initialThemeColor) = runBlocking {
-      val modeDeferred = async(Dispatchers.IO) { themeModeStore.data.first() }
-      val colorDeferred = async(Dispatchers.IO) { themeColorStore.data.first() }
-      modeDeferred.await() to colorDeferred.await()
-    }
-
     setContent {
       @Suppress("UNCHECKED_CAST")
       val backStack = rememberNavBackStack(*startDestinationProvider(intent).toTypedArray()) as MutableList<Destination.Compose>
       LaunchedEffect(backStack.last()) {
         analytics.screenView(backStack.last().trackingName)
       }
-      val themeMode = themeModeStore.data.collectAsState(initial = initialThemeMode).value
-      val themeColor = themeColorStore.data.collectAsState(initial = initialThemeColor).value
+      val themeMode = themeModeStore.data.collectAsState(initial = null).value
+        ?: return@setContent
+      val themeColor = themeColorStore.data.collectAsState(initial = null).value
+        ?: return@setContent
       val isCustomDark = remember(themeColor) {
         val baseColor = Color(themeColor.parseColor())
         (0.299f * baseColor.red + 0.587f * baseColor.green + 0.114f * baseColor.blue) < 0.45f
@@ -206,21 +204,21 @@ class MainActivity : AppCompatActivity() {
                   if (isBookOverviewPlaybackTransition(initialState.destination(), targetState.destination())) {
                     SharedZAxisEnterTransition togetherWith SharedZAxisExitTransition
                   } else {
-                    CrossfadeEnterTransition togetherWith CrossfadeExitTransition
+                    EnterTransition.None togetherWith ExitTransition.None
                   }
                 },
                 popTransitionSpec = {
                   if (isBookOverviewPlaybackTransition(initialState.destination(), targetState.destination())) {
                     SharedZAxisEnterTransition togetherWith SharedZAxisExitTransition
                   } else {
-                    CrossfadeEnterTransition togetherWith CrossfadeExitTransition
+                    EnterTransition.None togetherWith ExitTransition.None
                   }
                 },
                 predictivePopTransitionSpec = {
                   if (isBookOverviewPlaybackTransition(initialState.destination(), targetState.destination())) {
                     SharedZAxisEnterTransition togetherWith SharedZAxisExitTransition
                   } else {
-                    CrossfadeEnterTransition togetherWith CrossfadeExitTransition
+                    EnterTransition.None togetherWith ExitTransition.None
                   }
                 },
                 onBack = {
@@ -263,6 +261,9 @@ class MainActivity : AppCompatActivity() {
                     backStack.removeLastOrNull()
                   }
                 }
+                NavigationCommand.MinimizeApp -> {
+                  moveTaskToBack(true)
+                }
                 is NavigationCommand.SetRoot -> {
                   backStack.clear()
                   backStack.add(command.root)
@@ -275,6 +276,16 @@ class MainActivity : AppCompatActivity() {
         }
       }
     }
+  }
+
+  override fun onNewIntent(intent: Intent) {
+    super.onNewIntent(intent)
+    setIntent(intent)
+  }
+
+  override fun onResume() {
+    super.onResume()
+    mediaScanTrigger.scan()
   }
 
   private fun toBatteryOptimizations() {

@@ -1,4 +1,4 @@
-﻿package de.clio.features.bookOverview.deleteBook
+package de.clio.features.bookOverview.deleteBook
 
 import android.app.Application
 import androidx.compose.runtime.State
@@ -38,8 +38,7 @@ class DeleteBookViewModel(
     if (item != BottomSheetItem.DeleteBook) return
 
     _state.value = DeleteBookViewState(
-      id = bookId,
-      deleteCheckBoxChecked = false,
+      ids = setOf(bookId),
       fileToDelete = bookId.toUri().pathSegments
         .let { segments ->
           val result = segments.lastOrNull()?.removePrefix("primary:")
@@ -53,36 +52,62 @@ class DeleteBookViewModel(
     )
   }
 
-  internal fun onDismiss() {
-    _state.value = null
+  fun onDeleteMultiple(bookIds: Set<BookId>, onDeleted: () -> Unit = {}) {
+    if (bookIds.isEmpty()) return
+    val description = if (bookIds.size == 1) {
+      bookIds.first().toUri().pathSegments
+        .let { segments ->
+          val result = segments.lastOrNull()?.removePrefix("primary:")
+          if (result.isNullOrEmpty()) {
+            Logger.w("Could not determine path for $segments")
+            segments.joinToString(separator = "\"")
+          } else {
+            result
+          }
+        }
+    } else {
+      "${bookIds.size} Bücher"
+    }
+
+    _state.value = DeleteBookViewState(
+      ids = bookIds,
+      fileToDelete = description,
+    )
+    this.onDeletedCallback = onDeleted
   }
 
-  internal fun onDeleteCheckBoxCheck(checked: Boolean) {
-    _state.value = _state.value?.copy(deleteCheckBoxChecked = checked)
+  private var onDeletedCallback: (() -> Unit)? = null
+
+  internal fun onDismiss() {
+    _state.value = null
+    onDeletedCallback = null
   }
 
   internal fun onConfirmDeletion() {
     val state = _state.value
     if (state != null) {
-      check(state.confirmButtonEnabled)
+      val callback = onDeletedCallback
       scope.launch {
-        val uri = state.id.toUri()
-        val documentFile = DocumentFile.fromSingleUri(application, uri)
-        scope.launch {
+        state.ids.forEach { id ->
+          val uri = id.toUri()
+          val documentFile = DocumentFile.fromSingleUri(application, uri)
           documentFile?.delete()
-          mediaScanTrigger.scan(restartIfScanning = true)
         }
+        mediaScanTrigger.scan(restartIfScanning = true)
+        callback?.invoke()
       }
     }
     _state.value = null
+    onDeletedCallback = null
   }
 }
 
 data class DeleteBookViewState(
-  val id: BookId,
-  val deleteCheckBoxChecked: Boolean,
+  val ids: Set<BookId>,
   val fileToDelete: String,
 ) {
-
-  val confirmButtonEnabled = deleteCheckBoxChecked
+  val id: BookId get() = ids.first()
+  val count: Int get() = ids.size
 }
+
+

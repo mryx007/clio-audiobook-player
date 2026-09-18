@@ -1,4 +1,4 @@
-﻿package de.clio.core.playback.session
+package de.clio.core.playback.session
 
 import android.app.Application
 import android.net.Uri
@@ -20,7 +20,6 @@ import de.clio.core.data.store.CurrentBookStore
 import de.clio.core.data.toUri
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 import java.io.File
 import de.clio.core.strings.R as StringsR
 
@@ -43,13 +42,13 @@ class MediaItemProvider(
     mediaType = MediaType.AudioBookRoot,
   )
 
-  fun recent(): MediaItem? = MediaItem(
+  suspend fun recent(): MediaItem? = MediaItem(
     title = application.getString(StringsR.string.media_session_library_recent),
     browsable = true,
     isPlayable = false,
     mediaId = MediaId.Recent,
     mediaType = MediaType.AudioBook,
-  ).takeIf { runBlocking { currentBookStoreId.data.first() != null } }
+  ).takeIf { currentBookStoreId.data.first() != null }
 
   suspend fun item(id: String): MediaItem? {
     val mediaId = id.toMediaIdOrNull() ?: return null

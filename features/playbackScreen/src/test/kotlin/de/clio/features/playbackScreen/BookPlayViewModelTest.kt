@@ -1,9 +1,10 @@
-﻿package de.clio.features.playbackScreen
+package de.clio.features.playbackScreen
 
 import app.cash.molecule.RecompositionMode
 import app.cash.molecule.launchMolecule
 import app.cash.turbine.test
 import de.clio.core.common.DispatcherProvider
+import de.clio.core.data.BackButtonBehavior
 import de.clio.core.data.Book
 import de.clio.core.data.BookContent
 import de.clio.core.data.BookId
@@ -81,6 +82,9 @@ class BookPlayViewModelTest {
   private val currentBookResolver = mockk<CurrentBookResolver> {
     coEvery { book(book.id) } returns book
   }
+  private val playerLockedStore = MemoryDataStore(false)
+  private val backButtonBehaviorStore = MemoryDataStore(BackButtonBehavior.BookOverview)
+  private val navigator = mockk<de.clio.navigation.Navigator>(relaxed = true)
   private val viewModel = BookPlayViewModel(
     bookRepository = mockk {
       coEvery { get(book.id) } returns book
@@ -93,7 +97,7 @@ class BookPlayViewModelTest {
     sleepTimer = sleepTimer,
     playStateManager = playStateManager,
     currentBookStoreId = currentBookStoreId,
-    navigator = mockk(),
+    navigator = navigator,
     bookmarkRepository = mockk {
       coEvery { addBookmarkAtBookPosition(book, any(), any()) } returns Bookmark(
         bookId = book.id,
@@ -112,6 +116,8 @@ class BookPlayViewModelTest {
     playbackBackgroundStyleStore = MemoryDataStore(PlaybackBackgroundStyle.Solid),
     sleepTimerPreferenceStore = sleepTimerDataStore,
     playerButtonVisibilityStore = MemoryDataStore(PlayerButtonVisibility()),
+    playerLockedStore = playerLockedStore,
+    backButtonBehaviorStore = backButtonBehaviorStore,
     bookId = book.id,
     dispatcherProvider = DispatcherProvider(scope.coroutineContext, scope.coroutineContext, scope.coroutineContext),
     experimentalPlaybackPersistenceFeatureFlag = MemoryFeatureFlag(false),
@@ -326,6 +332,46 @@ class BookPlayViewModelTest {
     }
   }
 
+  @Test
+  fun toggleLockPersistsState() = scope.runTest {
+    assertEquals(expected = false, actual = playerLockedStore.data.first())
+    viewModel.toggleLock()
+    yield()
+    assertEquals(expected = true, actual = playerLockedStore.data.first())
+    viewModel.toggleLock()
+    yield()
+    assertEquals(expected = false, actual = playerLockedStore.data.first())
+  }
+
+  @Test
+  fun onCloseClickAlwaysNavigatesBack() = scope.runTest {
+    backButtonBehaviorStore.updateData { BackButtonBehavior.MinimizeApp }
+    yield()
+    viewModel.onCloseClick()
+    yield()
+    verify(exactly = 1) { navigator.goBack() }
+    verify(exactly = 0) { navigator.minimizeApp() }
+  }
+
+  @Test
+  fun onSystemBackClickNavigatesBackWhenOverviewConfigured() = scope.runTest {
+    backButtonBehaviorStore.updateData { BackButtonBehavior.BookOverview }
+    yield()
+    viewModel.onSystemBackClick()
+    yield()
+    verify(exactly = 1) { navigator.goBack() }
+    verify(exactly = 0) { navigator.minimizeApp() }
+  }
+
+  @Test
+  fun onSystemBackClickMinimizesAppWhenMinimizeAppConfigured() = scope.runTest {
+    backButtonBehaviorStore.updateData { BackButtonBehavior.MinimizeApp }
+    yield()
+    viewModel.onSystemBackClick()
+    yield()
+    verify(exactly = 1) { navigator.minimizeApp() }
+  }
+
   private fun viewModel(
     book: Book = this.book,
     experimentalPlaybackPersistence: Boolean = false,
@@ -358,6 +404,8 @@ class BookPlayViewModelTest {
       playbackBackgroundStyleStore = MemoryDataStore(PlaybackBackgroundStyle.Solid),
       sleepTimerPreferenceStore = sleepTimerDataStore,
       playerButtonVisibilityStore = MemoryDataStore(PlayerButtonVisibility()),
+      playerLockedStore = playerLockedStore,
+      backButtonBehaviorStore = backButtonBehaviorStore,
       bookId = book.id,
       dispatcherProvider = DispatcherProvider(scope.coroutineContext, scope.coroutineContext, scope.coroutineContext),
       experimentalPlaybackPersistenceFeatureFlag = MemoryFeatureFlag(experimentalPlaybackPersistence),

@@ -1,6 +1,7 @@
-﻿package de.clio.features.playbackScreen
+package de.clio.features.playbackScreen
 
 import android.content.res.Configuration.ORIENTATION_LANDSCAPE
+import androidx.activity.compose.BackHandler
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
@@ -36,6 +37,10 @@ fun BookPlayScreen(bookId: BookId) {
   val dialogState = viewModel.dialogState.value
   val viewState = viewModel.viewState()
     ?: return
+
+  BackHandler {
+    viewModel.onSystemBackClick()
+  }
 
   val onAppReady = LocalAppReady.current
   SideEffect {

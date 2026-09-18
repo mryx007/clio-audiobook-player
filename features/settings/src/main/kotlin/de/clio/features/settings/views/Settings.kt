@@ -1,4 +1,4 @@
-﻿package de.clio.features.settings.views
+package de.clio.features.settings.views
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -126,6 +126,9 @@ private fun Settings(
       }
       item {
         PlaybackBackgroundStyleRow(viewState.playbackBackgroundStyle, listener::onPlaybackBackgroundStyleRowClick)
+      }
+      item {
+        BackButtonBehaviorRow(viewState.backButtonBehavior, listener::onBackButtonBehaviorRowClick)
       }
       item {
         ListItem(
@@ -337,7 +340,7 @@ interface SettingsProvider {
 fun Settings() {
   val viewModel = retain<SettingsViewModel> { rootGraphAs<SettingsGraph>().settingsViewModel }
   val snackbarHostState = remember { SnackbarHostState() }
-  val viewState = viewModel.viewState() ?: return
+  val viewState = viewModel.viewState()
   val currentDeveloperMenuUnlockedMessage = rememberUpdatedState("Developer Menu unlocked")
   LaunchedEffect(viewModel) {
     viewModel.viewEffects.collect { viewEffect ->
@@ -394,6 +397,13 @@ private fun Dialog(
       PlaybackBackgroundStyleDialog(
         selectedStyle = viewState.playbackBackgroundStyle,
         onStyleSelect = listener::setPlaybackBackgroundStyle,
+        onDismiss = listener::dismissDialog,
+      )
+    }
+    SettingsViewState.Dialog.BackButtonBehavior -> {
+      BackButtonBehaviorDialog(
+        selectedBehavior = viewState.backButtonBehavior,
+        onBehaviorSelect = listener::setBackButtonBehavior,
         onDismiss = listener::dismissDialog,
       )
     }

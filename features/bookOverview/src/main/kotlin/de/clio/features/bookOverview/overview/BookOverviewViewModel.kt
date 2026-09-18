@@ -1,4 +1,4 @@
-﻿package de.clio.features.bookOverview.overview
+package de.clio.features.bookOverview.overview
 
 import android.content.Intent
 import android.os.Build
@@ -24,6 +24,7 @@ import de.clio.core.data.KioskModeDemoData
 import de.clio.core.data.repo.BookRepository
 import de.clio.core.data.store.CurrentBookStore
 import de.clio.core.data.store.FolderPickerMovedDialogShownStore
+import de.clio.core.data.store.GridColumnCountStore
 import de.clio.core.data.store.GridModeStore
 import de.clio.core.featureflag.ExperimentalPlaybackPersistenceQualifier
 import de.clio.core.featureflag.FeatureFlag
@@ -57,6 +58,8 @@ class BookOverviewViewModel(
   private val folderPickerMovedDialogShownStore: DataStore<Boolean>,
   @GridModeStore
   private val gridModeStore: DataStore<GridMode>,
+  @GridColumnCountStore
+  private val gridColumnCountStore: DataStore<Int>,
   private val gridCount: GridCount,
   private val navigator: Navigator,
   private val appInfoProvider: AppInfoProvider,
@@ -73,6 +76,7 @@ class BookOverviewViewModel(
   private val scope = MainScope(dispatcherProvider)
   private var query by mutableStateOf("")
   private var dialog by mutableStateOf<BookOverviewViewState.Dialog?>(null)
+  private var selectedBookIds by mutableStateOf<Set<BookId>>(emptySet())
 
   fun attach() {
     mediaScanner.scan()
@@ -98,6 +102,8 @@ class BookOverviewViewModel(
     val gridMode = remember { gridModeStore.data }
       .collectAsState(initial = null).value
       ?: return BookOverviewViewState.Loading
+    val gridColumnCount = remember { gridColumnCountStore.data }
+      .collectAsState(initial = 2).value
 
     val noBooks = !scannerActive && books.isEmpty()
 
@@ -134,6 +140,7 @@ class BookOverviewViewModel(
 
     return BookOverviewViewState(
       layoutMode = layoutMode,
+      gridColumnCount = gridColumnCount,
       books = filteredBooks
         .groupBy {
           it.category
@@ -167,7 +174,14 @@ class BookOverviewViewModel(
         !folderPickerMovedDialogShown &&
         appInfoProvider.installTime < FolderPickerMigrationInstallTimeCutoff,
       dialog = dialog,
+      selectedBookIds = selectedBookIds,
     )
+  }
+
+  fun onGridColumnCountChange(count: Int) {
+    scope.launch {
+      gridColumnCountStore.updateData { count.coerceIn(1, 3) }
+    }
   }
 
   private fun kioskModeState(): BookOverviewViewState {
@@ -204,6 +218,7 @@ class BookOverviewViewModel(
       showStoragePermissionBugCard = false,
       showFolderPickerIcon = false,
       dialog = null,
+      selectedBookIds = emptySet(),
     )
   }
 
@@ -212,7 +227,35 @@ class BookOverviewViewModel(
   }
 
   fun onBookClick(id: BookId) {
-    navigator.goTo(Destination.Playback(id))
+    if (selectedBookIds.isNotEmpty()) {
+      toggleSelection(id)
+    } else {
+      navigator.goTo(Destination.Playback(id))
+    }
+  }
+
+  fun onBookLongClick(id: BookId) {
+    toggleSelection(id)
+  }
+
+  private fun toggleSelection(id: BookId) {
+    selectedBookIds = if (id in selectedBookIds) {
+      selectedBookIds - id
+    } else {
+      selectedBookIds + id
+    }
+  }
+
+  fun onSelectAllClick(allIds: Set<BookId>) {
+    selectedBookIds = if (selectedBookIds.size == allIds.size && allIds.isNotEmpty()) {
+      emptySet()
+    } else {
+      allIds
+    }
+  }
+
+  fun onClearSelection() {
+    selectedBookIds = emptySet()
   }
 
   fun onBookFolderClick() {

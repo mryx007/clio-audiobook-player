@@ -1,11 +1,11 @@
-﻿package de.clio.features.playbackScreen.view
+package de.clio.features.playbackScreen.view
 
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -18,6 +18,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import androidx.core.view.WindowCompat
 import de.clio.core.data.BookId
 import de.clio.core.data.PlaybackBackgroundStyle
 import de.clio.core.ui.ClioTheme
@@ -49,32 +50,59 @@ internal fun BookPlayView(
   snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
   val context = LocalContext.current
-  val isDarkTheme = isSystemInDarkTheme()
+  val backgroundColor = MaterialTheme.colorScheme.background
+  val isAppDark = remember(backgroundColor) {
+    (0.299f * backgroundColor.red + 0.587f * backgroundColor.green + 0.114f * backgroundColor.blue) < 0.5f
+  }
   val isCustomBackground = viewState.backgroundStyle != PlaybackBackgroundStyle.Solid
+  val isScreenDark = isCustomBackground || isAppDark
 
-  DisposableEffect(isCustomBackground, isDarkTheme) {
+  DisposableEffect(isCustomBackground, isAppDark) {
     val activity = context as? ComponentActivity
     if (activity != null) {
-      if (isCustomBackground) {
-        // Force light icons for custom (typically dark) backgrounds
-        activity.enableEdgeToEdge(
-          statusBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT),
-          navigationBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT),
-        )
-      } else {
-        // Restore default auto behavior
-        activity.enableEdgeToEdge(
-          statusBarStyle = SystemBarStyle.auto(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT),
-          navigationBarStyle = SystemBarStyle.auto(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT),
-        )
+      val insetsController = WindowCompat.getInsetsController(activity.window, activity.window.decorView)
+      insetsController.isAppearanceLightStatusBars = !isScreenDark
+      insetsController.isAppearanceLightNavigationBars = !isScreenDark
+
+      activity.enableEdgeToEdge(
+        statusBarStyle = if (isScreenDark) {
+          SystemBarStyle.dark(android.graphics.Color.TRANSPARENT)
+        } else {
+          SystemBarStyle.light(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT)
+        },
+        navigationBarStyle = if (isScreenDark) {
+          SystemBarStyle.dark(android.graphics.Color.TRANSPARENT)
+        } else {
+          SystemBarStyle.light(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT)
+        },
+      )
+      if (android.os.Build.VERSION.SDK_INT >= 29) {
+        activity.window.isNavigationBarContrastEnforced = false
       }
     }
     onDispose {
-      // Always restore default on dispose
-      activity?.enableEdgeToEdge(
-        statusBarStyle = SystemBarStyle.auto(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT),
-        navigationBarStyle = SystemBarStyle.auto(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT),
-      )
+      val activity = context as? ComponentActivity
+      if (activity != null) {
+        val insetsController = WindowCompat.getInsetsController(activity.window, activity.window.decorView)
+        insetsController.isAppearanceLightStatusBars = !isAppDark
+        insetsController.isAppearanceLightNavigationBars = !isAppDark
+
+        activity.enableEdgeToEdge(
+          statusBarStyle = if (isAppDark) {
+            SystemBarStyle.dark(android.graphics.Color.TRANSPARENT)
+          } else {
+            SystemBarStyle.light(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT)
+          },
+          navigationBarStyle = if (isAppDark) {
+            SystemBarStyle.dark(android.graphics.Color.TRANSPARENT)
+          } else {
+            SystemBarStyle.light(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT)
+          },
+        )
+        if (android.os.Build.VERSION.SDK_INT >= 29) {
+          activity.window.isNavigationBarContrastEnforced = false
+        }
+      }
     }
   }
 

@@ -1,11 +1,12 @@
-﻿package de.clio.core.ui
+package de.clio.core.ui
 
-import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.graphics.res.animatedVectorResource
 import androidx.compose.animation.graphics.res.rememberAnimatedVectorPainter
 import androidx.compose.animation.graphics.vector.AnimatedImageVector
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
@@ -31,18 +32,25 @@ fun PlayButton(
   containerColor: Color = FloatingActionButtonDefaults.containerColor,
   contentColor: Color = contentColorFor(containerColor),
 ) {
-  val cornerSize by animateDpAsState(
-    targetValue = if (playing) 16.dp else fabSize / 2,
-    label = "cornerSize",
+  val animatedContainerColor by animateColorAsState(
+    targetValue = containerColor,
+    animationSpec = tween(durationMillis = 300),
+    label = "playButtonContainerColor",
   )
+  val animatedContentColor by animateColorAsState(
+    targetValue = contentColor,
+    animationSpec = tween(durationMillis = 300),
+    label = "playButtonContentColor",
+  )
+
   FloatingActionButton(
     modifier = modifier
       .size(fabSize)
       .then(sharedElementModifier),
     onClick = onPlayClick,
-    shape = RoundedCornerShape(cornerSize),
-    containerColor = containerColor,
-    contentColor = contentColor,
+    shape = CircleShape,
+    containerColor = animatedContainerColor,
+    contentColor = animatedContentColor,
   ) {
     Icon(
       modifier = Modifier.size(iconSize),
