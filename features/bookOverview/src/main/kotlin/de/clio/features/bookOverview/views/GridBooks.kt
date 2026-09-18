@@ -135,7 +135,6 @@ internal fun GridBooks(
           selectedBookId = selectedBookId,
           menuItems = menuItems,
           onMenuItemClick = onMenuItemClick,
-          modifier = Modifier.animateItem(),
         )
       }
       item(
