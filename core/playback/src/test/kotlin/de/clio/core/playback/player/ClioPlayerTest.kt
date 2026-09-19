@@ -1,4 +1,4 @@
-﻿package de.clio.core.playback.player
+package de.clio.core.playback.player
 
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
@@ -349,7 +349,7 @@ class ClioPlayerTest {
   }
 
   @Test
-  fun `auto rewind clamps to current chapter start`() = scope.runTest {
+  fun `auto rewind clamps to current chapter start after pause threshold`() = scope.runTest {
     setMediaItems(
       listOf(
         chapter(
@@ -366,9 +366,97 @@ class ClioPlayerTest {
     awaitReady()
     player.shouldHavePosition(1, 3_000)
 
+    var simulatedTime = 1_000_000L
+    player.currentTimeMsProvider = { simulatedTime }
     player.pause()
 
+    player.shouldHavePosition(1, 3_000)
+
+    simulatedTime += 15_000L
+    player.play()
+
     player.shouldHavePosition(1, 0)
+  }
+
+  @Test
+  fun `auto rewind does not rewind if pause duration is under threshold`() = scope.runTest {
+    setMediaItems(
+      listOf(
+        chapter(
+          ChapterMark(startMs = 0, endMs = 11_999, name = null),
+          ChapterMark(startMs = 12_000, endMs = 20_000, name = null),
+        ),
+      ),
+    )
+
+    autoRewindAmountStore.updateData { 5 }
+
+    player.seekTo(1, 8_000)
+    player.prepare()
+    awaitReady()
+    player.shouldHavePosition(1, 8_000)
+
+    var simulatedTime = 1_000_000L
+    player.currentTimeMsProvider = { simulatedTime }
+    player.pause()
+
+    simulatedTime += 5_000L
+    player.play()
+
+    player.shouldHavePosition(1, 8_000)
+  }
+
+  @Test
+  fun `auto rewind rewinds by configured amount if pause duration reaches threshold`() = scope.runTest {
+    setMediaItems(
+      listOf(
+        chapter(
+          ChapterMark(startMs = 0, endMs = 11_999, name = null),
+          ChapterMark(startMs = 12_000, endMs = 20_000, name = null),
+        ),
+      ),
+    )
+
+    autoRewindAmountStore.updateData { 5 }
+
+    player.seekTo(1, 8_000)
+    player.prepare()
+    awaitReady()
+    player.shouldHavePosition(1, 8_000)
+
+    var simulatedTime = 1_000_000L
+    player.currentTimeMsProvider = { simulatedTime }
+    player.pause()
+
+    simulatedTime += 10_000L
+    player.play()
+
+    player.shouldHavePosition(1, 3_000)
+  }
+
+  @Test
+  fun `setBook does not reset position when same book is already active`() = scope.runTest {
+    val chapter = chapter(
+      ChapterMark(startMs = 0, endMs = 11_999, name = null),
+      ChapterMark(startMs = 12_000, endMs = 20_000, name = null),
+    )
+    setMediaItems(
+      chapters = listOf(chapter),
+      currentChapter = chapter,
+      positionInChapter = 15_000,
+    )
+
+    player.prepare()
+    awaitReady()
+    player.shouldHavePosition(1, 3_000)
+
+    player.seekTo(1, 4_000)
+    player.shouldHavePosition(1, 4_000)
+
+    player.setMediaItem(mediaItemProvider.mediaItem(currentBook))
+    runCurrent()
+
+    player.shouldHavePosition(1, 4_000)
   }
 
   private fun TestScope.setMediaItems(

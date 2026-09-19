@@ -22,12 +22,15 @@ import de.clio.core.playback.misc.Decibel
 import de.clio.core.playback.misc.VolumeGain
 import de.clio.core.playback.session.MediaId
 import de.clio.core.playback.session.MediaItemProvider
+import de.clio.core.playback.session.bookId
 import de.clio.core.playback.session.playbackItemForPosition
 import de.clio.core.playback.session.positionInMediaItem
 import de.clio.core.playback.session.toMediaIdOrNull
 import de.clio.core.sleeptimer.SleepTimer
 import de.clio.core.sleeptimer.SleepTimerState
+import de.clio.core.playback.di.PlaybackScope
 import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -39,6 +42,7 @@ import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 @Inject
+@SingleIn(PlaybackScope::class)
 class ClioPlayer(
   private val player: Player,
   private val repo: BookRepository,
@@ -58,6 +62,9 @@ class ClioPlayer(
   private val analytics: Analytics,
 ) : ForwardingPlayer(player) {
 
+  private var pausedAtWallTimeMs: Long = 0L
+  internal var currentTimeMsProvider: () -> Long = { System.currentTimeMillis() }
+
   private val endOfChapterSleepTimerListener = object : Player.Listener {
     override fun onPositionDiscontinuity(
       oldPosition: Player.PositionInfo,
@@ -75,6 +82,15 @@ class ClioPlayer(
       }
     }
 
+    override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
+      Logger.d("onPlayWhenReadyChanged: playWhenReady=$playWhenReady, reason=$reason")
+      if (!playWhenReady) {
+        pausedAtWallTimeMs = currentTimeMsProvider()
+      } else {
+        performAutoRewind()
+      }
+    }
+
     private fun pauseAndDisableSleepTimerIfEndOfChapter() {
       if (sleepTimer.state.value !is SleepTimerState.Enabled.WithEndOfChapter) return
       Logger.v("Pausing due to EndOfChapter")
@@ -88,6 +104,7 @@ class ClioPlayer(
   }
 
   fun forceSeekToNext() {
+    pausedAtWallTimeMs = 0L
     scope.launch {
       val nextMediaItemIndex = player.nextMediaItemIndex.takeUnless { it == C.INDEX_UNSET }
         ?: return@launch
@@ -96,6 +113,7 @@ class ClioPlayer(
   }
 
   fun forceSeekToPrevious() {
+    pausedAtWallTimeMs = 0L
     scope.launch {
       val currentPosition = player.currentPosition
       if (currentPosition > THRESHOLD_FOR_BACK_SEEK_MS) {
@@ -147,19 +165,20 @@ class ClioPlayer(
   }
 
   override fun seekBack() {
+    pausedAtWallTimeMs = 0L
     scope.launch {
       seekBackBy(rewindTimeStore.data.first().seconds)
     }
   }
 
-  private suspend fun seekBackBy(skipAmount: Duration) {
+  private fun seekBackBy(skipAmount: Duration) {
     seekBackBy(
       skipAmount = skipAmount,
       crossMediaItems = true,
     )
   }
 
-  private suspend fun seekBackBy(
+  private fun seekBackBy(
     skipAmount: Duration,
     crossMediaItems: Boolean,
   ) {
@@ -190,6 +209,7 @@ class ClioPlayer(
   }
 
   override fun seekForward() {
+    pausedAtWallTimeMs = 0L
     scope.launch {
       val skipAmount = fastForwardTimeStore.data.first().seconds
 
@@ -223,18 +243,31 @@ class ClioPlayer(
 
     if (playWhenReady) {
       updateLastPlayedAt()
+      performAutoRewind()
     } else {
-      val currentPosition = player.currentPosition.takeUnless { it == C.TIME_UNSET }?.milliseconds ?: ZERO
-      if (currentPosition > ZERO) {
-        scope.launch {
+      pausedAtWallTimeMs = currentTimeMsProvider()
+    }
+    super.setPlayWhenReady(playWhenReady)
+  }
+
+  private fun performAutoRewind() {
+    val pausedAt = pausedAtWallTimeMs
+    pausedAtWallTimeMs = 0L
+    if (pausedAt <= 0L) return
+    val pauseDurationMs = currentTimeMsProvider() - pausedAt
+    Logger.d("performAutoRewind: pauseDurationMs=$pauseDurationMs, threshold=$AUTO_REWIND_THRESHOLD_MS")
+    if (pauseDurationMs >= AUTO_REWIND_THRESHOLD_MS) {
+      scope.launch {
+        val autoRewindSec = autoRewindAmountStore.data.first()
+        Logger.d("performAutoRewind: rewinding by $autoRewindSec seconds")
+        if (autoRewindSec > 0) {
           seekBackBy(
-            skipAmount = autoRewindAmountStore.data.first().seconds,
+            skipAmount = autoRewindSec.seconds,
             crossMediaItems = false,
           )
         }
       }
     }
-    super.setPlayWhenReady(playWhenReady)
   }
 
   override fun pause() {
@@ -303,9 +336,16 @@ class ClioPlayer(
     Logger.v("setBook(${mediaItem.mediaId})")
     val mediaId = mediaItem.mediaId.toMediaIdOrNull()
     if (mediaId != null) {
-      if (mediaId is MediaId.Book) {
+      val targetBookId = mediaId.bookId
+      if (targetBookId != null) {
+        val currentBookId = player.currentMediaItem?.mediaId?.toMediaIdOrNull()?.bookId
+        if (currentBookId == targetBookId && player.playbackState != STATE_IDLE) {
+          Logger.d("setBook($targetBookId): Book already loaded and active, ignoring reload")
+          return
+        }
+        pausedAtWallTimeMs = 0L
         val book = runBlocking {
-          repo.get(mediaId.id)
+          repo.get(targetBookId)
         }
         if (book != null) {
           player.setPlaybackSpeed(book.content.playbackSpeed)
@@ -367,3 +407,4 @@ class ClioPlayer(
 }
 
 private const val THRESHOLD_FOR_BACK_SEEK_MS = 2000
+internal const val AUTO_REWIND_THRESHOLD_MS = 10_000L

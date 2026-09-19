@@ -60,6 +60,7 @@ class PositionUpdater(
               trackListeningTimeNow()
             }
           } else {
+            flushPositionNow()
             trackListeningTimeNow()
             lastTrackedWallTimeMs = 0L
           }
