@@ -18,6 +18,7 @@ import de.clio.core.data.store.RewindTimeStore
 import de.clio.core.data.store.SeekTimeStore
 import de.clio.core.logging.api.Logger
 import de.clio.core.playback.audio.EqualizerAudioProcessor
+import de.clio.core.playback.di.PlaybackScope
 import de.clio.core.playback.misc.Decibel
 import de.clio.core.playback.misc.VolumeGain
 import de.clio.core.playback.session.MediaId
@@ -28,7 +29,6 @@ import de.clio.core.playback.session.positionInMediaItem
 import de.clio.core.playback.session.toMediaIdOrNull
 import de.clio.core.sleeptimer.SleepTimer
 import de.clio.core.sleeptimer.SleepTimerState
-import de.clio.core.playback.di.PlaybackScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
@@ -83,7 +83,10 @@ class ClioPlayer(
       }
     }
 
-    override fun onPlayWhenReadyChanged(playWhenReady: Boolean, reason: Int) {
+    override fun onPlayWhenReadyChanged(
+      playWhenReady: Boolean,
+      reason: Int,
+    ) {
       Logger.d("onPlayWhenReadyChanged: playWhenReady=$playWhenReady, reason=$reason")
       if (!playWhenReady) {
         pausedAtWallTimeMs = currentTimeMsProvider()
