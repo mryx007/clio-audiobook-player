@@ -87,6 +87,9 @@ class PlayerController(
   fun pauseIfCurrentBookDifferentFrom(id: BookId) {
     scope.launch {
       val controller = awaitConnect() ?: return@launch
+      if (currentBookStoreId.data.first() == id) {
+        return@launch
+      }
       val currentBookId = controller.currentBookId()
       if (currentBookId != null && currentBookId != id) {
         controller.pause()
@@ -119,7 +122,7 @@ class PlayerController(
   }
 
   fun playPause() = executeAfterPrepare { controller ->
-    if (controller.isPlaying) {
+    if (controller.playWhenReady) {
       controller.pause()
     } else {
       controller.play()
@@ -217,7 +220,11 @@ class PlayerController(
 
     var tickJob: Job? = null
     fun updateTicking() {
-      if (!controller.isPlaying) {
+      val isPlaying = when {
+        controller.playbackState == Player.STATE_ENDED || controller.playbackState == Player.STATE_IDLE -> false
+        else -> controller.playWhenReady
+      }
+      if (!isPlaying) {
         tickJob?.cancel()
         return
       }

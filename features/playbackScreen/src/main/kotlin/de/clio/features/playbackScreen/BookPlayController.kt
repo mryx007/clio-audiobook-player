@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.retain.RetainedEffect
 import androidx.compose.runtime.retain.retain
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
@@ -33,6 +34,9 @@ fun BookPlayScreen(bookId: BookId) {
     rootGraphAs<BookPlayGraph>()
       .bookPlayViewModelFactory
       .create(bookId)
+  }
+  RetainedEffect(viewModel) {
+    onRetire(viewModel::close)
   }
   val snackbarHostState = remember { SnackbarHostState() }
   val dialogState = viewModel.dialogState.value

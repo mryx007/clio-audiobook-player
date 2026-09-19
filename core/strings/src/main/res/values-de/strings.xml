@@ -172,6 +172,7 @@
     <string name="settings.playback.end_of_book_behavior.title">Wenn das Hörbuch endet</string>
     <string name="settings.playback.end_of_book_behavior.do_nothing">Nichts tun</string>
     <string name="settings.playback.end_of_book_behavior.book_overview">Bücherübersicht öffnen</string>
+    <string name="settings.playback.end_of_book_behavior.continue_queue">Warteschlange fortsetzen</string>
     <string name="queue_title">Warteschlange</string>
     <string name="queue_action_add_to_queue">Zur Warteschlange hinzufügen</string>
     <string name="queue_added_snackbar_one">1 Hörbuch zur Warteschlange hinzugefügt</string>

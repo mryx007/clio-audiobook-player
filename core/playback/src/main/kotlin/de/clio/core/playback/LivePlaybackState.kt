@@ -1,6 +1,7 @@
-﻿package de.clio.core.playback
+package de.clio.core.playback
 
 import androidx.media3.common.C
+import androidx.media3.common.Player
 import androidx.media3.session.MediaController
 import de.clio.core.data.Book
 import de.clio.core.data.BookId
@@ -27,6 +28,10 @@ internal fun MediaController.livePlaybackStateSnapshot(bookId: BookId? = null): 
   val positionMs = currentPosition.takeUnless { it == C.TIME_UNSET || it < 0 } ?: return null
   val chapterId = mediaId.realChapterId ?: return null
   val positionInChapter = mediaId.positionInChapter(positionMs) ?: return null
+  val isPlaying = when {
+    playbackState == Player.STATE_ENDED || playbackState == Player.STATE_IDLE -> false
+    else -> playWhenReady
+  }
   return LivePlaybackState(
     bookId = mediaItemBookId,
     chapterId = chapterId,

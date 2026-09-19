@@ -276,6 +276,8 @@
     <string name="settings.playback.end_of_book_behavior.do_nothing">Do nothing</string>
     <!-- Option for end of book behavior: open book overview. -->
     <string name="settings.playback.end_of_book_behavior.book_overview">Open book overview</string>
+    <!-- Option for end of book behavior: continue with the next queued audiobook. -->
+    <string name="settings.playback.end_of_book_behavior.continue_queue">Continue queue</string>
     <string name="queue_title">Queue</string>
     <string name="queue_action_add_to_queue">Add to queue</string>
     <string name="queue_added_snackbar_one">1 audiobook added to queue</string>

@@ -80,5 +80,6 @@ internal fun EndOfBookBehavior.label(): String {
   return when (this) {
     EndOfBookBehavior.DoNothing -> stringResource(StringsR.string.settings_playback_end_of_book_behavior_do_nothing)
     EndOfBookBehavior.BookOverview -> stringResource(StringsR.string.settings_playback_end_of_book_behavior_book_overview)
+    EndOfBookBehavior.ContinueQueue -> stringResource(StringsR.string.settings_playback_end_of_book_behavior_continue_queue)
   }
 }

@@ -124,13 +124,17 @@ class BookPlayViewModel(
       player.playbackEndedFlow()
         .filter { it == bookId }
         .collect {
-          val nextBookId = queueRepository.popNext()
-          if (nextBookId != null) {
-            currentBookStoreId.updateData { nextBookId }
-            player.play()
-            navigator.replace(Destination.Playback(nextBookId))
-          } else if (endOfBookBehaviorStore.data.first() == EndOfBookBehavior.BookOverview) {
-            navigator.goBack()
+          when (endOfBookBehaviorStore.data.first()) {
+            EndOfBookBehavior.ContinueQueue -> {
+              val nextBookId = queueRepository.popNext()
+              if (nextBookId != null) {
+                currentBookStoreId.updateData { nextBookId }
+                player.play()
+                navigator.replace(Destination.Playback(nextBookId))
+              }
+            }
+            EndOfBookBehavior.BookOverview -> navigator.goBack()
+            EndOfBookBehavior.DoNothing -> Unit
           }
         }
     }

@@ -32,9 +32,9 @@ import de.clio.core.playback.di.PlaybackScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import java.time.Instant
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.ZERO
@@ -63,6 +63,7 @@ class ClioPlayer(
 ) : ForwardingPlayer(player) {
 
   private var pausedAtWallTimeMs: Long = 0L
+  private var setBookJob: Job? = null
   internal var currentTimeMsProvider: () -> Long = { System.currentTimeMillis() }
 
   private val endOfChapterSleepTimerListener = object : Player.Listener {
@@ -344,24 +345,25 @@ class ClioPlayer(
           return
         }
         pausedAtWallTimeMs = 0L
-        val book = runBlocking {
-          repo.get(targetBookId)
-        }
-        if (book != null) {
-          player.setPlaybackSpeed(book.content.playbackSpeed)
-          setSkipSilenceEnabled(book.content.skipSilence)
-          volumeGain.gain = Decibel(book.content.gain)
-          equalizerAudioProcessor.setSetting(book.content.equalizerSetting)
-          val currentPlaybackItem = book.playbackItemForPosition(
-            chapterId = book.content.currentChapter,
-            positionInChapterMs = book.content.positionInChapter,
-          ) ?: return
-          val mediaItems = mediaItemProvider.playbackItems(book)
-          player.setMediaItems(
-            mediaItems,
-            currentPlaybackItem.index,
-            currentPlaybackItem.positionInMediaItem(book.content.positionInChapter),
-          )
+        setBookJob?.cancel()
+        setBookJob = scope.launch {
+          val book = repo.get(targetBookId)
+          if (book != null) {
+            player.setPlaybackSpeed(book.content.playbackSpeed)
+            setSkipSilenceEnabled(book.content.skipSilence)
+            volumeGain.gain = Decibel(book.content.gain)
+            equalizerAudioProcessor.setSetting(book.content.equalizerSetting)
+            val currentPlaybackItem = book.playbackItemForPosition(
+              chapterId = book.content.currentChapter,
+              positionInChapterMs = book.content.positionInChapter,
+            ) ?: return@launch
+            val mediaItems = mediaItemProvider.playbackItems(book)
+            player.setMediaItems(
+              mediaItems,
+              currentPlaybackItem.index,
+              currentPlaybackItem.positionInMediaItem(book.content.positionInChapter),
+            )
+          }
         }
       } else {
         Logger.w("Unexpected mediaId=$mediaId")

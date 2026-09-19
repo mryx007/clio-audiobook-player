@@ -236,8 +236,8 @@ class SettingsViewModelTest {
     viewStateFlow().test {
       assertEquals(expected = EndOfBookBehavior.DoNothing, actual = awaitItem().endOfBookBehavior)
 
-      viewModel.setEndOfBookBehavior(EndOfBookBehavior.BookOverview)
-      assertEquals(expected = EndOfBookBehavior.BookOverview, actual = awaitItem().endOfBookBehavior)
+      viewModel.setEndOfBookBehavior(EndOfBookBehavior.ContinueQueue)
+      assertEquals(expected = EndOfBookBehavior.ContinueQueue, actual = awaitItem().endOfBookBehavior)
 
       viewModel.onEndOfBookBehaviorRowClick()
       assertEquals(expected = SettingsViewState.Dialog.EndOfBookBehavior, actual = awaitItem().dialog)

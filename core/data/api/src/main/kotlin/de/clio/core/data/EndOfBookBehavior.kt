@@ -6,4 +6,5 @@ import kotlinx.serialization.Serializable
 public enum class EndOfBookBehavior {
   DoNothing,
   BookOverview,
+  ContinueQueue,
 }

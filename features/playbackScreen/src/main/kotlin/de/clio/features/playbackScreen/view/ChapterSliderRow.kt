@@ -1,5 +1,7 @@
 package de.clio.features.playbackScreen.view
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsDraggedAsState
@@ -88,6 +90,13 @@ internal fun ChapterSliderRow(
         .coerceIn(0F, 1F)
     }
 
+    val animatedProgress by animateFloatAsState(
+      targetValue = sliderValue,
+      animationSpec = tween(durationMillis = 150),
+      label = "chapter_progress",
+    )
+    val displayProgress = if (dragging) sliderValue else animatedProgress
+
     Box(
       modifier = Modifier
         .fillMaxWidth()
@@ -114,7 +123,7 @@ internal fun ChapterSliderRow(
       ) {
         Box(
           modifier = Modifier
-            .fillMaxWidth(sliderValue)
+            .fillMaxWidth(displayProgress)
             .fillMaxHeight()
             .background(
               color = activeTrackColor,

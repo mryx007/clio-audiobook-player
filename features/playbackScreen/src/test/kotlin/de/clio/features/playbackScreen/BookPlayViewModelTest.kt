@@ -40,11 +40,14 @@ import io.mockk.mockk
 import io.mockk.verify
 import io.mockk.verifyOrder
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.TestScope
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.yield
 import java.time.Instant
@@ -467,7 +470,32 @@ class BookPlayViewModelTest {
   }
 
   @Test
-  fun `when playback ends and queue has next book, plays next book and replaces screen`() = scope.runTest {
+  fun `when playback ends and continue queue is selected, plays next book and replaces screen`() = scope.runTest {
+    val nextBookId = BookId("next-book-id")
+    val queueRepository = FakeBookQueueRepository(listOf(nextBookId))
+    val localNavigator = mockk<Navigator>(relaxed = true)
+    val localPlayer = mockk<PlayerController>(relaxed = true) {
+      every { playbackEndedFlow() } returns flowOf(book.id)
+    }
+
+    val localViewModel = viewModel(
+      player = localPlayer,
+      navigator = localNavigator,
+      queueRepository = queueRepository,
+      endOfBookBehavior = EndOfBookBehavior.ContinueQueue,
+    )
+    assertIs<BookPlayViewModel>(localViewModel)
+
+    yield()
+
+    verify {
+      localPlayer.play()
+      localNavigator.replace(Destination.Playback(nextBookId))
+    }
+  }
+
+  @Test
+  fun `when playback ends and do nothing is selected, leaves queued book untouched`() = scope.runTest {
     val nextBookId = BookId("next-book-id")
     val queueRepository = FakeBookQueueRepository(listOf(nextBookId))
     val localNavigator = mockk<Navigator>(relaxed = true)
@@ -484,10 +512,38 @@ class BookPlayViewModelTest {
 
     yield()
 
-    verify {
+    verify(exactly = 0) {
       localPlayer.play()
-      localNavigator.replace(Destination.Playback(nextBookId))
+      localNavigator.replace(any())
     }
+    assertEquals(expected = nextBookId, actual = queueRepository.popNext())
+  }
+
+  @Test
+  fun `when closed, ignores later playback ended events`() = scope.runTest {
+    val playbackEnded = MutableSharedFlow<BookId>()
+    val localNavigator = mockk<Navigator>(relaxed = true)
+    val localPlayer = mockk<PlayerController>(relaxed = true) {
+      every { playbackEndedFlow() } returns playbackEnded
+    }
+    val localViewModel = viewModel(
+      player = localPlayer,
+      navigator = localNavigator,
+      endOfBookBehavior = EndOfBookBehavior.BookOverview,
+      dispatcherProvider = DispatcherProvider(
+        StandardTestDispatcher(testScheduler),
+        StandardTestDispatcher(testScheduler),
+        StandardTestDispatcher(testScheduler),
+      ),
+    )
+    assertIs<BookPlayViewModel>(localViewModel)
+
+    runCurrent()
+    localViewModel.close()
+    playbackEnded.emit(book.id)
+    runCurrent()
+
+    verify(exactly = 0) { localNavigator.goBack() }
   }
 
   private fun viewModel(
@@ -500,9 +556,11 @@ class BookPlayViewModelTest {
     },
     navigator: Navigator = mockk(relaxed = true),
     queueRepository: BookQueueRepository = FakeBookQueueRepository(),
+    endOfBookBehavior: EndOfBookBehavior = EndOfBookBehavior.DoNothing,
     experimentalPlaybackPersistence: Boolean = false,
     kioskMode: Boolean = false,
     playStateFlow: MutableStateFlow<PlayStateManager.PlayState> = MutableStateFlow(PlayStateManager.PlayState.Paused),
+    dispatcherProvider: DispatcherProvider = DispatcherProvider(scope.coroutineContext, scope.coroutineContext, scope.coroutineContext),
   ): BookPlayViewModel {
     return BookPlayViewModel(
       bookRepository = mockk {
@@ -528,10 +586,10 @@ class BookPlayViewModelTest {
       playerButtonVisibilityStore = MemoryDataStore(PlayerButtonVisibility()),
       playerLockedStore = playerLockedStore,
       backButtonBehaviorStore = backButtonBehaviorStore,
-      endOfBookBehaviorStore = endOfBookBehaviorStore,
+      endOfBookBehaviorStore = MemoryDataStore(endOfBookBehavior),
       queueRepository = queueRepository,
       bookId = book.id,
-      dispatcherProvider = DispatcherProvider(scope.coroutineContext, scope.coroutineContext, scope.coroutineContext),
+      dispatcherProvider = dispatcherProvider,
       experimentalPlaybackPersistenceFeatureFlag = MemoryFeatureFlag(experimentalPlaybackPersistence),
       kioskModeFeatureFlag = MemoryFeatureFlag(kioskMode),
     )
