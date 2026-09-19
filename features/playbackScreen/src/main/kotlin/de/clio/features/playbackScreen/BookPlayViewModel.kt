@@ -12,6 +12,7 @@ import de.clio.core.common.MainScope
 import de.clio.core.data.BackButtonBehavior
 import de.clio.core.data.Book
 import de.clio.core.data.BookId
+import de.clio.core.data.EndOfBookBehavior
 import de.clio.core.data.EqualizerSetting
 import de.clio.core.data.KioskModeDemoData
 import de.clio.core.data.PlaybackBackgroundStyle
@@ -19,11 +20,14 @@ import de.clio.core.data.PlayerButtonVisibility
 import de.clio.core.data.durationMs
 import de.clio.core.data.formatDisplayChapterName
 import de.clio.core.data.markForPosition
+import de.clio.core.data.repo.BookQueueRepository
+import de.clio.core.data.repo.FakeBookQueueRepository
 import de.clio.core.data.repo.BookRepository
 import de.clio.core.data.repo.BookmarkRepo
 import de.clio.core.data.sleeptimer.SleepTimerPreference
 import de.clio.core.data.store.BackButtonBehaviorStore
 import de.clio.core.data.store.CurrentBookStore
+import de.clio.core.data.store.EndOfBookBehaviorStore
 import de.clio.core.data.store.FastForwardTimeStore
 import de.clio.core.data.store.PlaybackBackgroundStyleStore
 import de.clio.core.data.store.PlayerButtonVisibilityStore
@@ -52,8 +56,10 @@ import de.clio.navigation.Navigator
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -90,6 +96,9 @@ class BookPlayViewModel(
   private val playerLockedStore: DataStore<Boolean>,
   @BackButtonBehaviorStore
   private val backButtonBehaviorStore: DataStore<BackButtonBehavior>,
+  @EndOfBookBehaviorStore
+  private val endOfBookBehaviorStore: DataStore<EndOfBookBehavior>,
+  private val queueRepository: BookQueueRepository = FakeBookQueueRepository(),
   @ExperimentalPlaybackPersistenceQualifier
   private val experimentalPlaybackPersistenceFeatureFlag: FeatureFlag<Boolean>,
   @KioskModeFeatureFlagQualifier
@@ -111,6 +120,20 @@ class BookPlayViewModel(
       player.pauseIfCurrentBookDifferentFrom(bookId)
       currentBookStoreId.updateData { bookId }
     }
+    scope.launch {
+      player.playbackEndedFlow()
+        .filter { it == bookId }
+        .collect {
+          val nextBookId = queueRepository.popNext()
+          if (nextBookId != null) {
+            currentBookStoreId.updateData { nextBookId }
+            player.play()
+            navigator.replace(Destination.Playback(nextBookId))
+          } else if (endOfBookBehaviorStore.data.first() == EndOfBookBehavior.BookOverview) {
+            navigator.goBack()
+          }
+        }
+    }
   }
 
   @Composable
@@ -122,13 +145,9 @@ class BookPlayViewModel(
       bookRepository.flow(bookId).filterNotNull()
     }.collectAsState(initial = null).value ?: return null
 
-    val experimentalPlaybackPersistence = experimentalPlaybackPersistenceFeatureFlag.get()
-    val livePlaybackState = if (experimentalPlaybackPersistence) {
-      remember(bookId) { player.livePlaybackStateFlow(bookId) }
-        .collectAsState(null).value
-    } else {
-      null
-    }
+    val livePlaybackState = remember(bookId) {
+      player.livePlaybackStateFlow(bookId)
+    }.collectAsState(null).value
     val managerPlayState by remember {
       playStateManager.playStateFlow
     }.collectAsState()
@@ -157,6 +176,7 @@ class BookPlayViewModel(
       .collectAsState(initial = PlayerButtonVisibility()).value
     val isLocked = remember { playerLockedStore.data }
       .collectAsState(initial = false).value
+    val queue = remember { queueRepository.queueFlow }.collectAsState().value
     val hasMoreThanOneChapter = book.chapters.sumOf { it.chapterMarks.count() } > 1
     val chapterName = if (hasMoreThanOneChapter) {
       formatDisplayChapterName(
@@ -185,6 +205,7 @@ class BookPlayViewModel(
       rewindTimeInSeconds = rewindTime,
       fastForwardTimeInSeconds = fastForwardTime,
       playerButtonVisibility = playerButtonVisibility,
+      queueCount = queue.size,
     )
   }
 
@@ -213,6 +234,64 @@ class BookPlayViewModel(
   fun dismissDialog() {
     Logger.d("dismissDialog")
     dialogState.value = null
+  }
+
+  fun onQueueClick() {
+    scope.launch {
+      val currentBook = bookRepository.get(bookId)
+      val queueIds = queueRepository.queueFlow.value
+      val queuedBooks = queueIds.mapNotNull { bookRepository.get(it) }
+      dialogState.value = BookPlayDialogViewState.QueueSheet(
+        currentBook = currentBook,
+        queueItems = queuedBooks,
+      )
+    }
+  }
+
+  fun onQueueBookClick(id: BookId) {
+    dismissDialog()
+    scope.launch {
+      queueRepository.removeFromQueue(setOf(id))
+      currentBookStoreId.updateData { id }
+      player.play()
+      navigator.replace(Destination.Playback(id))
+    }
+  }
+
+  fun onRemoveFromQueue(bookIds: Set<BookId>) {
+    scope.launch {
+      queueRepository.removeFromQueue(bookIds)
+      val currentBook = bookRepository.get(bookId)
+      val queueIds = queueRepository.queueFlow.value.filter { it !in bookIds }
+      val queuedBooks = queueIds.mapNotNull { bookRepository.get(it) }
+      dialogState.value = BookPlayDialogViewState.QueueSheet(
+        currentBook = currentBook,
+        queueItems = queuedBooks,
+      )
+    }
+  }
+
+  fun onClearQueue() {
+    scope.launch {
+      queueRepository.clearQueue()
+      val currentBook = bookRepository.get(bookId)
+      dialogState.value = BookPlayDialogViewState.QueueSheet(
+        currentBook = currentBook,
+        queueItems = emptyList(),
+      )
+    }
+  }
+
+  fun onReorderQueue(bookIds: List<BookId>) {
+    scope.launch {
+      queueRepository.reorder(bookIds)
+      val currentBook = bookRepository.get(bookId)
+      val queuedBooks = bookIds.mapNotNull { bookRepository.get(it) }
+      dialogState.value = BookPlayDialogViewState.QueueSheet(
+        currentBook = currentBook,
+        queueItems = queuedBooks,
+      )
+    }
   }
 
   fun incrementSleepTime() {
@@ -492,6 +571,10 @@ class BookPlayViewModel(
 
   private suspend fun currentBook(): Book? {
     return currentBookResolver.book(bookId)
+  }
+
+  fun close() {
+    scope.cancel()
   }
 
   @AssistedFactory

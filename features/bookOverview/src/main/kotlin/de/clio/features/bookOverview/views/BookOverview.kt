@@ -20,14 +20,24 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.LocalContext
+import kotlinx.coroutines.launch
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -65,6 +75,7 @@ import de.clio.features.bookOverview.overview.BookOverviewCategory
 import de.clio.features.bookOverview.overview.BookOverviewItemViewState
 import de.clio.features.bookOverview.overview.BookOverviewLayoutMode
 import de.clio.features.bookOverview.overview.BookOverviewViewState
+import de.clio.features.bookOverview.overview.OverviewTab
 import de.clio.features.bookOverview.views.topbar.BookOverviewTopBar
 import de.clio.navigation.Destination
 import de.clio.navigation.NavEntryProvider
@@ -109,7 +120,11 @@ fun BookOverviewScreen(modifier: Modifier = Modifier) {
     bookOverviewViewModel.onClearSelection()
   }
 
-  BackHandler(enabled = !viewState.inSelectionMode && viewState.searchQuery.isNotEmpty()) {
+  BackHandler(enabled = !viewState.inSelectionMode && viewState.selectedTab == OverviewTab.Queue) {
+    bookOverviewViewModel.onTabSelected(OverviewTab.Books)
+  }
+
+  BackHandler(enabled = !viewState.inSelectionMode && viewState.selectedTab == OverviewTab.Books && viewState.searchQuery.isNotEmpty()) {
     bookOverviewViewModel.onSearchQueryChange("")
   }
 
@@ -122,6 +137,10 @@ fun BookOverviewScreen(modifier: Modifier = Modifier) {
     },
   )
 
+  val snackbarHostState = remember { SnackbarHostState() }
+  val scope = rememberCoroutineScope()
+  val context = LocalContext.current
+
   BookOverview(
     viewState = viewState,
     onSettingsClick = bookOverviewViewModel::onSettingsClick,
@@ -130,11 +149,36 @@ fun BookOverviewScreen(modifier: Modifier = Modifier) {
     onClearSelection = bookOverviewViewModel::onClearSelection,
     onSelectAllClick = { bookOverviewViewModel.onSelectAllClick(viewState.allBookIds) },
     onDeleteSelectedClick = {
-      deleteBookViewModel.onDeleteMultiple(
-        bookIds = viewState.selectedBookIds,
-        onDeleted = bookOverviewViewModel::onClearSelection,
-      )
+      if (viewState.selectedTab == OverviewTab.Queue) {
+        bookOverviewViewModel.onDeleteSelectedFromQueue()
+      } else {
+        deleteBookViewModel.onDeleteMultiple(
+          bookIds = viewState.selectedBookIds,
+          onDeleted = bookOverviewViewModel::onClearSelection,
+        )
+      }
     },
+    onAddToQueueClick = {
+      val count = viewState.selectedBookIds.size
+      bookOverviewViewModel.onAddSelectedToQueue()
+      val message = if (count == 1) {
+        context.getString(StringsR.string.queue_added_snackbar_one)
+      } else {
+        context.getString(StringsR.string.queue_added_snackbar_many, count)
+      }
+      scope.launch {
+        val result = snackbarHostState.showSnackbar(
+          message = message,
+          actionLabel = context.getString(StringsR.string.queue_title),
+          duration = SnackbarDuration.Short,
+        )
+        if (result == SnackbarResult.ActionPerformed) {
+          bookOverviewViewModel.onTabSelected(OverviewTab.Queue)
+        }
+      }
+    },
+    onTabSelected = bookOverviewViewModel::onTabSelected,
+    onReorderQueue = bookOverviewViewModel::onReorderQueue,
     onBookMoreClick = bottomSheetViewModel::bookSelected,
     selectedBookId = bottomSheetViewModel.selectedBookId,
     menuItems = bottomSheetViewModel.state.value.items,
@@ -151,6 +195,7 @@ fun BookOverviewScreen(modifier: Modifier = Modifier) {
     onGridColumnCountChange = bookOverviewViewModel::onGridColumnCountChange,
     onSortOrderChange = bookOverviewViewModel::onSortOrderChange,
     modifier = modifier,
+    snackbarHostState = snackbarHostState,
   )
   val deleteBookViewState = deleteBookViewModel.state.value
   if (deleteBookViewState != null) {
@@ -190,6 +235,10 @@ internal fun BookOverview(
   onSearchQueryChange: (String) -> Unit,
   onPermissionBugCardClick: () -> Unit,
   modifier: Modifier = Modifier,
+  onAddToQueueClick: () -> Unit = {},
+  onTabSelected: (OverviewTab) -> Unit = {},
+  onReorderQueue: (List<BookId>) -> Unit = {},
+  snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
   onGridColumnCountChange: (Int) -> Unit = {},
   onSortOrderChange: (BookSortOrder) -> Unit = {},
 ) {
@@ -212,29 +261,73 @@ internal fun BookOverview(
       ): Offset {
         val delta = available.y
         val maxOffset = if (topBarHeightPx > 0f) topBarHeightPx else with(density) { initialTopBarHeightDp.toPx() }
-        if (maxOffset > 0f) {
+        // Quick-return when pulling down: reveal top bar simultaneously with list scroll
+        if (delta > 0f && maxOffset > 0f && topBarOffsetHeightPx < 0f) {
           topBarOffsetHeightPx = (topBarOffsetHeightPx + delta).coerceIn(-maxOffset, 0f)
+        }
+        return Offset.Zero
+      }
+
+      override fun onPostScroll(
+        consumed: Offset,
+        available: Offset,
+        source: NestedScrollSource,
+      ): Offset {
+        val maxOffset = if (topBarHeightPx > 0f) topBarHeightPx else with(density) { initialTopBarHeightDp.toPx() }
+        // Only hide top bar when the list actually scrolled up (has content to scroll)
+        if (consumed.y < 0f && maxOffset > 0f) {
+          topBarOffsetHeightPx = (topBarOffsetHeightPx + consumed.y).coerceIn(-maxOffset, 0f)
         }
         return Offset.Zero
       }
     }
   }
 
-  LaunchedEffect(viewState.searchQuery.isNotEmpty(), viewState.inSelectionMode) {
-    if (viewState.searchQuery.isNotEmpty() || viewState.inSelectionMode) {
+  LaunchedEffect(viewState.searchQuery.isNotEmpty(), viewState.inSelectionMode, viewState.selectedTab) {
+    if (viewState.searchQuery.isNotEmpty() || viewState.inSelectionMode || viewState.selectedTab == OverviewTab.Queue) {
       topBarOffsetHeightPx = 0f
     }
   }
 
   Scaffold(
     modifier = modifier,
+    snackbarHost = {
+      SnackbarHost(snackbarHostState)
+    },
     bottomBar = {
-      Spacer(
-        Modifier
-          .fillMaxWidth()
-          .windowInsetsBottomHeight(WindowInsets.navigationBars)
-          .background(MaterialTheme.colorScheme.surface),
-      )
+      if (viewState.inSelectionMode && viewState.selectedTab == OverviewTab.Books) {
+        Surface(
+          color = MaterialTheme.colorScheme.surfaceContainer,
+          tonalElevation = 3.dp,
+          shadowElevation = 8.dp,
+        ) {
+          Column(
+            modifier = Modifier
+              .fillMaxWidth()
+              .windowInsetsPadding(WindowInsets.navigationBars)
+              .padding(horizontal = 16.dp, vertical = 12.dp),
+          ) {
+            Button(
+              onClick = onAddToQueueClick,
+              modifier = Modifier.fillMaxWidth(),
+            ) {
+              Icon(
+                imageVector = ClioIcons.PlaylistAdd,
+                contentDescription = null,
+                modifier = Modifier.padding(end = 8.dp),
+              )
+              Text(text = stringResource(StringsR.string.queue_action_add_to_queue))
+            }
+          }
+        }
+      } else {
+        Spacer(
+          Modifier
+            .fillMaxWidth()
+            .windowInsetsBottomHeight(WindowInsets.navigationBars)
+            .background(MaterialTheme.colorScheme.background),
+        )
+      }
     },
     contentWindowInsets = WindowInsets(0, 0, 0, 0),
   ) { contentPadding ->
@@ -255,7 +348,11 @@ internal fun BookOverview(
         )
       }
 
-      val hasBooks = viewState.books.values.any { it.isNotEmpty() }
+      val hasBooks = if (viewState.selectedTab == OverviewTab.Queue) {
+        viewState.queueBooks.isNotEmpty()
+      } else {
+        viewState.books.values.any { it.isNotEmpty() }
+      }
       if (!hasBooks && viewState.searchQuery.isNotBlank()) {
         Column(modifier = Modifier.fillMaxSize()) {
           TopBarContent()
@@ -283,51 +380,79 @@ internal fun BookOverview(
             top = topBarHeightDp + 4.dp,
             start = 12.dp,
             end = 12.dp,
-            bottom = 16.dp,
+            bottom = 44.dp,
           )
-          when (viewState.layoutMode) {
-            BookOverviewLayoutMode.List -> {
-              ListBooks(
-                books = viewState.books,
-                onBookClick = onBookClick,
-                onBookLongClick = onBookLongClick,
-                selectedBookIds = viewState.selectedBookIds,
-                allBookIds = viewState.allBookIds,
-                inSelectionMode = viewState.inSelectionMode,
-                onSelectAllClick = onSelectAllClick,
-                onDeleteSelectedClick = onDeleteSelectedClick,
-                onBookMoreClick = onBookMoreClick,
-                selectedBookId = selectedBookId,
-                menuItems = menuItems,
-                onMenuItemClick = onMenuItemClick,
-                showPermissionBugCard = viewState.showStoragePermissionBugCard,
-                onPermissionBugCardClick = onPermissionBugCardClick,
-                sortOrder = viewState.sortOrder,
-                onSortOrderChange = onSortOrderChange,
-                contentPadding = listContentPadding,
-              )
-            }
-            BookOverviewLayoutMode.Grid -> {
-              GridBooks(
-                books = viewState.books,
-                gridColumnCount = viewState.gridColumnCount,
-                onBookClick = onBookClick,
-                onBookLongClick = onBookLongClick,
-                selectedBookIds = viewState.selectedBookIds,
-                allBookIds = viewState.allBookIds,
-                inSelectionMode = viewState.inSelectionMode,
-                onSelectAllClick = onSelectAllClick,
-                onDeleteSelectedClick = onDeleteSelectedClick,
-                onBookMoreClick = onBookMoreClick,
-                selectedBookId = selectedBookId,
-                menuItems = menuItems,
-                onMenuItemClick = onMenuItemClick,
-                showPermissionBugCard = viewState.showStoragePermissionBugCard,
-                onPermissionBugCardClick = onPermissionBugCardClick,
-                sortOrder = viewState.sortOrder,
-                onSortOrderChange = onSortOrderChange,
-                contentPadding = listContentPadding,
-              )
+          if (viewState.selectedTab == OverviewTab.Queue) {
+            QueueBooksList(
+              books = viewState.queueBooks,
+              onBookClick = onBookClick,
+              onBookLongClick = onBookLongClick,
+              selectedBookIds = viewState.selectedBookIds,
+              inSelectionMode = viewState.inSelectionMode,
+              selectedTab = viewState.selectedTab,
+              onTabSelected = onTabSelected,
+              queueCount = viewState.queueCount,
+              allBookIds = viewState.allBookIds,
+              onSelectAllClick = onSelectAllClick,
+              onDeleteSelectedClick = onDeleteSelectedClick,
+              onReorderQueue = onReorderQueue,
+              contentPadding = listContentPadding,
+              isSearching = viewState.searchQuery.isNotBlank(),
+              currentBook = viewState.currentBook,
+            )
+          } else {
+            when (viewState.layoutMode) {
+              BookOverviewLayoutMode.List -> {
+                ListBooks(
+                  books = viewState.books,
+                  onBookClick = onBookClick,
+                  onBookLongClick = onBookLongClick,
+                  selectedBookIds = viewState.selectedBookIds,
+                  allBookIds = viewState.allBookIds,
+                  inSelectionMode = viewState.inSelectionMode,
+                  onSelectAllClick = onSelectAllClick,
+                  onDeleteSelectedClick = onDeleteSelectedClick,
+                  onBookMoreClick = onBookMoreClick,
+                  selectedBookId = selectedBookId,
+                  menuItems = menuItems,
+                  onMenuItemClick = onMenuItemClick,
+                  showPermissionBugCard = viewState.showStoragePermissionBugCard,
+                  onPermissionBugCardClick = onPermissionBugCardClick,
+                  sortOrder = viewState.sortOrder,
+                  onSortOrderChange = onSortOrderChange,
+                  selectedTab = viewState.selectedTab,
+                  onTabSelected = onTabSelected,
+                  queueCount = viewState.queueCount,
+                  contentPadding = listContentPadding,
+                  currentBook = viewState.currentBook,
+                )
+              }
+              BookOverviewLayoutMode.Grid -> {
+                GridBooks(
+                  books = viewState.books,
+                  gridColumnCount = viewState.gridColumnCount,
+                  onBookClick = onBookClick,
+                  onBookLongClick = onBookLongClick,
+                  selectedBookIds = viewState.selectedBookIds,
+                  allBookIds = viewState.allBookIds,
+                  inSelectionMode = viewState.inSelectionMode,
+                  onSelectAllClick = onSelectAllClick,
+                  onDeleteSelectedClick = onDeleteSelectedClick,
+                  onBookMoreClick = onBookMoreClick,
+                  selectedBookId = selectedBookId,
+                  menuItems = menuItems,
+                  onMenuItemClick = onMenuItemClick,
+                  showPermissionBugCard = viewState.showStoragePermissionBugCard,
+                  onPermissionBugCardClick = onPermissionBugCardClick,
+                  sortOrder = viewState.sortOrder,
+                  onSortOrderChange = onSortOrderChange,
+                  selectedTab = viewState.selectedTab,
+                  onTabSelected = onTabSelected,
+                  queueCount = viewState.queueCount,
+                  contentPadding = listContentPadding,
+                  currentBook = viewState.currentBook,
+                )
+              }
             }
           }
 
@@ -355,6 +480,21 @@ internal fun BookOverview(
               )
             }
           }
+
+          Spacer(
+            modifier = Modifier
+              .fillMaxWidth()
+              .align(Alignment.BottomCenter)
+              .height(36.dp)
+              .background(
+                Brush.verticalGradient(
+                  colors = listOf(
+                    Color.Transparent,
+                    MaterialTheme.colorScheme.background,
+                  ),
+                ),
+              ),
+          )
         }
       }
     }

@@ -3594,4 +3594,147 @@ object ClioIcons {
         }
       }
       .build()
+
+  val QueueMusic: ImageVector =
+    ImageVector.Builder(
+      name = "QueueMusic",
+      defaultWidth = 24.dp,
+      defaultHeight = 24.dp,
+      viewportWidth = 24f,
+      viewportHeight = 24f,
+    )
+      .apply {
+        path(
+          fill = SolidColor(Color.Black),
+          fillAlpha = 1f,
+          stroke = null,
+          strokeAlpha = 1f,
+          strokeLineWidth = 1f,
+          strokeLineCap = StrokeCap.Butt,
+          strokeLineJoin = StrokeJoin.Bevel,
+          strokeLineMiter = 1f,
+          pathFillType = PathFillType.NonZero,
+        ) {
+          moveTo(15f, 6f)
+          horizontalLineTo(3f)
+          verticalLineToRelative(2f)
+          horizontalLineToRelative(12f)
+          verticalLineTo(6f)
+          close()
+          moveToRelative(0f, 4f)
+          horizontalLineTo(3f)
+          verticalLineToRelative(2f)
+          horizontalLineToRelative(12f)
+          verticalLineToRelative(-2f)
+          close()
+          moveToRelative(-8f, 4f)
+          horizontalLineTo(3f)
+          verticalLineToRelative(2f)
+          horizontalLineToRelative(4f)
+          verticalLineToRelative(-2f)
+          close()
+          moveToRelative(14f, -7f)
+          verticalLineToRelative(6f)
+          curveToRelative(0f, 1.66f, -1.34f, 3f, -3f, 3f)
+          reflectiveCurveToRelative(-3f, -1.34f, -3f, -3f)
+          reflectiveCurveToRelative(1.34f, -3f, 3f, -3f)
+          curveToRelative(0.35f, 0f, 0.69f, 0.06f, 1f, 0.17f)
+          verticalLineTo(3f)
+          horizontalLineToRelative(5f)
+          verticalLineToRelative(4f)
+          horizontalLineToRelative(-3f)
+          close()
+        }
+      }
+      .build()
+
+  val PlaylistAdd: ImageVector =
+    ImageVector.Builder(
+      name = "PlaylistAdd",
+      defaultWidth = 24.dp,
+      defaultHeight = 24.dp,
+      viewportWidth = 24f,
+      viewportHeight = 24f,
+    )
+      .apply {
+        path(
+          fill = SolidColor(Color.Black),
+          fillAlpha = 1f,
+          stroke = null,
+          strokeAlpha = 1f,
+          strokeLineWidth = 1f,
+          strokeLineCap = StrokeCap.Butt,
+          strokeLineJoin = StrokeJoin.Bevel,
+          strokeLineMiter = 1f,
+          pathFillType = PathFillType.NonZero,
+        ) {
+          moveTo(14f, 10f)
+          horizontalLineTo(3f)
+          verticalLineToRelative(2f)
+          horizontalLineToRelative(11f)
+          verticalLineToRelative(-2f)
+          close()
+          moveToRelative(0f, -4f)
+          horizontalLineTo(3f)
+          verticalLineToRelative(2f)
+          horizontalLineToRelative(11f)
+          verticalLineTo(6f)
+          close()
+          moveToRelative(4f, 8f)
+          verticalLineToRelative(-4f)
+          horizontalLineToRelative(-2f)
+          verticalLineToRelative(4f)
+          horizontalLineToRelative(-4f)
+          verticalLineToRelative(2f)
+          horizontalLineToRelative(4f)
+          verticalLineToRelative(4f)
+          horizontalLineToRelative(2f)
+          verticalLineToRelative(-4f)
+          horizontalLineToRelative(4f)
+          verticalLineToRelative(-2f)
+          horizontalLineToRelative(-4f)
+          close()
+          moveTo(3f, 16f)
+          horizontalLineToRelative(7f)
+          verticalLineToRelative(-2f)
+          horizontalLineTo(3f)
+          verticalLineToRelative(2f)
+          close()
+        }
+      }
+      .build()
+
+  val DragHandle: ImageVector =
+    ImageVector.Builder(
+      name = "DragHandle",
+      defaultWidth = 24.dp,
+      defaultHeight = 24.dp,
+      viewportWidth = 24f,
+      viewportHeight = 24f,
+    )
+      .apply {
+        path(
+          fill = SolidColor(Color.Black),
+          fillAlpha = 1f,
+          stroke = null,
+          strokeAlpha = 1f,
+          strokeLineWidth = 1f,
+          strokeLineCap = StrokeCap.Butt,
+          strokeLineJoin = StrokeJoin.Bevel,
+          strokeLineMiter = 1f,
+          pathFillType = PathFillType.NonZero,
+        ) {
+          moveTo(4f, 9f)
+          horizontalLineToRelative(16f)
+          verticalLineToRelative(2f)
+          horizontalLineTo(4f)
+          close()
+          moveTo(4f, 13f)
+          horizontalLineToRelative(16f)
+          verticalLineToRelative(2f)
+          horizontalLineTo(4f)
+          close()
+        }
+      }
+      .build()
 }

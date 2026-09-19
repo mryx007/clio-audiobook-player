@@ -270,6 +270,21 @@
     <string name="settings.playback.back_button_behavior.book_overview">Go to book overview</string>
     <!-- Option for back button behavior: minimize app immediately. -->
     <string name="settings.playback.back_button_behavior.minimize_app">Minimize app</string>
+    <!-- Settings title for behavior when audiobook ends. -->
+    <string name="settings.playback.end_of_book_behavior.title">When audiobook ends</string>
+    <!-- Option for end of book behavior: do nothing. -->
+    <string name="settings.playback.end_of_book_behavior.do_nothing">Do nothing</string>
+    <!-- Option for end of book behavior: open book overview. -->
+    <string name="settings.playback.end_of_book_behavior.book_overview">Open book overview</string>
+    <string name="queue_title">Queue</string>
+    <string name="queue_action_add_to_queue">Add to queue</string>
+    <string name="queue_added_snackbar_one">1 audiobook added to queue</string>
+    <string name="queue_added_snackbar_many">%1$d audiobooks added to queue</string>
+    <string name="queue_empty">Queue is empty</string>
+    <string name="queue_empty_hint">Long press audiobooks in the overview to add them to the queue</string>
+    <string name="queue_now_playing">Now playing</string>
+    <string name="queue_next">Up next</string>
+    <string name="queue_action_clear">Clear queue</string>
     <!-- Label for using system dynamic colors as the app design. -->
     <string name="settings.appearance.theme.dynamic">Material You</string>
     <!-- Label for selecting a custom theme color. -->
@@ -423,6 +438,8 @@
     <string name="settings.player_controls.bookmark_summary">Create and view bookmarks</string>
     <string name="settings.player_controls.speed">Playback speed</string>
     <string name="settings.player_controls.speed_summary">Adjust playback tempo</string>
+    <string name="settings.player_controls.queue">Queue</string>
+    <string name="settings.player_controls.queue_summary">Show queue button in player</string>
     <string name="settings.player_controls.category.buttons">Visible buttons</string>
     <string name="settings.player_controls.category.seeking">Skip duration</string>
 </resources>

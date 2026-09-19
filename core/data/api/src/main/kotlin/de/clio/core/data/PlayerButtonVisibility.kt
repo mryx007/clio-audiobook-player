@@ -1,4 +1,4 @@
-﻿package de.clio.core.data
+package de.clio.core.data
 
 import kotlinx.serialization.Serializable
 
@@ -9,4 +9,5 @@ public data class PlayerButtonVisibility(
   val showSleepTimer: Boolean = true,
   val showBookmark: Boolean = true,
   val showSpeed: Boolean = true,
+  val showQueue: Boolean = true,
 )

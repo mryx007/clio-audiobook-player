@@ -22,6 +22,8 @@ import de.clio.core.data.BookId
 import de.clio.core.data.BookSortOrder
 import de.clio.core.data.GridMode
 import de.clio.core.data.KioskModeDemoData
+import de.clio.core.data.repo.BookQueueRepository
+import de.clio.core.data.repo.FakeBookQueueRepository
 import de.clio.core.data.repo.BookRepository
 import de.clio.core.data.store.BookSortOrderStore
 import de.clio.core.data.store.CurrentBookStore
@@ -51,6 +53,7 @@ import kotlin.time.Instant
 @Inject
 class BookOverviewViewModel(
   private val repo: BookRepository,
+  private val queueRepo: BookQueueRepository = FakeBookQueueRepository(),
   private val mediaScanner: MediaScanTrigger,
   private val playStateManager: PlayStateManager,
   private val playerController: PlayerController,
@@ -81,6 +84,7 @@ class BookOverviewViewModel(
   private var query by mutableStateOf("")
   private var dialog by mutableStateOf<BookOverviewViewState.Dialog?>(null)
   private var selectedBookIds by mutableStateOf<Set<BookId>>(emptySet())
+  private var selectedTab by mutableStateOf(OverviewTab.Books)
 
   private var lastGridMode: GridMode? = null
   private var lastGridColumnCount: Int = 2
@@ -89,6 +93,7 @@ class BookOverviewViewModel(
   private var lastPlayState = PlayStateManager.PlayState.Paused
   private var lastScannerActive = false
   private var lastFolderPickerMovedDialogShown = false
+  private var lastQueueIds: List<BookId> = emptyList()
 
   init {
     scope.launch {
@@ -111,6 +116,9 @@ class BookOverviewViewModel(
     }
     scope.launch {
       folderPickerMovedDialogShownStore.data.collect { lastFolderPickerMovedDialogShown = it }
+    }
+    scope.launch {
+      queueRepo.queueFlow.collect { lastQueueIds = it }
     }
   }
 
@@ -177,10 +185,40 @@ class BookOverviewViewModel(
     val sortOrder = remember { bookSortOrderStore.data }
       .collectAsState(initial = BookSortOrder.Default).value
 
+    val queueIds = remember { queueRepo.queueFlow }
+      .collectAsState(initial = lastQueueIds).value
+
+    val filteredBookMap = remember(filteredBooks) { filteredBooks.associateBy { it.id } }
+    val queueBooks = queueIds.mapNotNull { bookId ->
+      filteredBookMap[bookId]?.let { book ->
+        val livePlayback = if (book.id == currentBookId) livePlaybackState.value else null
+        if (livePlayback != null) {
+          book.overlay(livePlayback).toItemViewState()
+        } else {
+          book.toItemViewState()
+        }
+      }
+    }
+
+    val currentBook = currentBookId?.let { id ->
+      filteredBookMap[id] ?: books.firstOrNull { it.id == id }
+    }?.let { book ->
+      val livePlayback = livePlaybackState.value
+      if (livePlayback != null && livePlayback.bookId == book.id) {
+        book.overlay(livePlayback).toItemViewState()
+      } else {
+        book.toItemViewState()
+      }
+    }
+
     return BookOverviewViewState(
       layoutMode = layoutMode,
       gridColumnCount = gridColumnCount,
       sortOrder = sortOrder,
+      selectedTab = selectedTab,
+      queueBooks = queueBooks,
+      queueCount = queueIds.size,
+      currentBook = currentBook,
       books = filteredBooks
         .groupBy {
           it.category
@@ -216,6 +254,27 @@ class BookOverviewViewModel(
       dialog = dialog,
       selectedBookIds = selectedBookIds,
     )
+  }
+
+  fun onTabSelected(tab: OverviewTab) {
+    selectedTab = tab
+    selectedBookIds = emptySet()
+  }
+
+  fun onDeleteSelectedFromQueue() {
+    val selected = selectedBookIds
+    if (selected.isNotEmpty()) {
+      scope.launch {
+        queueRepo.removeFromQueue(selected)
+      }
+      onClearSelection()
+    }
+  }
+
+  fun onReorderQueue(bookIds: List<BookId>) {
+    scope.launch {
+      queueRepo.reorder(bookIds)
+    }
   }
 
   fun onSortOrderChange(order: BookSortOrder) {
@@ -302,6 +361,16 @@ class BookOverviewViewModel(
 
   fun onClearSelection() {
     selectedBookIds = emptySet()
+  }
+
+  fun onAddSelectedToQueue() {
+    val selected = selectedBookIds.toList()
+    if (selected.isNotEmpty()) {
+      scope.launch {
+        queueRepo.addToQueue(selected)
+      }
+      onClearSelection()
+    }
   }
 
   fun onBookFolderClick() {

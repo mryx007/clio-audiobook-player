@@ -11,15 +11,20 @@ import de.clio.core.data.BookId
 import de.clio.core.data.Bookmark
 import de.clio.core.data.Chapter
 import de.clio.core.data.ChapterId
+import de.clio.core.data.EndOfBookBehavior
 import de.clio.core.data.KioskModeDemoData
 import de.clio.core.data.MarkData
 import de.clio.core.data.PlaybackBackgroundStyle
 import de.clio.core.data.PlayerButtonVisibility
 import de.clio.core.data.sleeptimer.SleepTimerPreference
+import de.clio.core.data.repo.BookQueueRepository
+import de.clio.core.data.repo.FakeBookQueueRepository
 import de.clio.core.featureflag.MemoryFeatureFlag
 import de.clio.core.playback.CurrentBookResolver
 import de.clio.core.playback.LivePlaybackState
 import de.clio.core.playback.PlayerController
+import de.clio.navigation.Destination
+import de.clio.navigation.Navigator
 import de.clio.core.playback.overlay
 import de.clio.core.playback.playstate.PlayStateManager
 import de.clio.core.sleeptimer.SleepTimer
@@ -35,7 +40,9 @@ import io.mockk.mockk
 import io.mockk.verify
 import io.mockk.verifyOrder
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.runTest
@@ -84,6 +91,7 @@ class BookPlayViewModelTest {
   }
   private val playerLockedStore = MemoryDataStore(false)
   private val backButtonBehaviorStore = MemoryDataStore(BackButtonBehavior.BookOverview)
+  private val endOfBookBehaviorStore = MemoryDataStore(EndOfBookBehavior.DoNothing)
   private val navigator = mockk<de.clio.navigation.Navigator>(relaxed = true)
   private val viewModel = BookPlayViewModel(
     bookRepository = mockk {
@@ -93,6 +101,7 @@ class BookPlayViewModelTest {
     currentBookResolver = currentBookResolver,
     player = player.apply {
       every { pauseIfCurrentBookDifferentFrom(book.id) } just Runs
+      every { playbackEndedFlow() } returns emptyFlow()
     },
     sleepTimer = sleepTimer,
     playStateManager = playStateManager,
@@ -118,6 +127,7 @@ class BookPlayViewModelTest {
     playerButtonVisibilityStore = MemoryDataStore(PlayerButtonVisibility()),
     playerLockedStore = playerLockedStore,
     backButtonBehaviorStore = backButtonBehaviorStore,
+    endOfBookBehaviorStore = endOfBookBehaviorStore,
     bookId = book.id,
     dispatcherProvider = DispatcherProvider(scope.coroutineContext, scope.coroutineContext, scope.coroutineContext),
     experimentalPlaybackPersistenceFeatureFlag = MemoryFeatureFlag(false),
@@ -372,30 +382,26 @@ class BookPlayViewModelTest {
     verify(exactly = 1) { navigator.minimizeApp() }
   }
 
-  private fun viewModel(
-    book: Book = this.book,
-    experimentalPlaybackPersistence: Boolean = false,
-    kioskMode: Boolean = false,
-    livePlaybackFlow: MutableStateFlow<LivePlaybackState?> = MutableStateFlow(null),
-    playStateFlow: MutableStateFlow<PlayStateManager.PlayState> = MutableStateFlow(PlayStateManager.PlayState.Paused),
-  ): BookPlayViewModel {
-    return BookPlayViewModel(
+  @Test
+  fun whenPlaybackEndsAndEndOfBookBehaviorIsBookOverviewThenNavigatorGoesBack() = scope.runTest {
+    val localPlayer = mockk<PlayerController> {
+      every { pauseIfCurrentBookDifferentFrom(book.id) } just Runs
+      every { playbackEndedFlow() } returns flowOf(book.id)
+    }
+    val localEndOfBookBehaviorStore = MemoryDataStore(EndOfBookBehavior.BookOverview)
+    val localNavigator = mockk<de.clio.navigation.Navigator>(relaxed = true)
+
+    val localViewModel = BookPlayViewModel(
       bookRepository = mockk {
         coEvery { get(book.id) } returns book
         every { flow(book.id) } returns MutableStateFlow(book)
       },
       currentBookResolver = currentBookResolver,
-      player = mockk {
-        every { pauseIfCurrentBookDifferentFrom(book.id) } just Runs
-        every { livePlaybackStateFlow(book.id) } returns livePlaybackFlow
-      },
+      player = localPlayer,
       sleepTimer = sleepTimer,
-      playStateManager = mockk {
-        every { this@mockk.playStateFlow } returns playStateFlow
-        every { playState } returns playStateFlow.value
-      },
-      currentBookStoreId = MemoryDataStore(null),
-      navigator = mockk(),
+      playStateManager = playStateManager,
+      currentBookStoreId = currentBookStoreId,
+      navigator = localNavigator,
       bookmarkRepository = mockk(),
       volumeGainFormatter = mockk(),
       batteryOptimization = mockk(),
@@ -406,6 +412,124 @@ class BookPlayViewModelTest {
       playerButtonVisibilityStore = MemoryDataStore(PlayerButtonVisibility()),
       playerLockedStore = playerLockedStore,
       backButtonBehaviorStore = backButtonBehaviorStore,
+      endOfBookBehaviorStore = localEndOfBookBehaviorStore,
+      bookId = book.id,
+      dispatcherProvider = DispatcherProvider(scope.coroutineContext, scope.coroutineContext, scope.coroutineContext),
+      experimentalPlaybackPersistenceFeatureFlag = MemoryFeatureFlag(false),
+      kioskModeFeatureFlag = MemoryFeatureFlag(false),
+    )
+    assertIs<BookPlayViewModel>(localViewModel)
+
+    yield()
+    verify(exactly = 1) { localNavigator.goBack() }
+  }
+
+  @Test
+  fun whenPlaybackEndsAndEndOfBookBehaviorIsDoNothingThenNavigatorDoesNotGoBack() = scope.runTest {
+    val localPlayer = mockk<PlayerController> {
+      every { pauseIfCurrentBookDifferentFrom(book.id) } just Runs
+      every { playbackEndedFlow() } returns flowOf(book.id)
+    }
+    val localEndOfBookBehaviorStore = MemoryDataStore(EndOfBookBehavior.DoNothing)
+    val localNavigator = mockk<de.clio.navigation.Navigator>(relaxed = true)
+
+    val localViewModel = BookPlayViewModel(
+      bookRepository = mockk {
+        coEvery { get(book.id) } returns book
+        every { flow(book.id) } returns MutableStateFlow(book)
+      },
+      currentBookResolver = currentBookResolver,
+      player = localPlayer,
+      sleepTimer = sleepTimer,
+      playStateManager = playStateManager,
+      currentBookStoreId = currentBookStoreId,
+      navigator = localNavigator,
+      bookmarkRepository = mockk(),
+      volumeGainFormatter = mockk(),
+      batteryOptimization = mockk(),
+      rewindTimeStore = MemoryDataStore(20),
+      fastForwardTimeStore = MemoryDataStore(30),
+      playbackBackgroundStyleStore = MemoryDataStore(PlaybackBackgroundStyle.Solid),
+      sleepTimerPreferenceStore = sleepTimerDataStore,
+      playerButtonVisibilityStore = MemoryDataStore(PlayerButtonVisibility()),
+      playerLockedStore = playerLockedStore,
+      backButtonBehaviorStore = backButtonBehaviorStore,
+      endOfBookBehaviorStore = localEndOfBookBehaviorStore,
+      bookId = book.id,
+      dispatcherProvider = DispatcherProvider(scope.coroutineContext, scope.coroutineContext, scope.coroutineContext),
+      experimentalPlaybackPersistenceFeatureFlag = MemoryFeatureFlag(false),
+      kioskModeFeatureFlag = MemoryFeatureFlag(false),
+    )
+    assertIs<BookPlayViewModel>(localViewModel)
+
+    yield()
+    verify(exactly = 0) { localNavigator.goBack() }
+  }
+
+  @Test
+  fun `when playback ends and queue has next book, plays next book and replaces screen`() = scope.runTest {
+    val nextBookId = BookId("next-book-id")
+    val queueRepository = FakeBookQueueRepository(listOf(nextBookId))
+    val localNavigator = mockk<Navigator>(relaxed = true)
+    val localPlayer = mockk<PlayerController>(relaxed = true) {
+      every { playbackEndedFlow() } returns flowOf(book.id)
+    }
+
+    val localViewModel = viewModel(
+      player = localPlayer,
+      navigator = localNavigator,
+      queueRepository = queueRepository,
+    )
+    assertIs<BookPlayViewModel>(localViewModel)
+
+    yield()
+
+    verify {
+      localPlayer.play()
+      localNavigator.replace(Destination.Playback(nextBookId))
+    }
+  }
+
+  private fun viewModel(
+    book: Book = this.book,
+    livePlaybackFlow: MutableStateFlow<LivePlaybackState?> = MutableStateFlow(null),
+    player: PlayerController = mockk {
+      every { pauseIfCurrentBookDifferentFrom(book.id) } just Runs
+      every { livePlaybackStateFlow(book.id) } returns livePlaybackFlow
+      every { playbackEndedFlow() } returns emptyFlow()
+    },
+    navigator: Navigator = mockk(relaxed = true),
+    queueRepository: BookQueueRepository = FakeBookQueueRepository(),
+    experimentalPlaybackPersistence: Boolean = false,
+    kioskMode: Boolean = false,
+    playStateFlow: MutableStateFlow<PlayStateManager.PlayState> = MutableStateFlow(PlayStateManager.PlayState.Paused),
+  ): BookPlayViewModel {
+    return BookPlayViewModel(
+      bookRepository = mockk {
+        coEvery { get(book.id) } returns book
+        every { flow(book.id) } returns MutableStateFlow(book)
+      },
+      currentBookResolver = currentBookResolver,
+      player = player,
+      sleepTimer = sleepTimer,
+      playStateManager = mockk {
+        every { this@mockk.playStateFlow } returns playStateFlow
+        every { playState } returns playStateFlow.value
+      },
+      currentBookStoreId = MemoryDataStore(null),
+      navigator = navigator,
+      bookmarkRepository = mockk(),
+      volumeGainFormatter = mockk(),
+      batteryOptimization = mockk(),
+      rewindTimeStore = MemoryDataStore(20),
+      fastForwardTimeStore = MemoryDataStore(30),
+      playbackBackgroundStyleStore = MemoryDataStore(PlaybackBackgroundStyle.Solid),
+      sleepTimerPreferenceStore = sleepTimerDataStore,
+      playerButtonVisibilityStore = MemoryDataStore(PlayerButtonVisibility()),
+      playerLockedStore = playerLockedStore,
+      backButtonBehaviorStore = backButtonBehaviorStore,
+      endOfBookBehaviorStore = endOfBookBehaviorStore,
+      queueRepository = queueRepository,
       bookId = book.id,
       dispatcherProvider = DispatcherProvider(scope.coroutineContext, scope.coroutineContext, scope.coroutineContext),
       experimentalPlaybackPersistenceFeatureFlag = MemoryFeatureFlag(experimentalPlaybackPersistence),

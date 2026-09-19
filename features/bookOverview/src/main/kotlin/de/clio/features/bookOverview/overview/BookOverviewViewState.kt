@@ -20,10 +20,18 @@ data class BookOverviewViewState(
   val selectedBookIds: Set<BookId> = emptySet(),
   val gridColumnCount: Int = 2,
   val sortOrder: BookSortOrder = BookSortOrder.Default,
+  val selectedTab: OverviewTab = OverviewTab.Books,
+  val queueBooks: List<BookOverviewItemViewState> = emptyList(),
+  val queueCount: Int = 0,
+  val currentBook: BookOverviewItemViewState? = null,
 ) {
 
   val inSelectionMode: Boolean = selectedBookIds.isNotEmpty()
-  val allBookIds: Set<BookId> get() = books.values.flatMap { it.keys }.toSet()
+  val allBookIds: Set<BookId> get() = if (selectedTab == OverviewTab.Queue) {
+    queueBooks.map { it.id }.toSet()
+  } else {
+    books.values.flatMap { it.keys }.toSet()
+  }
 
   companion object {
     val Loading = BookOverviewViewState(

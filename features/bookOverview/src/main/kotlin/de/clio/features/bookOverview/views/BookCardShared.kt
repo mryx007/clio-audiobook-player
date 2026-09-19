@@ -37,6 +37,7 @@ internal fun BookCard(
   modifier: Modifier = Modifier,
   onBookLongClick: ((BookId) -> Unit)? = null,
   isSelected: Boolean = false,
+  clickable: Boolean = true,
   content: @Composable () -> Unit,
 ) {
   val containerColor = if (isSelected) {
@@ -50,18 +51,24 @@ internal fun BookCard(
     null
   }
 
+  val cardModifier = if (clickable) {
+    modifier
+      .fillMaxWidth()
+      .combinedClickable(
+        onClick = { onBookClick(bookId) },
+        onLongClick = onBookLongClick?.let { { it(bookId) } },
+      )
+  } else {
+    modifier.fillMaxWidth()
+  }
+
   Card(
     shape = MaterialTheme.shapes.medium,
     colors = CardDefaults.cardColors(
       containerColor = containerColor,
     ),
     border = border,
-    modifier = modifier
-      .fillMaxWidth()
-      .combinedClickable(
-        onClick = { onBookClick(bookId) },
-        onLongClick = onBookLongClick?.let { { it(bookId) } },
-      ),
+    modifier = cardModifier,
   ) {
     content()
   }

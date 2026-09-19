@@ -11,6 +11,7 @@ import de.clio.core.common.AppInfoProvider
 import de.clio.core.common.DispatcherProvider
 import de.clio.core.common.MainScope
 import de.clio.core.data.BackButtonBehavior
+import de.clio.core.data.EndOfBookBehavior
 import de.clio.core.data.GridMode
 import de.clio.core.data.PlaybackBackgroundStyle
 import de.clio.core.data.ThemeColor
@@ -58,6 +59,7 @@ class SettingsViewModel(
     val openLastBookOnStartup by userSettingsRepository.openLastBookOnStartup.collectAsState()
     val playbackBackgroundStyle by userSettingsRepository.playbackBackgroundStyle.collectAsState()
     val backButtonBehavior by userSettingsRepository.backButtonBehavior.collectAsState()
+    val endOfBookBehavior by userSettingsRepository.endOfBookBehavior.collectAsState()
     val showDeveloperMenu by userSettingsRepository.developerMenuUnlocked.collectAsState()
     val kioskMode = remember {
       kioskModeFeatureFlag.get()
@@ -67,6 +69,7 @@ class SettingsViewModel(
       customThemeColor = customThemeColor,
       playbackBackgroundStyle = playbackBackgroundStyle,
       backButtonBehavior = backButtonBehavior,
+      endOfBookBehavior = endOfBookBehavior,
       rewindTimeInSeconds = rewindTime,
       fastForwardTimeInSeconds = fastForwardTime,
       autoRewindInSeconds = autoRewindAmount,
@@ -107,6 +110,10 @@ class SettingsViewModel(
     dialog.value = SettingsViewState.Dialog.BackButtonBehavior
   }
 
+  override fun onEndOfBookBehaviorRowClick() {
+    dialog.value = SettingsViewState.Dialog.EndOfBookBehavior
+  }
+
   override fun setThemeMode(themeMode: ThemeMode) {
     mainScope.launch {
       userSettingsRepository.setThemeMode(themeMode)
@@ -117,6 +124,13 @@ class SettingsViewModel(
   override fun setBackButtonBehavior(behavior: BackButtonBehavior) {
     mainScope.launch {
       userSettingsRepository.setBackButtonBehavior(behavior)
+    }
+    dialog.value = null
+  }
+
+  override fun setEndOfBookBehavior(behavior: EndOfBookBehavior) {
+    mainScope.launch {
+      userSettingsRepository.setEndOfBookBehavior(behavior)
     }
     dialog.value = null
   }

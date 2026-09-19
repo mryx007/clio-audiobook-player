@@ -21,6 +21,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -72,7 +73,11 @@ internal fun ListBooks(
   onDeleteSelectedClick: () -> Unit = {},
   sortOrder: BookSortOrder = BookSortOrder.Default,
   onSortOrderChange: (BookSortOrder) -> Unit = {},
+  selectedTab: de.clio.features.bookOverview.overview.OverviewTab = de.clio.features.bookOverview.overview.OverviewTab.Books,
+  onTabSelected: (de.clio.features.bookOverview.overview.OverviewTab) -> Unit = {},
+  queueCount: Int = 0,
   contentPadding: PaddingValues = PaddingValues(top = 4.dp, start = 12.dp, end = 12.dp, bottom = 16.dp),
+  currentBook: BookOverviewItemViewState? = null,
 ) {
   LazyColumn(
     verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -94,8 +99,11 @@ internal fun ListBooks(
           modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.background)
-            .padding(vertical = 8.dp, horizontal = 4.dp),
+            .padding(start = 4.dp, end = 4.dp, bottom = 4.dp),
           category = category,
+          selectedTab = selectedTab,
+          onTabSelected = onTabSelected,
+          queueCount = queueCount,
           inSelectionMode = inSelectionMode,
           selectedCount = selectedBookIds.size,
           allSelected = allSelected,
@@ -104,6 +112,18 @@ internal fun ListBooks(
           sortOrder = sortOrder,
           onSortOrderChange = onSortOrderChange,
         )
+      }
+      if (category == BookOverviewCategory.OVERVIEW && currentBook != null && !inSelectionMode) {
+        item(
+          key = "overview_now_playing",
+          contentType = "now_playing",
+        ) {
+          NowPlayingSection(
+            book = currentBook,
+            onClick = { onBookClick(currentBook.id) },
+            modifier = Modifier.padding(start = 4.dp, end = 4.dp, top = 2.dp),
+          )
+        }
       }
       items(
         items = books.toList(),
@@ -141,6 +161,10 @@ internal fun ListBookRow(
   menuItems: List<BottomSheetItem>,
   onMenuItemClick: (BookId, BottomSheetItem) -> Unit,
   modifier: Modifier = Modifier,
+  showCheckboxInSelectionMode: Boolean = true,
+  clickable: Boolean = true,
+  trailingContent: (@Composable () -> Unit)? = null,
+  enableSharedTransition: Boolean = true,
 ) {
   var menuExpanded by remember { mutableStateOf(false) }
 
@@ -149,6 +173,7 @@ internal fun ListBookRow(
     onBookClick = onBookClick,
     onBookLongClick = onBookLongClick,
     isSelected = isSelected,
+    clickable = clickable,
     modifier = modifier,
   ) {
     Column(Modifier.padding()) {
@@ -157,7 +182,7 @@ internal fun ListBookRow(
           .fillMaxWidth()
           .padding(end = 4.dp),
       ) {
-        CoverImage(book.id, book.cover)
+        CoverImage(book.id, book.cover, enableSharedTransition)
 
         Column(
           modifier = Modifier
@@ -223,12 +248,16 @@ internal fun ListBookRow(
               }
             }
 
-            if (inSelectionMode) {
-              Checkbox(
-                checked = isSelected,
-                onCheckedChange = { onBookClick(book.id) },
-                modifier = Modifier.padding(start = 4.dp),
-              )
+            if (trailingContent != null) {
+              trailingContent()
+            } else if (inSelectionMode) {
+              if (showCheckboxInSelectionMode) {
+                Checkbox(
+                  checked = isSelected,
+                  onCheckedChange = { onBookClick(book.id) },
+                  modifier = Modifier.padding(start = 4.dp),
+                )
+              }
             } else {
               Box(
                 modifier = Modifier.padding(start = 4.dp),
@@ -305,13 +334,16 @@ internal fun ListBookRow(
 private fun CoverImage(
   bookId: BookId,
   cover: String?,
+  enableSharedTransition: Boolean = true,
 ) {
   val cornerRadius = 4.dp
   AsyncImage(
     modifier = Modifier
       .padding(top = 8.dp, start = 8.dp, bottom = 8.dp)
       .size(76.dp)
-      .sharedCoverElementModifier(bookId)
+      .then(
+        if (enableSharedTransition) Modifier.sharedCoverElementModifier(bookId) else Modifier,
+      )
       .clip(RoundedCornerShape(cornerRadius)),
     model = cover,
     placeholder = painterResource(id = UiR.drawable.album_art),

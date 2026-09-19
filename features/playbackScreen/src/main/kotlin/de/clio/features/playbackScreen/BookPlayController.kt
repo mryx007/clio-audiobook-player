@@ -17,6 +17,7 @@ import de.clio.core.common.rootGraphAs
 import de.clio.core.data.BookId
 import de.clio.core.ui.LocalAppReady
 import de.clio.features.playbackScreen.view.BookPlayView
+import de.clio.features.playbackScreen.view.QueueBottomSheet
 import de.clio.features.sleepTimer.SleepTimerDialog
 import de.clio.navigation.Destination
 import de.clio.navigation.NavEntryProvider
@@ -88,6 +89,7 @@ fun BookPlayScreen(bookId: BookId) {
     onCloseClick = viewModel::onCloseClick,
     onEqualizerClick = viewModel::onEqualizerIconClick,
     onLockClick = viewModel::toggleLock,
+    onQueueClick = viewModel::onQueueClick,
     useLandscapeLayout = LocalConfiguration.current.orientation == ORIENTATION_LANDSCAPE,
     snackbarHostState = snackbarHostState,
   )
@@ -114,6 +116,16 @@ fun BookPlayScreen(bookId: BookId) {
       }
       is BookPlayDialogViewState.EqualizerDialog -> {
         EqualizerDialog(dialogState, viewModel)
+      }
+      is BookPlayDialogViewState.QueueSheet -> {
+        QueueBottomSheet(
+          dialogState = dialogState,
+          onDismiss = viewModel::dismissDialog,
+          onBookClick = viewModel::onQueueBookClick,
+          onRemoveFromQueue = viewModel::onRemoveFromQueue,
+          onClearQueue = viewModel::onClearQueue,
+          onReorderQueue = viewModel::onReorderQueue,
+        )
       }
     }
   }

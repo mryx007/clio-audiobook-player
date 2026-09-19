@@ -97,6 +97,12 @@ class PlayerControlsSettingsViewModel(
     }
   }
 
+  fun toggleQueue() {
+    scope.launch {
+      playerButtonVisibilityStore.updateData { it.copy(showQueue = !it.showQueue) }
+    }
+  }
+
   fun onRewindRowClick() {
     dialog.value = PlayerControlsSettingsViewState.Dialog.RewindTime
   }

@@ -1,4 +1,4 @@
-﻿package de.clio.features.playbackScreen
+package de.clio.features.playbackScreen
 
 import androidx.compose.runtime.Immutable
 import de.clio.core.data.PlaybackBackgroundStyle
@@ -25,6 +25,7 @@ data class BookPlayViewState(
   val rewindTimeInSeconds: Int = 20,
   val fastForwardTimeInSeconds: Int = 30,
   val playerButtonVisibility: PlayerButtonVisibility = PlayerButtonVisibility(),
+  val queueCount: Int = 0,
 ) {
 
   sealed interface SleepTimerViewState {
@@ -71,4 +72,9 @@ internal sealed interface BookPlayDialogViewState {
   value class SleepTimer(val viewState: SleepTimerViewState) : BookPlayDialogViewState
 
   data class EqualizerDialog(val bands: List<Int>) : BookPlayDialogViewState
+
+  data class QueueSheet(
+    val currentBook: de.clio.core.data.Book?,
+    val queueItems: List<de.clio.core.data.Book>,
+  ) : BookPlayDialogViewState
 }

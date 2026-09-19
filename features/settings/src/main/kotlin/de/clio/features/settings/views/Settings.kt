@@ -131,6 +131,9 @@ private fun Settings(
         BackButtonBehaviorRow(viewState.backButtonBehavior, listener::onBackButtonBehaviorRowClick)
       }
       item {
+        EndOfBookBehaviorRow(viewState.endOfBookBehavior, listener::onEndOfBookBehaviorRowClick)
+      }
+      item {
         ListItem(
           modifier = Modifier.clickable { listener.openPlayerControlsSettings() },
           leadingContent = {
@@ -404,6 +407,13 @@ private fun Dialog(
       BackButtonBehaviorDialog(
         selectedBehavior = viewState.backButtonBehavior,
         onBehaviorSelect = listener::setBackButtonBehavior,
+        onDismiss = listener::dismissDialog,
+      )
+    }
+    SettingsViewState.Dialog.EndOfBookBehavior -> {
+      EndOfBookBehaviorDialog(
+        selectedBehavior = viewState.endOfBookBehavior,
+        onBehaviorSelect = listener::setEndOfBookBehavior,
         onDismiss = listener::dismissDialog,
       )
     }

@@ -1,6 +1,7 @@
 package de.clio.features.settings
 
 import de.clio.core.data.BackButtonBehavior
+import de.clio.core.data.EndOfBookBehavior
 import de.clio.core.data.PlaybackBackgroundStyle
 import de.clio.core.data.ThemeMode
 import java.time.LocalTime
@@ -10,6 +11,7 @@ interface SettingsListener {
   fun onThemeModeRowClick()
   fun onPlaybackBackgroundStyleRowClick()
   fun onBackButtonBehaviorRowClick()
+  fun onEndOfBookBehaviorRowClick()
   fun setThemeMode(themeMode: ThemeMode)
   fun setCustomThemeHex(hex: String)
   fun setCustomTheme(
@@ -18,6 +20,7 @@ interface SettingsListener {
   ) = setCustomThemeHex(hex)
   fun setPlaybackBackgroundStyle(style: PlaybackBackgroundStyle)
   fun setBackButtonBehavior(behavior: BackButtonBehavior)
+  fun setEndOfBookBehavior(behavior: EndOfBookBehavior)
   fun toggleGrid()
   fun rewindAmountChanged(seconds: Int)
   fun onRewindRowClick()
@@ -50,10 +53,12 @@ interface SettingsListener {
       override fun onThemeModeRowClick() {}
       override fun onPlaybackBackgroundStyleRowClick() {}
       override fun onBackButtonBehaviorRowClick() {}
+      override fun onEndOfBookBehaviorRowClick() {}
       override fun setThemeMode(themeMode: ThemeMode) {}
       override fun setCustomThemeHex(hex: String) {}
       override fun setPlaybackBackgroundStyle(style: PlaybackBackgroundStyle) {}
       override fun setBackButtonBehavior(behavior: BackButtonBehavior) {}
+      override fun setEndOfBookBehavior(behavior: EndOfBookBehavior) {}
       override fun toggleGrid() {}
       override fun rewindAmountChanged(seconds: Int) {}
       override fun onRewindRowClick() {}

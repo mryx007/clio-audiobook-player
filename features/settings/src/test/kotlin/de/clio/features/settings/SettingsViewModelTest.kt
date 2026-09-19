@@ -6,6 +6,7 @@ import app.cash.turbine.test
 import de.clio.core.common.AppInfoProvider
 import de.clio.core.common.DispatcherProvider
 import de.clio.core.data.BackButtonBehavior
+import de.clio.core.data.EndOfBookBehavior
 import de.clio.core.data.GridMode
 import de.clio.core.data.PlaybackBackgroundStyle
 import de.clio.core.data.ThemeColor
@@ -229,6 +230,19 @@ class SettingsViewModelTest {
       assertEquals(expected = SettingsViewState.Dialog.BackButtonBehavior, actual = awaitItem().dialog)
     }
   }
+
+  @Test
+  fun `end of book behavior updates and row click opens dialog`() = scope.runTest {
+    viewStateFlow().test {
+      assertEquals(expected = EndOfBookBehavior.DoNothing, actual = awaitItem().endOfBookBehavior)
+
+      viewModel.setEndOfBookBehavior(EndOfBookBehavior.BookOverview)
+      assertEquals(expected = EndOfBookBehavior.BookOverview, actual = awaitItem().endOfBookBehavior)
+
+      viewModel.onEndOfBookBehaviorRowClick()
+      assertEquals(expected = SettingsViewState.Dialog.EndOfBookBehavior, actual = awaitItem().dialog)
+    }
+  }
 }
 
 private class MemoryUserSettingsRepository : UserSettingsRepository {
@@ -243,6 +257,7 @@ private class MemoryUserSettingsRepository : UserSettingsRepository {
   override val openLastBookOnStartup = MutableStateFlow(false)
   override val playbackBackgroundStyle = MutableStateFlow(PlaybackBackgroundStyle.Solid)
   override val backButtonBehavior = MutableStateFlow(BackButtonBehavior.BookOverview)
+  override val endOfBookBehavior = MutableStateFlow(EndOfBookBehavior.DoNothing)
   override val developerMenuUnlocked = MutableStateFlow(false)
 
   override suspend fun setThemeMode(themeMode: ThemeMode) {
@@ -287,6 +302,10 @@ private class MemoryUserSettingsRepository : UserSettingsRepository {
 
   override suspend fun setBackButtonBehavior(behavior: BackButtonBehavior) {
     this.backButtonBehavior.value = behavior
+  }
+
+  override suspend fun setEndOfBookBehavior(behavior: EndOfBookBehavior) {
+    this.endOfBookBehavior.value = behavior
   }
 
   override suspend fun setDeveloperMenuUnlocked(unlocked: Boolean) {

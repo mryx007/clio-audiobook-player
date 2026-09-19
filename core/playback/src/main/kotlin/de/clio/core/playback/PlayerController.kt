@@ -1,4 +1,4 @@
-﻿package de.clio.core.playback
+package de.clio.core.playback
 
 import android.content.ComponentName
 import android.content.Context
@@ -226,7 +226,7 @@ class PlayerController(
       }
       tickJob = launch {
         while (isActive) {
-          delay(250.milliseconds)
+          delay(200.milliseconds)
           emitSnapshot()
         }
       }
@@ -261,6 +261,32 @@ class PlayerController(
     updateTicking()
     awaitClose {
       tickJob?.cancel()
+      controller.removeListener(listener)
+    }
+  }
+
+  fun playbackEndedFlow(): Flow<BookId> = callbackFlow {
+    val controller = awaitConnect()
+    if (controller == null) {
+      close()
+      return@callbackFlow
+    }
+
+    val listener = object : Player.Listener {
+      override fun onPlaybackStateChanged(playbackState: Int) {
+        if (playbackState == Player.STATE_ENDED) {
+          launch {
+            val bookId = controller.currentBookId() ?: currentBookStoreId.data.first()
+            if (bookId != null) {
+              trySend(bookId)
+            }
+          }
+        }
+      }
+    }
+
+    controller.addListener(listener)
+    awaitClose {
       controller.removeListener(listener)
     }
   }

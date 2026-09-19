@@ -4,6 +4,7 @@ import androidx.datastore.core.DataStore
 import de.clio.core.common.DispatcherProvider
 import de.clio.core.common.MainScope
 import de.clio.core.data.BackButtonBehavior
+import de.clio.core.data.EndOfBookBehavior
 import de.clio.core.data.GridMode
 import de.clio.core.data.PlaybackBackgroundStyle
 import de.clio.core.data.ThemeColor
@@ -13,6 +14,7 @@ import de.clio.core.data.store.AnalyticsConsentStore
 import de.clio.core.data.store.AutoRewindAmountStore
 import de.clio.core.data.store.BackButtonBehaviorStore
 import de.clio.core.data.store.DeveloperMenuUnlockedStore
+import de.clio.core.data.store.EndOfBookBehaviorStore
 import de.clio.core.data.store.FastForwardTimeStore
 import de.clio.core.data.store.GridModeStore
 import de.clio.core.data.store.OpenLastBookOnStartupStore
@@ -56,6 +58,8 @@ public class UserSettingsRepositoryImpl(
   private val playbackBackgroundStyleStore: DataStore<PlaybackBackgroundStyle>,
   @BackButtonBehaviorStore
   private val backButtonBehaviorStore: DataStore<BackButtonBehavior>,
+  @EndOfBookBehaviorStore
+  private val endOfBookBehaviorStore: DataStore<EndOfBookBehavior>,
   @DeveloperMenuUnlockedStore
   private val developerMenuUnlockedStore: DataStore<Boolean>,
   dispatcherProvider: DispatcherProvider = DispatcherProvider(),
@@ -95,6 +99,9 @@ public class UserSettingsRepositoryImpl(
 
   override val backButtonBehavior: StateFlow<BackButtonBehavior> = backButtonBehaviorStore.data
     .stateIn(scope, SharingStarted.Eagerly, BackButtonBehavior.BookOverview)
+
+  override val endOfBookBehavior: StateFlow<EndOfBookBehavior> = endOfBookBehaviorStore.data
+    .stateIn(scope, SharingStarted.Eagerly, EndOfBookBehavior.DoNothing)
 
   override val developerMenuUnlocked: StateFlow<Boolean> = developerMenuUnlockedStore.data
     .stateIn(scope, SharingStarted.Eagerly, false)
@@ -141,6 +148,10 @@ public class UserSettingsRepositoryImpl(
 
   override suspend fun setBackButtonBehavior(behavior: BackButtonBehavior) {
     backButtonBehaviorStore.updateData { behavior }
+  }
+
+  override suspend fun setEndOfBookBehavior(behavior: EndOfBookBehavior) {
+    endOfBookBehaviorStore.updateData { behavior }
   }
 
   override suspend fun setDeveloperMenuUnlocked(unlocked: Boolean) {

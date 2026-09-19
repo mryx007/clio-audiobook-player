@@ -1,4 +1,4 @@
-﻿package de.clio.features.settings.playercontrols
+package de.clio.features.settings.playercontrols
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Spacer
@@ -180,6 +180,29 @@ internal fun PlayerControlsSettings(
           },
         ) {
           Text(stringResource(StringsR.string.settings_player_controls_speed))
+        }
+      }
+
+      item {
+        ListItem(
+          modifier = Modifier.clickable { viewModel.toggleQueue() },
+          leadingContent = {
+            Icon(
+              imageVector = ClioIcons.QueueMusic,
+              contentDescription = null,
+            )
+          },
+          supportingContent = {
+            Text(stringResource(StringsR.string.settings_player_controls_queue_summary))
+          },
+          trailingContent = {
+            Switch(
+              checked = viewState.buttonVisibility.showQueue,
+              onCheckedChange = { viewModel.toggleQueue() },
+            )
+          },
+        ) {
+          Text(stringResource(StringsR.string.settings_player_controls_queue))
         }
       }
 

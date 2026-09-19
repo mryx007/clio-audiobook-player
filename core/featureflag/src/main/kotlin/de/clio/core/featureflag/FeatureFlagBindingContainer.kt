@@ -1,4 +1,4 @@
-﻿package de.clio.core.featureflag
+package de.clio.core.featureflag
 
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Binds
@@ -59,6 +59,7 @@ interface FeatureFlagBindingContainer {
     return factory.boolean(
       key = "experimental_playback_persistence",
       description = "Uses the experimental playback persistence implementation.",
+      defaultValue = true,
     )
   }
 

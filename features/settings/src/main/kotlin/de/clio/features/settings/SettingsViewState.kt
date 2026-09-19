@@ -1,6 +1,7 @@
 package de.clio.features.settings
 
 import de.clio.core.data.BackButtonBehavior
+import de.clio.core.data.EndOfBookBehavior
 import de.clio.core.data.PlaybackBackgroundStyle
 import de.clio.core.data.ThemeColor
 import de.clio.core.data.ThemeMode
@@ -11,6 +12,7 @@ data class SettingsViewState(
   val customThemeColor: ThemeColor,
   val playbackBackgroundStyle: PlaybackBackgroundStyle,
   val backButtonBehavior: BackButtonBehavior,
+  val endOfBookBehavior: EndOfBookBehavior,
   val rewindTimeInSeconds: Int,
   val fastForwardTimeInSeconds: Int,
   val autoRewindInSeconds: Int,
@@ -33,6 +35,7 @@ data class SettingsViewState(
     Theme,
     BackgroundStyle,
     BackButtonBehavior,
+    EndOfBookBehavior,
   }
 
   companion object {
@@ -42,6 +45,7 @@ data class SettingsViewState(
         customThemeColor = ThemeColor(),
         playbackBackgroundStyle = PlaybackBackgroundStyle.Solid,
         backButtonBehavior = BackButtonBehavior.BookOverview,
+        endOfBookBehavior = EndOfBookBehavior.DoNothing,
         rewindTimeInSeconds = 20,
         fastForwardTimeInSeconds = 30,
         autoRewindInSeconds = 12,

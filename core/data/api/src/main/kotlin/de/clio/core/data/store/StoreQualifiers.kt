@@ -73,3 +73,9 @@ public annotation class GridColumnCountStore
 
 @Qualifier
 public annotation class BookSortOrderStore
+
+@Qualifier
+public annotation class EndOfBookBehaviorStore
+
+@Qualifier
+public annotation class BookQueueStore

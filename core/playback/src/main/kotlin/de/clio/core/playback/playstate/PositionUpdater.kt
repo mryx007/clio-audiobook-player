@@ -24,6 +24,7 @@ import kotlinx.coroutines.launch
 import java.time.Instant
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 @Inject
 @SingleIn(PlaybackScope::class)
@@ -54,13 +55,7 @@ class PositionUpdater(
           if (playing) {
             lastTrackedWallTimeMs = System.currentTimeMillis()
             while (true) {
-              delay(
-                if (experimentalPlaybackPersistenceFeatureFlag.get()) {
-                  5.minutes
-                } else {
-                  400.milliseconds
-                },
-              )
+              delay(15.seconds)
               flushPositionNow()
               trackListeningTimeNow()
             }

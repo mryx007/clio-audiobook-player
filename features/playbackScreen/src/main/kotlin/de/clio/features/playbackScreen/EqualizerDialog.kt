@@ -1,4 +1,4 @@
-﻿package de.clio.features.playbackScreen
+package de.clio.features.playbackScreen
 
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
@@ -105,16 +106,26 @@ internal fun EqualizerDialog(
         }
       }
     },
-    dismissButton = {
-      TextButton(onClick = { viewModel.onEqualizerReset() }) {
-        Text(stringResource(id = StringsR.string.playback_equalizer_reset))
-      }
-    },
     confirmButton = {
-      TextButton(onClick = { viewModel.dismissDialog() }) {
-        Text(stringResource(id = StringsR.string.common_action_close))
+      Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+      ) {
+        TextButton(
+          onClick = { viewModel.onEqualizerReset() },
+          colors = ButtonDefaults.textButtonColors(
+            contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+          ),
+        ) {
+          Text(stringResource(id = StringsR.string.playback_equalizer_reset))
+        }
+        Spacer(modifier = Modifier.weight(1f))
+        TextButton(onClick = { viewModel.dismissDialog() }) {
+          Text(stringResource(id = StringsR.string.common_action_close))
+        }
       }
     },
+    dismissButton = null,
   )
 }
 

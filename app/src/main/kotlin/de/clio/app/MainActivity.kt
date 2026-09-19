@@ -269,6 +269,13 @@ class MainActivity : AppCompatActivity() {
                   backStack.clear()
                   backStack.add(command.root)
                 }
+                is NavigationCommand.Replace -> {
+                  if (backStack.isNotEmpty()) {
+                    backStack[backStack.lastIndex] = command.destination
+                  } else {
+                    backStack += command.destination
+                  }
+                }
               }
             }
           }

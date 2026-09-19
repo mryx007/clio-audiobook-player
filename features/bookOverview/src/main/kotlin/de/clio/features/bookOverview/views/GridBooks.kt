@@ -3,6 +3,7 @@ package de.clio.features.bookOverview.views
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -29,16 +30,14 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -90,7 +89,11 @@ internal fun GridBooks(
   onPermissionBugCardClick: () -> Unit = {},
   sortOrder: BookSortOrder = BookSortOrder.Default,
   onSortOrderChange: (BookSortOrder) -> Unit = {},
+  selectedTab: de.clio.features.bookOverview.overview.OverviewTab = de.clio.features.bookOverview.overview.OverviewTab.Books,
+  onTabSelected: (de.clio.features.bookOverview.overview.OverviewTab) -> Unit = {},
+  queueCount: Int = 0,
   contentPadding: PaddingValues = PaddingValues(start = 12.dp, end = 12.dp, top = 4.dp, bottom = 12.dp),
+  currentBook: BookOverviewItemViewState? = null,
 ) {
   LazyVerticalGrid(
     columns = GridCells.Fixed(gridColumnCount.coerceIn(1, 3)),
@@ -113,18 +116,31 @@ internal fun GridBooks(
         key = category,
         contentType = "header",
       ) {
-        val allSelected = selectedBookIds.size == allBookIds.size && allBookIds.isNotEmpty()
-        Header(
-          modifier = Modifier.padding(top = 8.dp, bottom = 4.dp, start = 4.dp, end = 4.dp),
-          category = category,
-          inSelectionMode = inSelectionMode,
-          selectedCount = selectedBookIds.size,
-          allSelected = allSelected,
-          onSelectAllClick = onSelectAllClick,
-          onDeleteSelectedClick = onDeleteSelectedClick,
-          sortOrder = sortOrder,
-          onSortOrderChange = onSortOrderChange,
-        )
+        Column(modifier = Modifier.fillMaxWidth()) {
+          val allSelected = selectedBookIds.size == allBookIds.size && allBookIds.isNotEmpty()
+          Header(
+            modifier = Modifier.padding(start = 4.dp, end = 4.dp, bottom = 4.dp),
+            category = category,
+            selectedTab = selectedTab,
+            onTabSelected = onTabSelected,
+            queueCount = queueCount,
+            inSelectionMode = inSelectionMode,
+            selectedCount = selectedBookIds.size,
+            allSelected = allSelected,
+            onSelectAllClick = onSelectAllClick,
+            onDeleteSelectedClick = onDeleteSelectedClick,
+            sortOrder = sortOrder,
+            onSortOrderChange = onSortOrderChange,
+          )
+
+          if (category == BookOverviewCategory.OVERVIEW && currentBook != null && !inSelectionMode) {
+            NowPlayingSection(
+              book = currentBook,
+              onClick = { onBookClick(currentBook.id) },
+              modifier = Modifier.padding(start = 4.dp, end = 4.dp, top = 2.dp),
+            )
+          }
+        }
       }
       items(
         items = books.toList(),
@@ -167,63 +183,54 @@ internal fun GridBook(
   onMenuItemClick: (BookId, BottomSheetItem) -> Unit = { _, _ -> },
 ) {
   var menuExpanded by remember { mutableStateOf(false) }
+  val cardShape = RoundedCornerShape(8.dp)
   Column(
     modifier = modifier
       .fillMaxWidth()
-      .clip(MaterialTheme.shapes.medium)
+      .clip(cardShape)
+      .then(
+        if (isSelected) {
+          Modifier
+            .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.12f), cardShape)
+            .border(BorderStroke(2.dp, MaterialTheme.colorScheme.primary), cardShape)
+        } else {
+          Modifier
+        },
+      )
       .combinedClickable(
         onClick = { onBookClick(book.id) },
         onLongClick = { onBookLongClick(book.id) },
       )
-      .padding(4.dp),
+      .padding(5.dp),
   ) {
-    Row(
+    Column(
       modifier = Modifier.fillMaxWidth(),
-      verticalAlignment = Alignment.CenterVertically,
     ) {
-      Column(
-        modifier = Modifier.weight(1f),
-      ) {
-        Text(
-          text = book.author ?: "",
-          style = MaterialTheme.typography.labelMedium.copy(
-            fontSize = 15.sp,
-            fontWeight = FontWeight.Bold,
-          ),
-          color = MaterialTheme.colorScheme.onSurface,
-          minLines = 1,
-          maxLines = 1,
-          overflow = TextOverflow.Ellipsis,
-        )
+      Text(
+        text = book.author ?: "",
+        style = MaterialTheme.typography.labelMedium.copy(
+          fontSize = 15.sp,
+          fontWeight = FontWeight.Bold,
+        ),
+        color = MaterialTheme.colorScheme.onSurface,
+        minLines = 1,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+      )
 
-        Spacer(Modifier.height(1.dp))
+      Spacer(Modifier.height(1.dp))
 
-        Text(
-          text = book.name,
-          style = MaterialTheme.typography.bodySmall.copy(
-            fontSize = 12.5.sp,
-            lineHeight = 16.sp,
-          ),
-          color = MaterialTheme.colorScheme.onSurfaceVariant,
-          minLines = 1,
-          maxLines = 1,
-          overflow = TextOverflow.Ellipsis,
-        )
-      }
-
-      if (inSelectionMode) {
-        CompositionLocalProvider(
-          LocalMinimumInteractiveComponentSize provides 0.dp,
-        ) {
-          Checkbox(
-            checked = isSelected,
-            onCheckedChange = { onBookClick(book.id) },
-            modifier = Modifier
-              .size(20.dp)
-              .padding(start = 2.dp),
-          )
-        }
-      }
+      Text(
+        text = book.name,
+        style = MaterialTheme.typography.bodySmall.copy(
+          fontSize = 12.5.sp,
+          lineHeight = 16.sp,
+        ),
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        minLines = 1,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+      )
     }
 
     Spacer(Modifier.height(4.dp))
@@ -231,7 +238,6 @@ internal fun GridBook(
     Surface(
       shape = RoundedCornerShape(6.dp),
       shadowElevation = 3.dp,
-      border = if (isSelected) BorderStroke(2.5.dp, MaterialTheme.colorScheme.primary) else null,
       modifier = Modifier
         .fillMaxWidth()
         .aspectRatio(1f)
@@ -260,7 +266,7 @@ internal fun GridBook(
           Box(
             modifier = Modifier
               .fillMaxSize()
-              .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.25f)),
+              .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)),
           )
         }
 
@@ -309,53 +315,51 @@ internal fun GridBook(
           maxLines = 1,
         )
 
-        if (!inSelectionMode) {
-          Box {
+        Box {
+          Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+              .padding(start = 6.dp)
+              .clip(RoundedCornerShape(3.dp))
+              .clickable {
+                onBookMoreClick(book.id)
+                menuExpanded = true
+              }
+              .padding(vertical = 2.dp),
+          ) {
             Box(
-              contentAlignment = Alignment.Center,
               modifier = Modifier
-                .padding(start = 6.dp)
-                .clip(RoundedCornerShape(3.dp))
-                .clickable {
-                  onBookMoreClick(book.id)
-                  menuExpanded = true
-                }
-                .padding(vertical = 2.dp),
+                .width(7.dp)
+                .height(18.dp),
+              contentAlignment = Alignment.Center,
             ) {
-              Box(
-                modifier = Modifier
-                  .width(7.dp)
-                  .height(18.dp),
-                contentAlignment = Alignment.Center,
-              ) {
-                Icon(
-                  imageVector = ClioIcons.MoreVert,
-                  contentDescription = null,
-                  tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                  modifier = Modifier.requiredSize(20.dp),
-                )
-              }
+              Icon(
+                imageVector = ClioIcons.MoreVert,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.requiredSize(20.dp),
+              )
             }
+          }
 
-            SmoothDropdownMenu(
-              expanded = menuExpanded && selectedBookId == book.id && menuItems.isNotEmpty(),
-              onDismissRequest = { menuExpanded = false },
-            ) {
-              menuItems.forEach { item ->
-                DropdownMenuItem(
-                  text = { Text(stringResource(item.titleRes)) },
-                  leadingIcon = {
-                    Icon(
-                      imageVector = item.icon,
-                      contentDescription = null,
-                    )
-                  },
-                  onClick = {
-                    menuExpanded = false
-                    onMenuItemClick(book.id, item)
-                  },
-                )
-              }
+          SmoothDropdownMenu(
+            expanded = menuExpanded && selectedBookId == book.id && menuItems.isNotEmpty(),
+            onDismissRequest = { menuExpanded = false },
+          ) {
+            menuItems.forEach { item ->
+              DropdownMenuItem(
+                text = { Text(stringResource(item.titleRes)) },
+                leadingIcon = {
+                  Icon(
+                    imageVector = item.icon,
+                    contentDescription = null,
+                  )
+                },
+                onClick = {
+                  menuExpanded = false
+                  onMenuItemClick(book.id, item)
+                },
+              )
             }
           }
         }

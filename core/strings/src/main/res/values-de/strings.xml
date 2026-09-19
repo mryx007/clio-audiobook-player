@@ -169,6 +169,18 @@
     <string name="settings.playback.back_button_behavior.title">Verhalten der Zurück-Taste</string>
     <string name="settings.playback.back_button_behavior.book_overview">Zurück zur Bücherübersicht</string>
     <string name="settings.playback.back_button_behavior.minimize_app">App minimieren</string>
+    <string name="settings.playback.end_of_book_behavior.title">Wenn das Hörbuch endet</string>
+    <string name="settings.playback.end_of_book_behavior.do_nothing">Nichts tun</string>
+    <string name="settings.playback.end_of_book_behavior.book_overview">Bücherübersicht öffnen</string>
+    <string name="queue_title">Warteschlange</string>
+    <string name="queue_action_add_to_queue">Zur Warteschlange hinzufügen</string>
+    <string name="queue_added_snackbar_one">1 Hörbuch zur Warteschlange hinzugefügt</string>
+    <string name="queue_added_snackbar_many">%1$d Hörbücher zur Warteschlange hinzugefügt</string>
+    <string name="queue_empty">Warteschlange ist leer</string>
+    <string name="queue_empty_hint">Halte Hörbücher in der Übersicht gedrückt, um sie zur Warteschlange hinzuzufügen</string>
+    <string name="queue_now_playing">Wird gerade gespielt</string>
+    <string name="queue_next">Als Nächstes</string>
+    <string name="queue_action_clear">Warteschlange leeren</string>
     <string name="settings.playback.auto_rewind.title">Automatisch zurückspulen</string>
     <string name="settings.playback.seek_time.title">Vor- und zurückspulen</string>
     <string name="settings.support.faq.title">Häufige Fragen</string>
@@ -228,6 +240,8 @@
     <string name="settings.player_controls.bookmark_summary">Lesezeichen setzen und aufrufen</string>
     <string name="settings.player_controls.speed">Wiedergabegeschwindigkeit</string>
     <string name="settings.player_controls.speed_summary">Geschwindigkeit des Hörbuchs regeln</string>
+    <string name="settings.player_controls.queue">Warteschlange</string>
+    <string name="settings.player_controls.queue_summary">Warteschlangen-Button im Player anzeigen</string>
     <string name="settings.player_controls.category.buttons">Sichtbare Buttons</string>
     <string name="settings.player_controls.category.seeking">Sprungzeiten</string>
 </resources>

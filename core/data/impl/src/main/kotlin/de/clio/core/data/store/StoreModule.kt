@@ -9,6 +9,7 @@ import androidx.datastore.core.DataStore
 import de.clio.core.data.BackButtonBehavior
 import de.clio.core.data.BookId
 import de.clio.core.data.BookSortOrder
+import de.clio.core.data.EndOfBookBehavior
 import de.clio.core.data.GridMode
 import de.clio.core.data.PlaybackBackgroundStyle
 import de.clio.core.data.PlayerButtonVisibility
@@ -289,6 +290,28 @@ public interface StoreModule {
       serializer = BackButtonBehavior.serializer(),
       fileName = "backButtonBehavior",
       defaultValue = BackButtonBehavior.BookOverview,
+    )
+  }
+
+  @Provides
+  @SingleIn(AppScope::class)
+  @EndOfBookBehaviorStore
+  private fun endOfBookBehavior(factory: ClioDataStoreFactory): DataStore<EndOfBookBehavior> {
+    return factory.create(
+      serializer = EndOfBookBehavior.serializer(),
+      fileName = "endOfBookBehavior",
+      defaultValue = EndOfBookBehavior.DoNothing,
+    )
+  }
+
+  @Provides
+  @SingleIn(AppScope::class)
+  @BookQueueStore
+  private fun bookQueue(factory: ClioDataStoreFactory): DataStore<List<BookId>> {
+    return factory.create(
+      serializer = kotlinx.serialization.builtins.ListSerializer(BookId.serializer()),
+      fileName = "bookQueue",
+      defaultValue = emptyList(),
     )
   }
 }

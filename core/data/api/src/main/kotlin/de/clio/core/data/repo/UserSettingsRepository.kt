@@ -1,6 +1,7 @@
 package de.clio.core.data.repo
 
 import de.clio.core.data.BackButtonBehavior
+import de.clio.core.data.EndOfBookBehavior
 import de.clio.core.data.GridMode
 import de.clio.core.data.PlaybackBackgroundStyle
 import de.clio.core.data.ThemeColor
@@ -20,6 +21,7 @@ public interface UserSettingsRepository {
   public val openLastBookOnStartup: StateFlow<Boolean>
   public val playbackBackgroundStyle: StateFlow<PlaybackBackgroundStyle>
   public val backButtonBehavior: StateFlow<BackButtonBehavior>
+  public val endOfBookBehavior: StateFlow<EndOfBookBehavior>
   public val developerMenuUnlocked: StateFlow<Boolean>
 
   public suspend fun setThemeMode(themeMode: ThemeMode)
@@ -33,5 +35,6 @@ public interface UserSettingsRepository {
   public suspend fun setOpenLastBookOnStartup(enabled: Boolean)
   public suspend fun setPlaybackBackgroundStyle(style: PlaybackBackgroundStyle)
   public suspend fun setBackButtonBehavior(behavior: BackButtonBehavior)
+  public suspend fun setEndOfBookBehavior(behavior: EndOfBookBehavior)
   public suspend fun setDeveloperMenuUnlocked(unlocked: Boolean)
 }

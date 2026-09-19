@@ -38,6 +38,7 @@ internal fun BookPlayView(
   onChapterSeek: (Duration) -> Unit,
   onSkipToNext: () -> Unit,
   onSkipToPrevious: () -> Unit,
+  onQueueClick: () -> Unit = {},
   onSleepTimerClick: () -> Unit,
   onBookmarkClick: () -> Unit,
   onBookmarkLongClick: () -> Unit,
@@ -119,6 +120,7 @@ internal fun BookPlayView(
       topBar = {
         BookPlayAppBar(
           viewState = viewState,
+          onQueueClick = onQueueClick,
           onSleepTimerClick = onSleepTimerClick,
           onBookmarkClick = onBookmarkClick,
           onBookmarkLongClick = onBookmarkLongClick,
