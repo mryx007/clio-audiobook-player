@@ -23,8 +23,8 @@ import de.clio.core.data.BookSortOrder
 import de.clio.core.data.GridMode
 import de.clio.core.data.KioskModeDemoData
 import de.clio.core.data.repo.BookQueueRepository
-import de.clio.core.data.repo.FakeBookQueueRepository
 import de.clio.core.data.repo.BookRepository
+import de.clio.core.data.repo.FakeBookQueueRepository
 import de.clio.core.data.store.BookSortOrderStore
 import de.clio.core.data.store.CurrentBookStore
 import de.clio.core.data.store.FolderPickerMovedDialogShownStore

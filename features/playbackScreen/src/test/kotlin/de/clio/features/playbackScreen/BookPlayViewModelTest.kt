@@ -16,15 +16,13 @@ import de.clio.core.data.KioskModeDemoData
 import de.clio.core.data.MarkData
 import de.clio.core.data.PlaybackBackgroundStyle
 import de.clio.core.data.PlayerButtonVisibility
-import de.clio.core.data.sleeptimer.SleepTimerPreference
 import de.clio.core.data.repo.BookQueueRepository
 import de.clio.core.data.repo.FakeBookQueueRepository
+import de.clio.core.data.sleeptimer.SleepTimerPreference
 import de.clio.core.featureflag.MemoryFeatureFlag
 import de.clio.core.playback.CurrentBookResolver
 import de.clio.core.playback.LivePlaybackState
 import de.clio.core.playback.PlayerController
-import de.clio.navigation.Destination
-import de.clio.navigation.Navigator
 import de.clio.core.playback.overlay
 import de.clio.core.playback.playstate.PlayStateManager
 import de.clio.core.sleeptimer.SleepTimer
@@ -32,6 +30,8 @@ import de.clio.core.sleeptimer.SleepTimerMode
 import de.clio.core.sleeptimer.SleepTimerMode.TimedWithDuration
 import de.clio.core.sleeptimer.SleepTimerState
 import de.clio.features.sleepTimer.SleepTimerViewState
+import de.clio.navigation.Destination
+import de.clio.navigation.Navigator
 import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.every

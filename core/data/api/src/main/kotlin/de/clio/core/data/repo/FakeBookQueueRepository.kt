@@ -6,9 +6,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-public class FakeBookQueueRepository(
-  initial: List<BookId> = emptyList(),
-) : BookQueueRepository {
+public class FakeBookQueueRepository(initial: List<BookId> = emptyList()) : BookQueueRepository {
 
   private val _queueFlow = MutableStateFlow(initial)
   override val queueFlow: StateFlow<List<BookId>> = _queueFlow.asStateFlow()

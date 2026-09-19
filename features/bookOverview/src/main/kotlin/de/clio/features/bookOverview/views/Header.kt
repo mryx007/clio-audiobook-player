@@ -31,7 +31,7 @@ internal fun Header(
   category: BookOverviewCategory,
   modifier: Modifier = Modifier,
   selectedTab: OverviewTab = OverviewTab.Books,
-  onTabSelected: (OverviewTab) -> Unit = {},
+  onTabSelect: (OverviewTab) -> Unit = {},
   queueCount: Int = 0,
   inSelectionMode: Boolean = false,
   selectedCount: Int = 0,
@@ -89,7 +89,7 @@ internal fun Header(
       ) {
         if (selectedTab == OverviewTab.Queue) {
           IconButton(
-            onClick = { onTabSelected(OverviewTab.Books) },
+            onClick = { onTabSelect(OverviewTab.Books) },
             modifier = Modifier.size(40.dp),
           ) {
             Icon(
@@ -116,7 +116,7 @@ internal fun Header(
         if (queueCount > 0) {
           Surface(
             onClick = {
-              onTabSelected(if (selectedTab == OverviewTab.Queue) OverviewTab.Books else OverviewTab.Queue)
+              onTabSelect(if (selectedTab == OverviewTab.Queue) OverviewTab.Books else OverviewTab.Queue)
             },
             shape = CircleShape,
             color = MaterialTheme.colorScheme.primary.copy(alpha = 0.10f),
@@ -148,7 +148,7 @@ internal fun Header(
         } else {
           IconButton(
             onClick = {
-              onTabSelected(if (selectedTab == OverviewTab.Queue) OverviewTab.Books else OverviewTab.Queue)
+              onTabSelect(if (selectedTab == OverviewTab.Queue) OverviewTab.Books else OverviewTab.Queue)
             },
             modifier = Modifier.size(40.dp),
           ) {

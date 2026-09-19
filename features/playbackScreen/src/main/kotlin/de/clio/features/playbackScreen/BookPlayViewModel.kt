@@ -21,9 +21,9 @@ import de.clio.core.data.durationMs
 import de.clio.core.data.formatDisplayChapterName
 import de.clio.core.data.markForPosition
 import de.clio.core.data.repo.BookQueueRepository
-import de.clio.core.data.repo.FakeBookQueueRepository
 import de.clio.core.data.repo.BookRepository
 import de.clio.core.data.repo.BookmarkRepo
+import de.clio.core.data.repo.FakeBookQueueRepository
 import de.clio.core.data.sleeptimer.SleepTimerPreference
 import de.clio.core.data.store.BackButtonBehaviorStore
 import de.clio.core.data.store.CurrentBookStore

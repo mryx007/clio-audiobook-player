@@ -3,6 +3,7 @@ package de.clio.features.bookOverview.views
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,7 +26,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -49,8 +49,8 @@ import de.clio.core.ui.icons.ClioIcons
 import de.clio.features.bookOverview.overview.BookOverviewCategory
 import de.clio.features.bookOverview.overview.BookOverviewItemViewState
 import de.clio.features.bookOverview.overview.OverviewTab
-import java.util.Collections
 import kotlinx.coroutines.launch
+import java.util.Collections
 import de.clio.core.strings.R as StringsR
 
 @Composable
@@ -61,7 +61,7 @@ internal fun QueueBooksList(
   selectedBookIds: Set<BookId>,
   inSelectionMode: Boolean,
   selectedTab: OverviewTab,
-  onTabSelected: (OverviewTab) -> Unit,
+  onTabSelect: (OverviewTab) -> Unit,
   queueCount: Int,
   allBookIds: Set<BookId>,
   onSelectAllClick: () -> Unit,
@@ -103,7 +103,7 @@ internal fun QueueBooksList(
             .padding(start = 4.dp, end = 4.dp, bottom = 4.dp),
           category = BookOverviewCategory.OVERVIEW,
           selectedTab = selectedTab,
-          onTabSelected = onTabSelected,
+          onTabSelect = onTabSelect,
           queueCount = queueCount,
           inSelectionMode = inSelectionMode,
           selectedCount = selectedBookIds.size,

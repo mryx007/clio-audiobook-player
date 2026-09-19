@@ -35,13 +35,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.platform.LocalContext
-import kotlinx.coroutines.launch
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.retain.retain
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -83,6 +81,7 @@ import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.IntoSet
 import dev.zacsweers.metro.Provides
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 import kotlin.uuid.Uuid
 import de.clio.core.strings.R as StringsR
@@ -139,7 +138,9 @@ fun BookOverviewScreen(modifier: Modifier = Modifier) {
 
   val snackbarHostState = remember { SnackbarHostState() }
   val scope = rememberCoroutineScope()
-  val context = LocalContext.current
+  val queueSnackbarOne = stringResource(StringsR.string.queue_added_snackbar_one)
+  val queueSnackbarMany = stringResource(StringsR.string.queue_added_snackbar_many)
+  val queueTitle = stringResource(StringsR.string.queue_title)
 
   BookOverview(
     viewState = viewState,
@@ -162,14 +163,14 @@ fun BookOverviewScreen(modifier: Modifier = Modifier) {
       val count = viewState.selectedBookIds.size
       bookOverviewViewModel.onAddSelectedToQueue()
       val message = if (count == 1) {
-        context.getString(StringsR.string.queue_added_snackbar_one)
+        queueSnackbarOne
       } else {
-        context.getString(StringsR.string.queue_added_snackbar_many, count)
+        java.lang.String.format(queueSnackbarMany, count)
       }
       scope.launch {
         val result = snackbarHostState.showSnackbar(
           message = message,
-          actionLabel = context.getString(StringsR.string.queue_title),
+          actionLabel = queueTitle,
           duration = SnackbarDuration.Short,
         )
         if (result == SnackbarResult.ActionPerformed) {
@@ -177,7 +178,7 @@ fun BookOverviewScreen(modifier: Modifier = Modifier) {
         }
       }
     },
-    onTabSelected = bookOverviewViewModel::onTabSelected,
+    onTabSelect = bookOverviewViewModel::onTabSelected,
     onReorderQueue = bookOverviewViewModel::onReorderQueue,
     onBookMoreClick = bottomSheetViewModel::bookSelected,
     selectedBookId = bottomSheetViewModel.selectedBookId,
@@ -236,7 +237,7 @@ internal fun BookOverview(
   onPermissionBugCardClick: () -> Unit,
   modifier: Modifier = Modifier,
   onAddToQueueClick: () -> Unit = {},
-  onTabSelected: (OverviewTab) -> Unit = {},
+  onTabSelect: (OverviewTab) -> Unit = {},
   onReorderQueue: (List<BookId>) -> Unit = {},
   snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
   onGridColumnCountChange: (Int) -> Unit = {},
@@ -390,7 +391,7 @@ internal fun BookOverview(
               selectedBookIds = viewState.selectedBookIds,
               inSelectionMode = viewState.inSelectionMode,
               selectedTab = viewState.selectedTab,
-              onTabSelected = onTabSelected,
+              onTabSelect = onTabSelect,
               queueCount = viewState.queueCount,
               allBookIds = viewState.allBookIds,
               onSelectAllClick = onSelectAllClick,
@@ -421,7 +422,7 @@ internal fun BookOverview(
                   sortOrder = viewState.sortOrder,
                   onSortOrderChange = onSortOrderChange,
                   selectedTab = viewState.selectedTab,
-                  onTabSelected = onTabSelected,
+                  onTabSelect = onTabSelect,
                   queueCount = viewState.queueCount,
                   contentPadding = listContentPadding,
                   currentBook = viewState.currentBook,
@@ -447,7 +448,7 @@ internal fun BookOverview(
                   sortOrder = viewState.sortOrder,
                   onSortOrderChange = onSortOrderChange,
                   selectedTab = viewState.selectedTab,
-                  onTabSelected = onTabSelected,
+                  onTabSelect = onTabSelect,
                   queueCount = viewState.queueCount,
                   contentPadding = listContentPadding,
                   currentBook = viewState.currentBook,

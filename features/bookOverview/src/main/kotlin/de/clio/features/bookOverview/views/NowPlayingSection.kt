@@ -25,9 +25,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import de.clio.features.bookOverview.overview.BookOverviewItemViewState
 import de.clio.core.strings.R as StringsR
 import de.clio.core.ui.R as UiR
-import de.clio.features.bookOverview.overview.BookOverviewItemViewState
 
 @Composable
 internal fun NowPlayingSection(

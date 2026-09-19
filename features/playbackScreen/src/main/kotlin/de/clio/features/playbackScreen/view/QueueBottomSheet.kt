@@ -61,13 +61,13 @@ import androidx.compose.ui.zIndex
 import coil.compose.AsyncImage
 import de.clio.core.data.Book
 import de.clio.core.data.BookId
-import de.clio.core.strings.R as StringsR
-import de.clio.core.ui.R as UiR
 import de.clio.core.ui.formatTime
 import de.clio.core.ui.icons.ClioIcons
 import de.clio.features.playbackScreen.BookPlayDialogViewState
-import java.util.Collections
 import kotlinx.coroutines.launch
+import java.util.Collections
+import de.clio.core.strings.R as StringsR
+import de.clio.core.ui.R as UiR
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Suppress("DEPRECATION")
@@ -356,7 +356,9 @@ internal fun QueueBottomSheet(
                       )
                     }
                   }
-                } else null,
+                } else {
+                  null
+                },
               )
             }
           }
