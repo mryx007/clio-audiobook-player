@@ -177,16 +177,20 @@ class BookPlayViewModel(
     val isLocked = remember { playerLockedStore.data }
       .collectAsState(initial = false).value
     val queue = remember { queueRepository.queueFlow }.collectAsState().value
-    val hasMoreThanOneChapter = book.chapters.sumOf { it.chapterMarks.count() } > 1
-    val chapterName = if (hasMoreThanOneChapter) {
-      formatDisplayChapterName(
-        chapterName = currentMark.name,
-        bookName = book.content.name,
-        chapterUri = book.currentChapter.id.value,
-        author = book.content.author,
-      )
-    } else {
-      null
+    val hasMoreThanOneChapter = remember(persistedBook.chapters) {
+      persistedBook.chapters.sumOf { it.chapterMarks.count() } > 1
+    }
+    val chapterName = remember(currentMark.name, book.content.name, book.currentChapter.id, book.content.author, hasMoreThanOneChapter) {
+      if (hasMoreThanOneChapter) {
+        formatDisplayChapterName(
+          chapterName = currentMark.name,
+          bookName = book.content.name,
+          chapterUri = book.currentChapter.id.value,
+          author = book.content.author,
+        )
+      } else {
+        null
+      }
     }
     return BookPlayViewState(
       sleepTimerState = sleepTime.toViewState(),

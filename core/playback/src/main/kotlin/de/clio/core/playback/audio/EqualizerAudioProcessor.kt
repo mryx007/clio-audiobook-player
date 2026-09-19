@@ -1,4 +1,4 @@
-﻿package de.clio.core.playback.audio
+package de.clio.core.playback.audio
 
 import androidx.media3.common.C
 import androidx.media3.common.audio.AudioProcessor
@@ -31,6 +31,8 @@ class EqualizerAudioProcessor : BaseAudioProcessor() {
   }
 
   fun getSetting(): EqualizerSetting = setting
+
+  override fun isActive(): Boolean = !isFlat && super.isActive()
 
   override fun onConfigure(inputAudioFormat: AudioProcessor.AudioFormat): AudioProcessor.AudioFormat {
     if (inputAudioFormat.encoding != C.ENCODING_PCM_16BIT) {

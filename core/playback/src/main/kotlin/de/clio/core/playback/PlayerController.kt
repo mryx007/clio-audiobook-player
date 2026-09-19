@@ -226,7 +226,7 @@ class PlayerController(
       }
       tickJob = launch {
         while (isActive) {
-          delay(200.milliseconds)
+          delay(500.milliseconds)
           emitSnapshot()
         }
       }

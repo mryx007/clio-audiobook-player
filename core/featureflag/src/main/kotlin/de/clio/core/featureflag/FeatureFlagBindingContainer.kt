@@ -74,6 +74,7 @@ interface FeatureFlagBindingContainer {
     return factory.boolean(
       key = "media3_audio_offload",
       description = "Uses Media3 audio offload when the device supports it.",
+      defaultValue = true,
     )
   }
 

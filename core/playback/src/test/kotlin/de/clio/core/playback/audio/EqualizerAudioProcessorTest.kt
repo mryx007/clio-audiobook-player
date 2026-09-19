@@ -1,4 +1,4 @@
-﻿package de.clio.core.playback.audio
+package de.clio.core.playback.audio
 
 import androidx.media3.common.C
 import androidx.media3.common.audio.AudioProcessor
@@ -32,9 +32,11 @@ class EqualizerAudioProcessorTest {
   @Suppress("DEPRECATION")
   fun `bypass when flat`() {
     val processor = EqualizerAudioProcessor()
+    assertFalse(processor.isActive)
     val format = AudioProcessor.AudioFormat(44100, 2, C.ENCODING_PCM_16BIT)
     processor.configure(format)
     processor.flush()
+    assertFalse(processor.isActive)
 
     val inputBytes = ByteArray(16) { it.toByte() }
     val buffer = ByteBuffer.allocateDirect(inputBytes.size).order(ByteOrder.LITTLE_ENDIAN)
@@ -57,6 +59,7 @@ class EqualizerAudioProcessorTest {
     val format = AudioProcessor.AudioFormat(44100, 2, C.ENCODING_PCM_16BIT)
     processor.configure(format)
     processor.flush()
+    assertTrue(processor.isActive)
 
     val sampleCount = 64
     val buffer = ByteBuffer.allocateDirect(sampleCount * 2 * 2).order(ByteOrder.LITTLE_ENDIAN)

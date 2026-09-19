@@ -394,7 +394,11 @@ class ClioPlayer(
 
   fun setEqualizer(bands: List<Int>) {
     val setting = EqualizerSetting(bands)
+    val wasFlat = equalizerAudioProcessor.getSetting().isFlat
     equalizerAudioProcessor.setSetting(setting)
+    if (wasFlat != setting.isFlat && player.playbackState != Player.STATE_IDLE) {
+      player.seekTo(player.currentPosition)
+    }
     scope.launch {
       updateBook { it.copy(equalizer = setting.serialize()) }
     }
