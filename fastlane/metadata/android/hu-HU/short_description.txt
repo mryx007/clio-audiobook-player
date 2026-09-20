@@ -1,1 +1,0 @@
-Letisztult hangoskönyv-lejátszó saját fájlokhoz, időzítővel és könyvjelzőkkel.

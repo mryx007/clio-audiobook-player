@@ -9,7 +9,7 @@
 
 ## Source Of Truth
 
-- Architecture and module boundaries: `docs/architecture.md`. Read it before changing dependencies, DI wiring, navigation, playback,
+- Architecture and module boundaries: `ARCHITECTURE.md`. Read it before changing dependencies, DI wiring, navigation, playback,
   scanning, data, or module structure.
 - Module inventory: `settings.gradle.kts`.
 - Dependency versions and plugin aliases: `gradle/libs.versions.toml`.

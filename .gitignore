@@ -6,14 +6,8 @@
 .DS_Store
 .gradle/
 .transifexrc
-/.idea/copilot.data.migration.ask.xml
-/.idea/copilot.data.migration.ask2agent.xml
-/.idea/deviceManager.xml
+/.idea/
 /.kotlin
-/fastlane/README.md
-/fastlane/report.xml
-Gemfile.lock
-/artwork/package-lock.json
 artifacts
 build
 captures

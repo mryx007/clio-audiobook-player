@@ -11,14 +11,14 @@ It started as a fork of [Voice](https://github.com/PaulWoitaschek/Voice) by Paul
 ## Screenshots
 
 <p align="center">
-  <img src="docs/screenshots/Screenshot_1789810900.png" width="30%" alt="Clio Screenshot 1" />
-  <img src="docs/screenshots/Screenshot_1789810906.png" width="30%" alt="Clio Screenshot 2" />
-  <img src="docs/screenshots/Screenshot_1789810915.png" width="30%" alt="Clio Screenshot 3" />
+  <img src="screenshots/Screenshot_1789810900.png" width="30%" alt="Clio Screenshot 1" />
+  <img src="screenshots/Screenshot_1789810906.png" width="30%" alt="Clio Screenshot 2" />
+  <img src="screenshots/Screenshot_1789810915.png" width="30%" alt="Clio Screenshot 3" />
 </p>
 <p align="center">
-  <img src="docs/screenshots/Screenshot_1789810921.png" width="30%" alt="Clio Screenshot 4" />
-  <img src="docs/screenshots/Screenshot_1789810929.png" width="30%" alt="Clio Screenshot 5" />
-  <img src="docs/screenshots/Screenshot_1789810938.png" width="30%" alt="Clio Screenshot 6" />
+  <img src="screenshots/Screenshot_1789810921.png" width="30%" alt="Clio Screenshot 4" />
+  <img src="screenshots/Screenshot_1789810929.png" width="30%" alt="Clio Screenshot 5" />
+  <img src="screenshots/Screenshot_1789810938.png" width="30%" alt="Clio Screenshot 6" />
 </p>
 
 ---
