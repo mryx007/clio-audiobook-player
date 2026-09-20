@@ -107,7 +107,10 @@ internal fun ChaptersOverlay(
 
   val nestedScrollConnection = remember(isFullyExpanded) {
     object : NestedScrollConnection {
-      override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+      override fun onPreScroll(
+        available: Offset,
+        source: NestedScrollSource,
+      ): Offset {
         if (!isFullyExpanded && available.y < -15f && source == NestedScrollSource.UserInput) {
           onExpand()
           return Offset.Zero

@@ -68,7 +68,7 @@ internal fun ChapterTitleHeader(
             Modifier.clickable { onToggleChapters() }
           } else {
             Modifier
-          }
+          },
         )
         .padding(horizontal = 4.dp, vertical = 2.dp),
     ) {

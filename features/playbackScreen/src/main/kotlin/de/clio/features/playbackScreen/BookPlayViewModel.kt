@@ -196,29 +196,30 @@ class BookPlayViewModel(
         null
       }
     }
-    val chapters = remember(persistedBook.chapters, currentMark, book.currentChapter, hasMoreThanOneChapter, book.content.name, book.content.author) {
-      if (!hasMoreThanOneChapter) {
-        emptyList()
-      } else {
-        persistedBook.chapters.flatMapIndexed { chapterIndex, chapter ->
-          chapter.chapterMarks.mapIndexed { markIndex, chapterMark ->
-            val previousChapters = persistedBook.chapters.take(chapterIndex)
-            val displayName = formatDisplayChapterName(
-              chapterName = chapterMark.name,
-              bookName = book.content.name,
-              chapterUri = chapter.id.value,
-              author = book.content.author,
-            ) ?: ""
-            BookPlayViewState.BookPlayChapter(
-              number = previousChapters.sumOf { it.chapterMarks.count() } + markIndex + 1,
-              name = displayName,
-              active = chapterMark == currentMark && chapter == book.currentChapter,
-              time = formatTime(previousChapters.sumOf { it.duration } + chapterMark.startMs),
-            )
+    val chapters =
+      remember(persistedBook.chapters, currentMark, book.currentChapter, hasMoreThanOneChapter, book.content.name, book.content.author) {
+        if (!hasMoreThanOneChapter) {
+          emptyList()
+        } else {
+          persistedBook.chapters.flatMapIndexed { chapterIndex, chapter ->
+            chapter.chapterMarks.mapIndexed { markIndex, chapterMark ->
+              val previousChapters = persistedBook.chapters.take(chapterIndex)
+              val displayName = formatDisplayChapterName(
+                chapterName = chapterMark.name,
+                bookName = book.content.name,
+                chapterUri = chapter.id.value,
+                author = book.content.author,
+              ) ?: ""
+              BookPlayViewState.BookPlayChapter(
+                number = previousChapters.sumOf { it.chapterMarks.count() } + markIndex + 1,
+                name = displayName,
+                active = chapterMark == currentMark && chapter == book.currentChapter,
+                time = formatTime(previousChapters.sumOf { it.duration } + chapterMark.startMs),
+              )
+            }
           }
         }
       }
-    }
     return BookPlayViewState(
       sleepTimerState = sleepTime.toViewState(),
       playing = isPlaying,
