@@ -1,11 +1,10 @@
-﻿package de.clio.features.folderPicker.addcontent
+package de.clio.features.folderPicker.addcontent
 
 import android.net.Uri
 import de.clio.core.data.folders.AudiobookFolders
 import de.clio.core.data.folders.FolderType
 import de.clio.features.folderPicker.folderPicker.FileTypeSelection
 import de.clio.navigation.Destination
-import de.clio.navigation.Destination.OnboardingCompletion
 import de.clio.navigation.Navigator
 import de.clio.navigation.Origin
 import dev.zacsweers.metro.Assisted
@@ -34,7 +33,7 @@ class AddContentViewModel(
         navigator.setRoot(Destination.BookOverview)
       }
       Origin.Onboarding -> {
-        navigator.goTo(OnboardingCompletion)
+        navigator.goTo(Destination.OnboardingBatteryOptimization)
       }
     }
   }

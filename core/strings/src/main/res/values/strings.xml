@@ -183,6 +183,16 @@
     <string name="onboarding.explanation.subtitle">With Clio, you can add books as individual files or organize them in folders. You choose!</string>
     <!-- Title on the onboarding explanation screen. -->
     <string name="onboarding.explanation.title">Your Library, Your Way</string>
+    <!-- Title on the onboarding battery optimization screen. -->
+    <string name="onboarding.battery_optimization.title">Background Playback</string>
+    <!-- Subtitle explaining battery optimization in onboarding. -->
+    <string name="onboarding.battery_optimization.subtitle">To ensure your audiobooks keep playing smoothly without interruptions when your screen is off or in the background, please allow unrestricted background activity.</string>
+    <!-- Action button to request ignoring battery optimization. -->
+    <string name="onboarding.battery_optimization.action.grant">Allow Background Playback</string>
+    <!-- Status text when battery optimization is already unrestricted. -->
+    <string name="onboarding.battery_optimization.status.already_unrestricted">Unrestricted background playback enabled</string>
+    <!-- Button label to skip battery optimization. -->
+    <string name="onboarding.battery_optimization.action.skip">Later</string>
     <!-- Subtitle on the onboarding welcome screen. -->
     <string name="onboarding.welcome.subtitle">Your personal pocket audiobook player. Let\'s get you set up.</string>
     <!-- Title on the onboarding welcome screen. -->

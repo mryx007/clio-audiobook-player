@@ -25,3 +25,8 @@ reports
 *.dm
 /.artifacts/
 /.claude/
+/.agents/
+/.gemini/
+/.opencode/
+/GEMINI.md
+/opencode.json

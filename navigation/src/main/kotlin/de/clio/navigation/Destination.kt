@@ -1,4 +1,4 @@
-﻿package de.clio.navigation
+package de.clio.navigation
 
 import android.content.Intent
 import android.net.Uri
@@ -98,6 +98,11 @@ sealed interface Destination {
   @Serializable
   data object OnboardingCompletion : Compose {
     override val trackingName: String get() = "OnboardingCompletion"
+  }
+
+  @Serializable
+  data object OnboardingBatteryOptimization : Compose {
+    override val trackingName: String get() = "OnboardingBatteryOptimization"
   }
 
   @Serializable

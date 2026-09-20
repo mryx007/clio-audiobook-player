@@ -245,4 +245,9 @@
     <string name="settings.player_controls.queue_summary">Warteschlangen-Button im Player anzeigen</string>
     <string name="settings.player_controls.category.buttons">Sichtbare Buttons</string>
     <string name="settings.player_controls.category.seeking">Sprungzeiten</string>
+    <string name="onboarding.battery_optimization.title">Hintergrund-Wiedergabe</string>
+    <string name="onboarding.battery_optimization.subtitle">Damit deine Hörbücher auch bei ausgeschaltetem Bildschirm oder im Hintergrund unterbrechungsfrei weiterspielen, erlaube bitte die uneingeschränkte Hintergrundaktivität.</string>
+    <string name="onboarding.battery_optimization.action.grant">Hintergrund-Wiedergabe erlauben</string>
+    <string name="onboarding.battery_optimization.status.already_unrestricted">Hintergrund-Aktivität uneingeschränkt aktiv</string>
+    <string name="onboarding.battery_optimization.action.skip">Später</string>
 </resources>

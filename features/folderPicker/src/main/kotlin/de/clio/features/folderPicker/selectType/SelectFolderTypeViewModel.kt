@@ -1,4 +1,4 @@
-﻿package de.clio.features.folderPicker.selectType
+package de.clio.features.folderPicker.selectType
 
 import android.net.Uri
 import androidx.compose.runtime.Composable
@@ -80,7 +80,7 @@ class SelectFolderTypeViewModel(
         navigator.setRoot(Destination.BookOverview)
       }
       Origin.Onboarding -> {
-        navigator.goTo(Destination.OnboardingCompletion)
+        navigator.goTo(Destination.OnboardingBatteryOptimization)
       }
     }
   }

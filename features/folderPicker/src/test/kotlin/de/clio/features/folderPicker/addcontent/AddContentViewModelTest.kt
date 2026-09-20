@@ -1,4 +1,4 @@
-﻿package de.clio.features.folderPicker.addcontent
+package de.clio.features.folderPicker.addcontent
 
 import android.net.Uri
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -26,7 +26,7 @@ class AddContentViewModelTest {
     viewModel.add(uri, FileTypeSelection.Folder)
 
     verify { audiobookFolders.add(uri, FolderType.Root) }
-    verify { navigator.goTo(Destination.OnboardingCompletion) }
+    verify { navigator.goTo(Destination.OnboardingBatteryOptimization) }
   }
 
   @Test
@@ -46,6 +46,6 @@ class AddContentViewModelTest {
     viewModel.add(uri, FileTypeSelection.File)
 
     verify { audiobookFolders.add(uri, FolderType.SingleFile) }
-    verify { navigator.goTo(Destination.OnboardingCompletion) }
+    verify { navigator.goTo(Destination.OnboardingBatteryOptimization) }
   }
 }

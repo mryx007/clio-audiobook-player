@@ -1,7 +1,8 @@
-﻿package de.clio.features.playbackScreen.batteryOptimization
+package de.clio.features.playbackScreen.batteryOptimization
 
 import android.os.Build
 import androidx.datastore.core.DataStore
+import de.clio.core.common.IsIgnoringBatteryOptimizations
 import de.clio.core.data.store.AmountOfBatteryOptimizationRequestedStore
 import dev.zacsweers.metro.Inject
 import kotlinx.coroutines.flow.first

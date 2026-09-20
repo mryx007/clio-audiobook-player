@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:aapt="http://schemas.android.com/aapt"
+  android:width="108dp"
+  android:height="108dp"
+  android:viewportWidth="108"
+  android:viewportHeight="108">
+
+  <!-- Background Gradient -->
+  <path
+    android:pathData="M 0 0 L 108 0 L 108 108 L 0 108 Z">
+    <aapt:attr name="android:fillColor">
+      <gradient
+        android:type="linear"
+        android:startX="0"
+        android:startY="0"
+        android:endX="108"
+        android:endY="108"
+        android:startColor="#00897B"
+        android:endColor="#1E88E5" />
+    </aapt:attr>
+  </path>
+
+  <!-- Battery Terminal -->
+  <path
+    android:pathData="M 48 24 L 60 24 A 2 2 0 0 1 62 26 L 62 28 L 46 28 L 46 26 A 2 2 0 0 1 48 24 Z"
+    android:fillColor="#ffffff" />
+
+  <!-- Battery Body Outline -->
+  <path
+    android:pathData="M 42 28 L 66 28 A 6 6 0 0 1 72 34 L 72 80 A 6 6 0 0 1 66 86 L 42 86 A 6 6 0 0 1 36 80 L 36 34 A 6 6 0 0 1 42 28 Z"
+    android:strokeWidth="3.5"
+    android:strokeColor="#ffffff"
+    android:fillColor="#15ffffff" />
+
+  <!-- Lightning Bolt -->
+  <path
+    android:pathData="M 56 38 L 45 55 L 53 55 L 50 74 L 63 53 L 55 53 Z"
+    android:fillColor="#ffffff" />
+
+</vector>
