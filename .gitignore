@@ -30,3 +30,7 @@ reports
 /.opencode/
 /GEMINI.md
 /opencode.json
+/signing/
+*.keystore
+*.jks
+signing.properties
