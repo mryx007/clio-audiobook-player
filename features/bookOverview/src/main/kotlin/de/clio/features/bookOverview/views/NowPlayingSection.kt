@@ -1,6 +1,5 @@
 package de.clio.features.bookOverview.views
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,8 +8,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -18,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -43,23 +43,19 @@ internal fun NowPlayingSection(
       style = MaterialTheme.typography.labelMedium,
       color = MaterialTheme.colorScheme.primary,
       fontWeight = FontWeight.Bold,
-      modifier = Modifier.padding(bottom = 6.dp),
+      modifier = Modifier.padding(bottom = 2.dp),
     )
 
     Surface(
       onClick = onClick,
-      shape = CircleShape,
-      color = MaterialTheme.colorScheme.primary.copy(alpha = 0.10f),
-      border = BorderStroke(
-        width = 1.dp,
-        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.20f),
-      ),
+      shape = RoundedCornerShape(6.dp),
+      color = Color.Transparent,
       modifier = Modifier.fillMaxWidth(),
     ) {
       Row(
         modifier = Modifier
           .fillMaxWidth()
-          .padding(start = 8.dp, end = 16.dp, top = 6.dp, bottom = 6.dp),
+          .padding(start = 8.dp, end = 16.dp, top = 2.dp, bottom = 6.dp),
         verticalAlignment = Alignment.CenterVertically,
       ) {
         Box(
@@ -107,5 +103,7 @@ internal fun NowPlayingSection(
         }
       }
     }
+
+    HorizontalDivider(modifier = Modifier.padding(top = 10.dp, bottom = 2.dp))
   }
 }

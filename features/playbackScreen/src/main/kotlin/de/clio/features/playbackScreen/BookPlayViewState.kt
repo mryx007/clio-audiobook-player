@@ -26,7 +26,16 @@ data class BookPlayViewState(
   val fastForwardTimeInSeconds: Int = 30,
   val playerButtonVisibility: PlayerButtonVisibility = PlayerButtonVisibility(),
   val queueCount: Int = 0,
+  val chapters: List<BookPlayChapter> = emptyList(),
 ) {
+
+  @Immutable
+  data class BookPlayChapter(
+    val number: Int,
+    val name: String,
+    val active: Boolean,
+    val time: String,
+  )
 
   sealed interface SleepTimerViewState {
     data object Disabled : SleepTimerViewState

@@ -90,7 +90,7 @@ internal fun ListBooks(
     }
     books.forEach { (category, books) ->
       if (books.isEmpty()) return@forEach
-      stickyHeader(
+      item(
         key = category,
         contentType = "header",
       ) {
@@ -98,7 +98,6 @@ internal fun ListBooks(
         Header(
           modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.background)
             .padding(start = 4.dp, end = 4.dp, bottom = 4.dp),
           category = category,
           selectedTab = selectedTab,

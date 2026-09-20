@@ -94,6 +94,7 @@ fun BookPlayScreen(bookId: BookId) {
     onEqualizerClick = viewModel::onEqualizerIconClick,
     onLockClick = viewModel::toggleLock,
     onQueueClick = viewModel::onQueueClick,
+    onChapterClick = viewModel::onChapterClick,
     useLandscapeLayout = LocalConfiguration.current.orientation == ORIENTATION_LANDSCAPE,
     snackbarHostState = snackbarHostState,
   )

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -48,6 +49,7 @@ internal fun BookPlayView(
   onEqualizerClick: () -> Unit,
   onLockClick: () -> Unit,
   onCloseClick: () -> Unit,
+  onChapterClick: (Int) -> Unit = {},
   snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
   val context = LocalContext.current
@@ -115,7 +117,14 @@ internal fun BookPlayView(
     Scaffold(
       containerColor = Color.Transparent,
       snackbarHost = {
-        SnackbarHost(hostState = snackbarHostState)
+        SnackbarHost(hostState = snackbarHostState) { data ->
+          Snackbar(
+            snackbarData = data,
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+            contentColor = MaterialTheme.colorScheme.onSurface,
+            actionColor = MaterialTheme.colorScheme.primary,
+          )
+        }
       },
       topBar = {
         BookPlayAppBar(
@@ -145,7 +154,9 @@ internal fun BookPlayView(
           onSkipToPrevious = onSkipToPrevious,
           onSeek = onSeek,
           onChapterSeek = onChapterSeek,
+          onQueueClick = onQueueClick,
           useLandscapeLayout = useLandscapeLayout,
+          onChapterClick = onChapterClick,
         )
       },
     )

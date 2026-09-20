@@ -26,6 +26,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -293,7 +294,14 @@ internal fun BookOverview(
   Scaffold(
     modifier = modifier,
     snackbarHost = {
-      SnackbarHost(snackbarHostState)
+      SnackbarHost(snackbarHostState) { data ->
+        Snackbar(
+          snackbarData = data,
+          containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+          contentColor = MaterialTheme.colorScheme.onSurface,
+          actionColor = MaterialTheme.colorScheme.primary,
+        )
+      }
     },
     bottomBar = {
       if (viewState.inSelectionMode && viewState.selectedTab == OverviewTab.Books) {

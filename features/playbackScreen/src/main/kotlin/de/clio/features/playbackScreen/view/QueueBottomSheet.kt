@@ -6,7 +6,6 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -24,7 +23,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -199,7 +197,7 @@ internal fun QueueBottomSheet(
             color = MaterialTheme.colorScheme.primary,
             fontWeight = FontWeight.Bold,
           )
-          Spacer(modifier = Modifier.height(6.dp))
+          Spacer(modifier = Modifier.height(2.dp))
           QueueBookItemRow(
             book = dialogState.currentBook,
             index = null,
@@ -380,29 +378,26 @@ private fun QueueBookItemRow(
   modifier: Modifier = Modifier,
   trailingContent: (@Composable () -> Unit)? = null,
 ) {
-  val shape = if (isCurrentPlaying) CircleShape else RoundedCornerShape(12.dp)
-  val backgroundColor = when {
-    isSelected -> MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)
-    isCurrentPlaying -> MaterialTheme.colorScheme.primary.copy(alpha = 0.10f)
-    else -> Color.Transparent
-  }
-  val borderModifier = if (isCurrentPlaying) {
-    Modifier.border(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.20f), shape)
+  val shape = RoundedCornerShape(6.dp)
+  val backgroundColor = if (isSelected) {
+    MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)
   } else {
-    Modifier
+    Color.Transparent
   }
+
+  val topPadding = if (isCurrentPlaying) 2.dp else 8.dp
+  val bottomPadding = if (isCurrentPlaying) 6.dp else 8.dp
 
   Row(
     modifier = modifier
       .fillMaxWidth()
       .clip(shape)
       .background(backgroundColor)
-      .then(borderModifier)
       .combinedClickable(
         onClick = onClick,
         onLongClick = onLongClick,
       )
-      .padding(horizontal = 8.dp, vertical = 8.dp),
+      .padding(start = 8.dp, end = 8.dp, top = topPadding, bottom = bottomPadding),
     verticalAlignment = Alignment.CenterVertically,
   ) {
     if (index != null) {
