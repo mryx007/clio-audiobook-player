@@ -20,6 +20,9 @@ It started as a fork of [Voice](https://github.com/PaulWoitaschek/Voice) by Paul
   <img src="screenshots/Screenshot_1789810929.png" width="30%" alt="Clio Screenshot 5" />
   <img src="screenshots/Screenshot_1789810938.png" width="30%" alt="Clio Screenshot 6" />
 </p>
+<p align="center">
+  <img src="screenshots/Screenshot_1789899165.png" width="30%" alt="Clio Screenshot 7" />
+</p>
 
 ---
 
