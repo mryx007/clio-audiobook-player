@@ -7,7 +7,10 @@ public object CoverAspectRatioCache {
 
   public fun get(cover: String?): Float? = cover?.let { cache[it] }
 
-  public fun put(cover: String?, ratio: Float) {
+  public fun put(
+    cover: String?,
+    ratio: Float,
+  ) {
     if (cover != null && ratio > 0f) {
       cache[cover] = ratio
     }
