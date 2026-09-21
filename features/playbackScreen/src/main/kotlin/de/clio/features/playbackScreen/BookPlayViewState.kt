@@ -11,6 +11,7 @@ import kotlin.time.Duration
 data class BookPlayViewState(
   val chapterName: String?,
   val showPreviousNextButtons: Boolean,
+  val hasChapters: Boolean = showPreviousNextButtons,
   val title: String,
   val sleepTimerState: SleepTimerViewState,
   val playedTime: Duration,

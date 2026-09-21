@@ -27,8 +27,8 @@ internal fun Cover(
   AsyncImage(
     modifier = Modifier
       .fillMaxSize()
+      .clip(RoundedCornerShape(6.dp))
       .sharedCoverElementModifier(bookId)
-      .clip(RoundedCornerShape(8.dp))
       .pointerInput(Unit) {
         detectTapGestures(
           onDoubleTap = {
@@ -36,7 +36,7 @@ internal fun Cover(
           },
         )
       },
-    contentScale = ContentScale.Fit,
+    contentScale = ContentScale.Crop,
     model = cover,
     onSuccess = { state ->
       val drawable = state.result.drawable

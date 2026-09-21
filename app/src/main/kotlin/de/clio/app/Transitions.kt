@@ -39,6 +39,7 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.PathEasing
 import androidx.compose.animation.core.tween
@@ -83,11 +84,11 @@ val CrossfadeExitTransition: ExitTransition = fadeOut(
 )
 
 val BookOverviewPlaybackEnterTransition: EnterTransition = fadeIn(
-  animationSpec = tween(durationMillis = 350, easing = LinearOutSlowInEasing),
+  animationSpec = tween(durationMillis = 200, easing = LinearOutSlowInEasing),
 )
 
 val BookOverviewPlaybackExitTransition: ExitTransition = fadeOut(
-  animationSpec = tween(durationMillis = 350, easing = FastOutLinearInEasing),
+  animationSpec = tween(durationMillis = 100, easing = FastOutLinearInEasing),
 )
 
 val SharedZAxisEnterTransition =

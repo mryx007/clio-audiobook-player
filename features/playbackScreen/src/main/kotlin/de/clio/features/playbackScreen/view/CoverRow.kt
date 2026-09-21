@@ -33,8 +33,9 @@ internal fun CoverRow(
   modifier: Modifier = Modifier,
   contentAlignment: Alignment = Alignment.Center,
 ) {
+  val cachedRatio = CoverAspectRatioCache.get(cover)
   var coverAspectRatio by remember(cover) {
-    mutableFloatStateOf(CoverAspectRatioCache.get(cover) ?: 1f)
+    mutableFloatStateOf(cachedRatio ?: 1f)
   }
 
   BoxWithConstraints(
@@ -60,7 +61,9 @@ internal fun CoverRow(
         cover = cover,
         onCoverLoad = { ratio ->
           CoverAspectRatioCache.put(cover, ratio)
-          coverAspectRatio = ratio
+          if (kotlin.math.abs(coverAspectRatio - ratio) > 0.02f) {
+            coverAspectRatio = ratio
+          }
         },
       )
       when (sleepTimerState) {

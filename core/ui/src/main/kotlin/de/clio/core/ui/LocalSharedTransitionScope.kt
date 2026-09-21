@@ -4,7 +4,7 @@ package de.clio.core.ui
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
-import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -31,7 +31,7 @@ fun Modifier.sharedCoverElementModifier(bookId: BookId): Modifier {
       sharedContentState = rememberSharedContentState(key = sharedCoverKey(bookId)),
       animatedVisibilityScope = LocalNavAnimatedContentScope.current,
       boundsTransform = { _, _ ->
-        tween(durationMillis = 350, easing = LinearOutSlowInEasing)
+        tween(durationMillis = 280, easing = FastOutSlowInEasing)
       },
       clipInOverlayDuringTransition = OverlayClip(RoundedCornerShape(6.dp)),
     )

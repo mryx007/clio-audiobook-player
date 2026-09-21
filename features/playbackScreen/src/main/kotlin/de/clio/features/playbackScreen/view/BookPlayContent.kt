@@ -159,7 +159,7 @@ internal fun BookPlayContent(
       ) {
         ChapterTitleHeader(
           chapterName = viewState.chapterName,
-          hasChapters = viewState.chapters.isNotEmpty(),
+          hasChapters = viewState.hasChapters,
           isChaptersOpen = isChaptersOpen,
           isCustomBackground = isCustomBackground,
           enabled = !viewState.isLocked,
@@ -262,7 +262,7 @@ internal fun BookPlayContent(
           isCustomBackground = isCustomBackground,
           enabled = !viewState.isLocked,
           onSeek = onChapterSeek,
-          hasChapters = viewState.chapters.isNotEmpty(),
+          hasChapters = viewState.hasChapters,
           isChaptersOpen = isChaptersOpen,
           onToggleChapters = { isChaptersOpen = !isChaptersOpen },
         )

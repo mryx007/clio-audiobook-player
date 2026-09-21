@@ -5,6 +5,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.datastore.core.DataStore
 import de.clio.core.common.DispatcherProvider
@@ -12,6 +13,8 @@ import de.clio.core.common.MainScope
 import de.clio.core.data.BackButtonBehavior
 import de.clio.core.data.Book
 import de.clio.core.data.BookId
+import de.clio.core.data.Chapter
+import de.clio.core.data.ChapterMark
 import de.clio.core.data.EndOfBookBehavior
 import de.clio.core.data.EqualizerSetting
 import de.clio.core.data.KioskModeDemoData
@@ -57,6 +60,8 @@ import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.filter
@@ -87,7 +92,7 @@ class BookPlayViewModel(
   private val bookmarkRepository: BookmarkRepo,
   private val volumeGainFormatter: VolumeGainFormatter,
   private val batteryOptimization: BatteryOptimization,
-  dispatcherProvider: DispatcherProvider,
+  private val dispatcherProvider: DispatcherProvider,
   @SleepTimerPreferenceStore
   private val sleepTimerPreferenceStore: DataStore<SleepTimerPreference>,
   @PlayerButtonVisibilityStore
@@ -148,7 +153,10 @@ class BookPlayViewModel(
     val initialBook = remember(bookId) { bookRepository.getCached(bookId) }
     val persistedBook = remember(bookId) {
       bookRepository.flow(bookId).filterNotNull()
-    }.collectAsState(initial = initialBook).value ?: return null
+    }.collectAsState(initial = initialBook).value
+    if (persistedBook == null) {
+      return null
+    }
 
     val livePlaybackState = remember(bookId) {
       player.livePlaybackStateFlow(bookId)
@@ -183,7 +191,11 @@ class BookPlayViewModel(
       .collectAsState(initial = false).value
     val queue = remember { queueRepository.queueFlow }.collectAsState().value
     val hasMoreThanOneChapter = remember(persistedBook.chapters) {
-      persistedBook.chapters.sumOf { it.chapterMarks.count() } > 1
+      if (persistedBook.chapters.size > 1) {
+        true
+      } else {
+        (persistedBook.chapters.firstOrNull()?.chapterMarks?.size ?: 0) > 1
+      }
     }
     val chapterName = remember(currentMark.name, book.content.name, book.currentChapter.id, book.content.author, hasMoreThanOneChapter) {
       if (hasMoreThanOneChapter) {
@@ -197,35 +209,29 @@ class BookPlayViewModel(
         null
       }
     }
-    val chapters =
-      remember(persistedBook.chapters, currentMark, book.currentChapter, hasMoreThanOneChapter, book.content.name, book.content.author) {
-        if (!hasMoreThanOneChapter) {
-          emptyList()
-        } else {
-          persistedBook.chapters.flatMapIndexed { chapterIndex, chapter ->
-            chapter.chapterMarks.mapIndexed { markIndex, chapterMark ->
-              val previousChapters = persistedBook.chapters.take(chapterIndex)
-              val displayName = formatDisplayChapterName(
-                chapterName = chapterMark.name,
-                bookName = book.content.name,
-                chapterUri = chapter.id.value,
-                author = book.content.author,
-              ) ?: ""
-              BookPlayViewState.BookPlayChapter(
-                number = previousChapters.sumOf { it.chapterMarks.count() } + markIndex + 1,
-                name = displayName,
-                active = chapterMark == currentMark && chapter == book.currentChapter,
-                time = formatTime(previousChapters.sumOf { it.duration } + chapterMark.startMs),
-              )
-            }
-          }
-        }
+    val chapters by produceState(
+      initialValue = emptyList<BookPlayViewState.BookPlayChapter>(),
+      persistedBook.chapters,
+      currentMark,
+      book.currentChapter,
+      hasMoreThanOneChapter,
+    ) {
+      delay(400)
+      value = withContext(dispatcherProvider.io) {
+        computeChapters(
+          persistedBook = persistedBook,
+          currentMark = currentMark,
+          currentChapter = book.currentChapter,
+          hasMoreThanOneChapter = hasMoreThanOneChapter,
+        )
       }
+    }
     return BookPlayViewState(
       sleepTimerState = sleepTime.toViewState(),
       playing = isPlaying,
       title = book.content.name,
       showPreviousNextButtons = hasMoreThanOneChapter,
+      hasChapters = hasMoreThanOneChapter,
       chapterName = chapterName,
       duration = currentMark.durationMs.milliseconds,
       playedTime = positionInCurrentMark.milliseconds,
@@ -440,28 +446,75 @@ class BookPlayViewModel(
     }
   }
 
+  private fun computeChapters(
+    persistedBook: Book,
+    currentMark: ChapterMark,
+    currentChapter: Chapter,
+    hasMoreThanOneChapter: Boolean,
+  ): List<BookPlayViewState.BookPlayChapter> {
+    if (!hasMoreThanOneChapter) return emptyList()
+
+    var cumulativeMarks = 0
+    var cumulativeDuration = 0L
+    val result = ArrayList<BookPlayViewState.BookPlayChapter>()
+
+    for (chapter in persistedBook.chapters) {
+      val chapterBaseMarks = cumulativeMarks
+      val chapterBaseDuration = cumulativeDuration
+      for ((markIndex, chapterMark) in chapter.chapterMarks.withIndex()) {
+        val displayName = formatDisplayChapterName(
+          chapterName = chapterMark.name,
+          bookName = persistedBook.content.name,
+          chapterUri = chapter.id.value,
+          author = persistedBook.content.author,
+        ) ?: ""
+        result.add(
+          BookPlayViewState.BookPlayChapter(
+            number = chapterBaseMarks + markIndex + 1,
+            name = displayName,
+            active = chapterMark == currentMark && chapter == currentChapter,
+            time = formatTime(chapterBaseDuration + chapterMark.startMs),
+          ),
+        )
+      }
+      cumulativeMarks += chapter.chapterMarks.size
+      cumulativeDuration += chapter.duration
+    }
+    return result
+  }
+
   fun onCurrentChapterClick() {
     scope.launch {
       val book = currentBook() ?: return@launch
-      dialogState.value = BookPlayDialogViewState.SelectChapterDialog(
-        items = book.chapters.flatMapIndexed { chapterIndex, chapter ->
-          chapter.chapterMarks.mapIndexed { markIndex, chapterMark ->
-            val previousChapters = book.chapters.take(chapterIndex)
-            val displayName = formatDisplayChapterName(
-              chapterName = chapterMark.name,
-              bookName = book.content.name,
-              chapterUri = chapter.id.value,
-              author = book.content.author,
-            ) ?: ""
+      val currentMark = book.currentMark
+      val currentChapter = book.currentChapter
+      var cumulativeMarks = 0
+      var cumulativeDuration = 0L
+      val items = ArrayList<BookPlayDialogViewState.SelectChapterDialog.ItemViewState>()
+
+      for (chapter in book.chapters) {
+        val chapterBaseMarks = cumulativeMarks
+        val chapterBaseDuration = cumulativeDuration
+        for ((markIndex, chapterMark) in chapter.chapterMarks.withIndex()) {
+          val displayName = formatDisplayChapterName(
+            chapterName = chapterMark.name,
+            bookName = book.content.name,
+            chapterUri = chapter.id.value,
+            author = book.content.author,
+          ) ?: ""
+          items.add(
             BookPlayDialogViewState.SelectChapterDialog.ItemViewState(
-              number = previousChapters.sumOf { it.chapterMarks.count() } + markIndex + 1,
+              number = chapterBaseMarks + markIndex + 1,
               name = displayName,
-              active = chapterMark == book.currentMark && chapter == book.currentChapter,
-              time = formatTime(previousChapters.sumOf { it.duration } + chapterMark.startMs),
-            )
-          }
-        },
-      )
+              active = chapterMark == currentMark && chapter == currentChapter,
+              time = formatTime(chapterBaseDuration + chapterMark.startMs),
+            ),
+          )
+        }
+        cumulativeMarks += chapter.chapterMarks.size
+        cumulativeDuration += chapter.duration
+      }
+      dialogState.value = BookPlayDialogViewState.SelectChapterDialog(items = items)
     }
   }
 

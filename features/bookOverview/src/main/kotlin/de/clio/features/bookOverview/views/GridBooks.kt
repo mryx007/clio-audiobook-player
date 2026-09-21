@@ -137,7 +137,9 @@ internal fun GridBooks(
           if (category == BookOverviewCategory.OVERVIEW && currentBook != null && !inSelectionMode) {
             NowPlayingSection(
               book = currentBook,
-              onClick = { onBookClick(currentBook.id) },
+              onClick = {
+                onBookClick(currentBook.id)
+              },
               modifier = Modifier.padding(start = 4.dp, end = 4.dp, top = 2.dp),
             )
           }
@@ -199,7 +201,9 @@ internal fun GridBook(
         },
       )
       .combinedClickable(
-        onClick = { onBookClick(book.id) },
+        onClick = {
+          onBookClick(book.id)
+        },
         onLongClick = { onBookLongClick(book.id) },
       )
       .padding(5.dp),
@@ -241,13 +245,15 @@ internal fun GridBook(
       shadowElevation = 3.dp,
       modifier = Modifier
         .fillMaxWidth()
-        .aspectRatio(1f)
-        .sharedCoverElementModifier(book.id),
+        .aspectRatio(1f),
       color = MaterialTheme.colorScheme.surfaceVariant,
     ) {
       Box(modifier = Modifier.fillMaxSize()) {
         AsyncImage(
-          modifier = Modifier.fillMaxSize(),
+          modifier = Modifier
+            .fillMaxSize()
+            .clip(RoundedCornerShape(6.dp))
+            .sharedCoverElementModifier(book.id),
           contentScale = ContentScale.Crop,
           model = book.cover,
           onSuccess = { state ->
