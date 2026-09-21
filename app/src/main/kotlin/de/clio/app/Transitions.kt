@@ -83,11 +83,11 @@ val CrossfadeExitTransition: ExitTransition = fadeOut(
 )
 
 val BookOverviewPlaybackEnterTransition: EnterTransition = fadeIn(
-  animationSpec = tween(durationMillis = 250, easing = LinearOutSlowInEasing),
+  animationSpec = tween(durationMillis = 350, easing = LinearOutSlowInEasing),
 )
 
 val BookOverviewPlaybackExitTransition: ExitTransition = fadeOut(
-  animationSpec = tween(durationMillis = 250, easing = FastOutLinearInEasing),
+  animationSpec = tween(durationMillis = 350, easing = FastOutLinearInEasing),
 )
 
 val SharedZAxisEnterTransition =

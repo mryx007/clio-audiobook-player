@@ -199,7 +199,6 @@ class MainActivity : AppCompatActivity() {
               NavDisplay(
                 backStack = backStack,
                 sceneStrategies = listOf(bottomSheetStrategy, dialogStrategy),
-                sharedTransitionScope = this,
                 transitionSpec = {
                   if (isBookOverviewPlaybackTransition(initialState.destination(), targetState.destination())) {
                     BookOverviewPlaybackEnterTransition togetherWith BookOverviewPlaybackExitTransition
