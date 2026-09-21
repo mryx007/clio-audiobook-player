@@ -100,6 +100,7 @@ class BookPlayViewModelTest {
     bookRepository = mockk {
       coEvery { get(book.id) } returns book
       every { flow(book.id) } returns MutableStateFlow(book)
+      every { getCached(any()) } returns null
     },
     currentBookResolver = currentBookResolver,
     player = player.apply {
@@ -566,6 +567,7 @@ class BookPlayViewModelTest {
       bookRepository = mockk {
         coEvery { get(book.id) } returns book
         every { flow(book.id) } returns MutableStateFlow(book)
+        every { getCached(any()) } returns null
       },
       currentBookResolver = currentBookResolver,
       player = player,

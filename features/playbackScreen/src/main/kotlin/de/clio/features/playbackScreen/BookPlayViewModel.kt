@@ -145,9 +145,10 @@ class BookPlayViewModel(
     val kioskMode = remember { kioskModeFeatureFlag.get() }
     if (kioskMode) return kioskModeViewState()
 
+    val initialBook = remember(bookId) { bookRepository.getCached(bookId) }
     val persistedBook = remember(bookId) {
       bookRepository.flow(bookId).filterNotNull()
-    }.collectAsState(initial = null).value ?: return null
+    }.collectAsState(initial = initialBook).value ?: return null
 
     val livePlaybackState = remember(bookId) {
       player.livePlaybackStateFlow(bookId)

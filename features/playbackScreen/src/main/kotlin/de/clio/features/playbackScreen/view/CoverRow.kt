@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.isSpecified
 import de.clio.core.data.BookId
 import de.clio.core.strings.R
+import de.clio.core.ui.CoverAspectRatioCache
 import de.clio.core.ui.formatTime
 import de.clio.features.playbackScreen.BookPlayViewState
 
@@ -32,7 +33,9 @@ internal fun CoverRow(
   modifier: Modifier = Modifier,
   contentAlignment: Alignment = Alignment.Center,
 ) {
-  var coverAspectRatio by remember(cover) { mutableFloatStateOf(1f) }
+  var coverAspectRatio by remember(cover) {
+    mutableFloatStateOf(CoverAspectRatioCache.get(cover) ?: 1f)
+  }
 
   BoxWithConstraints(
     modifier = modifier,
@@ -56,6 +59,7 @@ internal fun CoverRow(
         onDoubleClick = onPlayClick,
         cover = cover,
         onCoverLoad = { ratio ->
+          CoverAspectRatioCache.put(cover, ratio)
           coverAspectRatio = ratio
         },
       )

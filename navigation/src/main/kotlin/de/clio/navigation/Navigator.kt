@@ -18,14 +18,18 @@ class Navigator {
   private val scope = MainScope()
 
   fun goTo(destination: Destination) {
-    scope.launch {
-      _navigationCommands.emit(NavigationCommand.GoTo(destination))
+    if (!_navigationCommands.tryEmit(NavigationCommand.GoTo(destination))) {
+      scope.launch {
+        _navigationCommands.emit(NavigationCommand.GoTo(destination))
+      }
     }
   }
 
   fun goBack() {
-    scope.launch {
-      _navigationCommands.emit(NavigationCommand.GoBack)
+    if (!_navigationCommands.tryEmit(NavigationCommand.GoBack)) {
+      scope.launch {
+        _navigationCommands.emit(NavigationCommand.GoBack)
+      }
     }
   }
 

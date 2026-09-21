@@ -60,6 +60,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import de.clio.core.data.BookId
 import de.clio.core.data.BookSortOrder
+import de.clio.core.ui.CoverAspectRatioCache
 import de.clio.core.ui.icons.ClioIcons
 import de.clio.core.ui.sharedCoverElementModifier
 import de.clio.features.bookOverview.bottomSheet.BottomSheetItem
@@ -249,6 +250,12 @@ internal fun GridBook(
           modifier = Modifier.fillMaxSize(),
           contentScale = ContentScale.Crop,
           model = book.cover,
+          onSuccess = { state ->
+            val drawable = state.result.drawable
+            if (drawable.intrinsicWidth > 0 && drawable.intrinsicHeight > 0) {
+              CoverAspectRatioCache.put(book.cover, drawable.intrinsicWidth.toFloat() / drawable.intrinsicHeight.toFloat())
+            }
+          },
           placeholder = painterResource(id = UiR.drawable.album_art),
           error = painterResource(id = UiR.drawable.album_art),
           contentDescription = null,

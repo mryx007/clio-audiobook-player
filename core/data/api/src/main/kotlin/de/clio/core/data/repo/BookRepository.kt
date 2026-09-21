@@ -1,4 +1,4 @@
-﻿package de.clio.core.data.repo
+package de.clio.core.data.repo
 
 import de.clio.core.data.Book
 import de.clio.core.data.BookContent
@@ -19,4 +19,6 @@ public interface BookRepository {
     id: BookId,
     update: (BookContent) -> BookContent,
   )
+
+  public fun getCached(id: BookId): Book? = null
 }

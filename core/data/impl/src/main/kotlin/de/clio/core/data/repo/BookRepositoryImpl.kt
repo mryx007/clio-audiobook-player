@@ -1,4 +1,4 @@
-﻿package de.clio.core.data.repo
+package de.clio.core.data.repo
 
 import de.clio.core.data.Book
 import de.clio.core.data.BookContent
@@ -12,6 +12,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
+import java.util.concurrent.ConcurrentHashMap
+
 @SingleIn(AppScope::class)
 @ContributesBinding(AppScope::class)
 public class BookRepositoryImpl(
@@ -19,6 +21,7 @@ public class BookRepositoryImpl(
   private val contentRepo: BookContentRepo,
 ) : BookRepository {
 
+  private val cachedBooks = ConcurrentHashMap<BookId, Book>()
   private var warmedUp = false
   private val mutex = Mutex()
 
@@ -55,6 +58,8 @@ public class BookRepositoryImpl(
       .map { it?.book() }
   }
 
+  override fun getCached(id: BookId): Book? = cachedBooks[id]
+
   override suspend fun get(id: BookId): Book? {
     return contentRepo.get(id)?.book()
   }
@@ -63,6 +68,7 @@ public class BookRepositoryImpl(
     id: BookId,
     update: (BookContent) -> BookContent,
   ) {
+    cachedBooks.remove(id)
     mutex.withLock {
       val content = contentRepo.get(id) ?: return
       val updated = update(content)
@@ -74,7 +80,7 @@ public class BookRepositoryImpl(
 
   private suspend fun BookContent.book(): Book? {
     warmUp()
-    return Book(
+    val book = Book(
       content = this,
       chapters = chapters.map { chapterId ->
         val chapter = chapterRepo.get(chapterId)
@@ -85,5 +91,7 @@ public class BookRepositoryImpl(
         chapter
       },
     )
+    cachedBooks[book.id] = book
+    return book
   }
 }
