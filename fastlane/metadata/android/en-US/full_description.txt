@@ -1,12 +1,31 @@
-Clio is a clean, simple audiobook player for Android designed for listening to local audio files without clutter, tracking, or account requirements.
+Clio is a clean, customizable open-source audiobook player for Android.
 
-Features:
-* Modern Material Design 3 interface with dynamic theming
-* Audiobook queue with drag-and-drop reordering
-* Fast library search and folder-based organization
-* Sleep timer with custom fade-out duration
-* Built-in 5-band equalizer with presets for spoken voice and vocal clarity
-* Playback speed control
-* Listening statistics and progress tracking
-* Screen playback lock against accidental touches
-* Completely open source, ad-free and privacy-friendly
+Audio & Playback Control
+* Built-in equalizer with spoken voice presets (Vocal Clarity, Treble Boost, Bass Cut, De-Esser)
+* Independent skip intervals for rewind and fast-forward (e.g. 30s forward, 10s backward)
+* Auto-rewind after pauses and skip silence support
+* Volume boost for quiet recordings
+* Variable playback speed
+
+Smart Library & Queue
+* Flexible audiobook queue with drag & drop reordering
+* Folder-based organization (single book, author, and series structures)
+* Bookmark feature with timestamps
+* Automatic resume: open your last played book directly on startup
+* Fast library search, multi-selection, and cover art picker
+
+Intelligent Sleep Timer
+* Manual or scheduled auto-timer (e.g. active during night hours)
+* Smooth fade-out and stop at end of chapter
+* Shake to extend
+
+Detailed Listening Statistics
+* Monthly and yearly overview of your listening habits
+* Seamless import of existing history from "Smart AudioBook Player"
+
+Design & Personalization
+* Customizable player interface
+* Customizable grid layout
+* Touch lock to prevent accidental input in your pocket
+* Versatile player backgrounds (blurred cover, dynamic gradients, AMOLED black, glassmorphism)
+* Material You & Themes (Catppuccin Mocha, OLED black, hex color picker)

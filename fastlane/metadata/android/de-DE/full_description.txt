@@ -1,12 +1,31 @@
-Clio ist ein schlanker, moderner Hörbuch-Player für Android, entwickelt für das Hören lokaler Audiodateien – ohne Werbung, Tracking oder Accountzwang.
+Clio ist ein schlanker, anpassbarer Open-Source-Hörbuch-Player für Android.
 
-Funktionen:
-* Moderne Material Design 3 Oberfläche mit dynamischen Farben
-* Hörbuch-Wiedergabeliste mit Drag-and-Drop
-* Schnelle Bibliothekssuche und ordnerbasierte Organisation
-* Einschlaf-Timer mit anpassbarem Fade-out
-* Integrierter 5-Band Equalizer mit Profilen für Sprache und Sprachklarheit
-* Anpassbare Wiedergabegeschwindigkeit
-* Hörstatistiken und Fortschrittsanzeige
-* Bildschirm-Sperre gegen versehentliche Berührungen
-* 100% Open Source, werbefrei und datensparsam
+Audio- & Wiedergabesteuerung
+* Integrierter Equalizer mit Sprach-Presets (Sprachklarheit, Höhen-Boost, Bass-Cut, De-Esser)
+* Separate Sprungzeiten für Vor- und Zurückspulen (z. B. 30s vor, 10s zurück)
+* Automatisches Zurückspulen nach Pausen und Stille überspringen (Skip Silence)
+* Lautstärke-Boost für leise Aufnahmen
+* Variable Wiedergabegeschwindigkeit
+
+Smarte Bibliothek & Warteschlange
+* Flexible Hörbuch-Warteschlange mit Drag & Drop
+* Ordnerbasierte Verwaltung (Einzelbuch-, Autoren- und Serienstrukturen)
+* Lesezeichenfunktion mit Zeitstempeln
+* Automatisches Weiterspielen: Zuletzt gehörtes Buch direkt beim Start öffnen
+* Schnelle Suche, Mehrfachauswahl und Cover-Suche
+
+Intelligenter Einschlaf-Timer
+* Manueller oder zeitgesteuerter automatischer Timer (z. B. nachts aktiv)
+* Weiches Ausblenden (Fade-Out) und Stopp am Kapitelende
+* Schütteln zum Verlängern
+
+Detaillierte Hörstatistiken
+* Monats- und Jahresübersicht über deine Hörgewohnheiten
+* Nahtloser Import bestehender Historien aus dem „Smart AudioBook Player“
+
+Design & Personalisierung
+* Anpassbare Player-Oberfläche
+* Anpassbarer Rastermodus
+* Touch-Sperre gegen versehentliche Eingaben in der Hosentasche
+* Vielseitige Player-Hintergründe (Blur-Cover, dynamische Verläufe, AMOLED-Schwarz, Glassmorphism)
+* Material You & Themes (Catppuccin Mocha, OLED-Schwarz, Hex-Farbwahl)
