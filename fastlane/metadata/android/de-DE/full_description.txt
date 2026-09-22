@@ -1,0 +1,12 @@
+Clio ist ein schlanker, moderner Hörbuch-Player für Android, entwickelt für das Hören lokaler Audiodateien – ohne Werbung, Tracking oder Accountzwang.
+
+Funktionen:
+* Moderne Material Design 3 Oberfläche mit dynamischen Farben
+* Hörbuch-Wiedergabeliste mit Drag-and-Drop
+* Schnelle Bibliothekssuche und ordnerbasierte Organisation
+* Einschlaf-Timer mit anpassbarem Fade-out
+* Integrierter 5-Band Equalizer mit Profilen für Sprache und Sprachklarheit
+* Anpassbare Wiedergabegeschwindigkeit
+* Hörstatistiken und Fortschrittsanzeige
+* Bildschirm-Sperre gegen versehentliche Berührungen
+* 100% Open Source, werbefrei und datensparsam
