@@ -17,6 +17,7 @@ import de.clio.core.data.store.DeveloperMenuUnlockedStore
 import de.clio.core.data.store.EndOfBookBehaviorStore
 import de.clio.core.data.store.FastForwardTimeStore
 import de.clio.core.data.store.GridModeStore
+import de.clio.core.data.store.OnlineCoverEnabledStore
 import de.clio.core.data.store.OpenLastBookOnStartupStore
 import de.clio.core.data.store.PlaybackBackgroundStyleStore
 import de.clio.core.data.store.RewindTimeStore
@@ -54,6 +55,8 @@ public class UserSettingsRepositoryImpl(
   private val analyticsConsentStore: DataStore<Boolean>,
   @OpenLastBookOnStartupStore
   private val openLastBookOnStartupStore: DataStore<Boolean>,
+  @OnlineCoverEnabledStore
+  private val onlineCoverEnabledStore: DataStore<Boolean>,
   @PlaybackBackgroundStyleStore
   private val playbackBackgroundStyleStore: DataStore<PlaybackBackgroundStyle>,
   @BackButtonBehaviorStore
@@ -106,6 +109,9 @@ public class UserSettingsRepositoryImpl(
   override val developerMenuUnlocked: StateFlow<Boolean> = developerMenuUnlockedStore.data
     .stateIn(scope, SharingStarted.Eagerly, false)
 
+  override val onlineCoverEnabled: StateFlow<Boolean> = onlineCoverEnabledStore.data
+    .stateIn(scope, SharingStarted.Eagerly, false)
+
   override suspend fun setThemeMode(themeMode: ThemeMode) {
     themeModeStore.updateData { themeMode }
   }
@@ -156,5 +162,9 @@ public class UserSettingsRepositoryImpl(
 
   override suspend fun setDeveloperMenuUnlocked(unlocked: Boolean) {
     developerMenuUnlockedStore.updateData { unlocked }
+  }
+
+  override suspend fun setOnlineCoverEnabled(enabled: Boolean) {
+    onlineCoverEnabledStore.updateData { enabled }
   }
 }

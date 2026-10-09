@@ -64,6 +64,7 @@ class BookOverviewViewModelTest {
       gridModeStore = MemoryDataStore(GridMode.LIST),
       gridColumnCountStore = MemoryDataStore(2),
       bookSortOrderStore = MemoryDataStore(BookSortOrder.Default),
+      groupByStatusStore = MemoryDataStore(false),
       gridCount = mockk<GridCount> {
         every { useGridAsDefault() } returns false
       },
@@ -125,6 +126,7 @@ class BookOverviewViewModelTest {
       gridModeStore = MemoryDataStore(GridMode.LIST),
       gridColumnCountStore = MemoryDataStore(2),
       bookSortOrderStore = MemoryDataStore(BookSortOrder.Default),
+      groupByStatusStore = MemoryDataStore(false),
       gridCount = mockk<GridCount> {
         every { useGridAsDefault() } returns false
       },
@@ -173,6 +175,7 @@ class BookOverviewViewModelTest {
       gridModeStore = MemoryDataStore(GridMode.LIST),
       gridColumnCountStore = MemoryDataStore(2),
       bookSortOrderStore = MemoryDataStore(BookSortOrder.Default),
+      groupByStatusStore = MemoryDataStore(false),
       gridCount = mockk<GridCount> {
         every { useGridAsDefault() } returns false
       },
@@ -329,6 +332,7 @@ class BookOverviewViewModelTest {
       gridModeStore = MemoryDataStore(GridMode.LIST),
       gridColumnCountStore = MemoryDataStore(2),
       bookSortOrderStore = sortOrderStore,
+      groupByStatusStore = MemoryDataStore(false),
       gridCount = mockk<GridCount> {
         every { useGridAsDefault() } returns false
       },
@@ -382,6 +386,7 @@ class BookOverviewViewModelTest {
       gridModeStore = MemoryDataStore(GridMode.LIST),
       gridColumnCountStore = MemoryDataStore(2),
       bookSortOrderStore = MemoryDataStore(BookSortOrder.Default),
+      groupByStatusStore = MemoryDataStore(false),
       gridCount = mockk<GridCount> {
         every { useGridAsDefault() } returns false
       },

@@ -259,6 +259,7 @@ private class MemoryUserSettingsRepository : UserSettingsRepository {
   override val backButtonBehavior = MutableStateFlow(BackButtonBehavior.BookOverview)
   override val endOfBookBehavior = MutableStateFlow(EndOfBookBehavior.DoNothing)
   override val developerMenuUnlocked = MutableStateFlow(false)
+  override val onlineCoverEnabled = MutableStateFlow(false)
 
   override suspend fun setThemeMode(themeMode: ThemeMode) {
     this.themeMode.value = themeMode
@@ -310,5 +311,9 @@ private class MemoryUserSettingsRepository : UserSettingsRepository {
 
   override suspend fun setDeveloperMenuUnlocked(unlocked: Boolean) {
     this.developerMenuUnlocked.value = unlocked
+  }
+
+  override suspend fun setOnlineCoverEnabled(enabled: Boolean) {
+    this.onlineCoverEnabled.value = enabled
   }
 }

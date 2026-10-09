@@ -17,6 +17,8 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
@@ -74,13 +76,20 @@ internal fun ListBooks(
   onDeleteSelectedClick: () -> Unit = {},
   sortOrder: BookSortOrder = BookSortOrder.Default,
   onSortOrderChange: (BookSortOrder) -> Unit = {},
+  groupByStatus: Boolean = false,
+  onToggleGroupByStatus: () -> Unit = {},
   selectedTab: de.clio.features.bookOverview.overview.OverviewTab = de.clio.features.bookOverview.overview.OverviewTab.Books,
   onTabSelect: (de.clio.features.bookOverview.overview.OverviewTab) -> Unit = {},
   queueCount: Int = 0,
   contentPadding: PaddingValues = PaddingValues(top = 4.dp, start = 12.dp, end = 12.dp, bottom = 16.dp),
   currentBook: BookOverviewItemViewState? = null,
 ) {
+  val listState = rememberLazyListState()
+  LaunchedEffect(groupByStatus) {
+    listState.scrollToItem(0)
+  }
   LazyColumn(
+    state = listState,
     verticalArrangement = Arrangement.spacedBy(12.dp),
     contentPadding = contentPadding,
   ) {
@@ -89,10 +98,11 @@ internal fun ListBooks(
         PermissionBugCard(onPermissionBugCardClick)
       }
     }
-    books.forEach { (category, books) ->
-      if (books.isEmpty()) return@forEach
+    val showNowPlaying = currentBook != null && !inSelectionMode && allBookIds.size > 1
+    val playingBookId = if (showNowPlaying) currentBook.id else null
+    if (!groupByStatus) {
       item(
-        key = category,
+        key = "overview_header",
         contentType = "header",
       ) {
         val allSelected = selectedBookIds.size == allBookIds.size && allBookIds.isNotEmpty()
@@ -100,7 +110,7 @@ internal fun ListBooks(
           modifier = Modifier
             .fillMaxWidth()
             .padding(start = 4.dp, end = 4.dp, bottom = 4.dp),
-          category = category,
+          category = BookOverviewCategory.OVERVIEW,
           selectedTab = selectedTab,
           onTabSelect = onTabSelect,
           queueCount = queueCount,
@@ -111,9 +121,12 @@ internal fun ListBooks(
           onDeleteSelectedClick = onDeleteSelectedClick,
           sortOrder = sortOrder,
           onSortOrderChange = onSortOrderChange,
+          groupByStatus = groupByStatus,
+          onToggleGroupByStatus = onToggleGroupByStatus,
+          showActions = true,
         )
       }
-      if (category == BookOverviewCategory.OVERVIEW && currentBook != null && !inSelectionMode) {
+      if (showNowPlaying) {
         item(
           key = "overview_now_playing",
           contentType = "now_playing",
@@ -125,8 +138,69 @@ internal fun ListBooks(
           )
         }
       }
+    } else if (showNowPlaying) {
+      item(
+        key = "overview_now_playing",
+        contentType = "now_playing",
+      ) {
+        NowPlayingSection(
+          book = currentBook,
+          onClick = { onBookClick(currentBook.id) },
+          modifier = Modifier.padding(start = 4.dp, end = 4.dp, top = 2.dp),
+          actions = {
+            HeaderActions(
+              selectedTab = selectedTab,
+              onTabSelect = onTabSelect,
+              queueCount = queueCount,
+              sortOrder = sortOrder,
+              onSortOrderChange = onSortOrderChange,
+              groupByStatus = groupByStatus,
+              onToggleGroupByStatus = onToggleGroupByStatus,
+            )
+          },
+        )
+      }
+    }
+    val firstCategory = books.mapValues { (cat, bks) ->
+      if (groupByStatus && playingBookId != null) bks.filterKeys { it != playingBookId } else bks
+    }.filterValues { it.isNotEmpty() }.keys.firstOrNull()
+    books.forEach { (category, categoryBooks) ->
+      val displayBooks = if (groupByStatus && playingBookId != null) {
+        categoryBooks.filterKeys { it != playingBookId }
+      } else {
+        categoryBooks
+      }
+      if (displayBooks.isEmpty()) return@forEach
+      val showCategoryActions = (!showNowPlaying || inSelectionMode) && category == firstCategory
+      if (groupByStatus) {
+        item(
+          key = category,
+          contentType = "section_header",
+        ) {
+          val allSelected = selectedBookIds.size == allBookIds.size && allBookIds.isNotEmpty()
+          Header(
+            modifier = Modifier
+              .fillMaxWidth()
+              .padding(start = 4.dp, end = 4.dp, bottom = 4.dp),
+            category = category,
+            selectedTab = selectedTab,
+            onTabSelect = onTabSelect,
+            queueCount = queueCount,
+            inSelectionMode = inSelectionMode,
+            selectedCount = selectedBookIds.size,
+            allSelected = allSelected,
+            onSelectAllClick = onSelectAllClick,
+            onDeleteSelectedClick = onDeleteSelectedClick,
+            sortOrder = sortOrder,
+            onSortOrderChange = onSortOrderChange,
+            groupByStatus = groupByStatus,
+            onToggleGroupByStatus = onToggleGroupByStatus,
+            showActions = showCategoryActions,
+          )
+        }
+      }
       items(
-        items = books.toList(),
+        items = displayBooks.toList(),
         key = { (bookId, _) -> bookId.value },
         contentType = { "item" },
       ) { (_, bookState) ->
@@ -142,9 +216,9 @@ internal fun ListBooks(
           onMenuItemClick = onMenuItemClick,
         )
       }
-      item {
-        Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.systemBars))
-      }
+    }
+    item {
+      Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.systemBars))
     }
   }
 }

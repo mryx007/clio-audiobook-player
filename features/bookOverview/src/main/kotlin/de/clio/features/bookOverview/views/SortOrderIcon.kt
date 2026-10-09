@@ -2,7 +2,9 @@ package de.clio.features.bookOverview.views
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -22,6 +24,8 @@ import de.clio.core.strings.R as StringsR
 internal fun SortOrderIcon(
   sortOrder: BookSortOrder,
   onSortOrderChange: (BookSortOrder) -> Unit,
+  groupByStatus: Boolean = false,
+  onToggleGroupByStatus: () -> Unit = {},
   modifier: Modifier = Modifier,
 ) {
   var expanded by remember { mutableStateOf(false) }
@@ -41,6 +45,25 @@ internal fun SortOrderIcon(
       expanded = expanded,
       onDismissRequest = { expanded = false },
     ) {
+      DropdownMenuItem(
+        text = { Text(stringResource(StringsR.string.book_sort_group_by_status)) },
+        trailingIcon = if (groupByStatus) {
+          {
+            Icon(
+              imageVector = ClioIcons.Check,
+              contentDescription = null,
+              modifier = Modifier.size(20.dp),
+            )
+          }
+        } else {
+          null
+        },
+        onClick = {
+          expanded = false
+          onToggleGroupByStatus()
+        },
+      )
+      HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
       BookSortOrder.entries.forEach { order ->
         DropdownMenuItem(
           text = { Text(stringResource(order.nameRes)) },

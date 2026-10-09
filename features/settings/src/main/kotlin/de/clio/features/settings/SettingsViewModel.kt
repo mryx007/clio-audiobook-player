@@ -87,6 +87,7 @@ class SettingsViewModel(
       ),
       analyticsEnabled = analyticsEnabled,
       openLastBookOnStartup = openLastBookOnStartup,
+      onlineCoverEnabled = userSettingsRepository.onlineCoverEnabled.collectAsState().value,
       showAnalyticSetting = appInfoProvider.analyticsIncluded,
       showDeveloperMenu = showDeveloperMenu,
       showSupportDevelopment = appInfoProvider.supportDevelopmentIncluded,
@@ -287,6 +288,12 @@ class SettingsViewModel(
   override fun toggleOpenLastBookOnStartup() {
     mainScope.launch {
       userSettingsRepository.setOpenLastBookOnStartup(!userSettingsRepository.openLastBookOnStartup.value)
+    }
+  }
+
+  override fun toggleOnlineCover() {
+    mainScope.launch {
+      userSettingsRepository.setOnlineCoverEnabled(!userSettingsRepository.onlineCoverEnabled.value)
     }
   }
 

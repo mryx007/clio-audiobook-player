@@ -1,0 +1,4 @@
+• Reworked Equalizer: Calibrated sound presets with distinctly audible frequency profiles and gain compensation.
+• Group by Status: New library sorting option (Now Playing, Started, Unread, Completed).
+• Online Cover Toggle: Added switch in onboarding and settings to enable or disable online cover search for complete offline use.
+• Library Polish: Renamed category to "Started", unified 22sp section headers, and eliminated duplicate entries for single-book libraries.

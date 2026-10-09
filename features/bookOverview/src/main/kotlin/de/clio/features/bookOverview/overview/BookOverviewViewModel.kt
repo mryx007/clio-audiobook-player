@@ -30,6 +30,7 @@ import de.clio.core.data.store.CurrentBookStore
 import de.clio.core.data.store.FolderPickerMovedDialogShownStore
 import de.clio.core.data.store.GridColumnCountStore
 import de.clio.core.data.store.GridModeStore
+import de.clio.core.data.store.GroupByStatusStore
 import de.clio.core.featureflag.ExperimentalPlaybackPersistenceQualifier
 import de.clio.core.featureflag.FeatureFlag
 import de.clio.core.featureflag.FolderPickerInSettingsFeatureFlagQualifier
@@ -67,6 +68,8 @@ class BookOverviewViewModel(
   private val gridColumnCountStore: DataStore<Int>,
   @BookSortOrderStore
   private val bookSortOrderStore: DataStore<BookSortOrder>,
+  @GroupByStatusStore
+  private val groupByStatusStore: DataStore<Boolean>,
   private val gridCount: GridCount,
   private val navigator: Navigator,
   private val appInfoProvider: AppInfoProvider,
@@ -185,6 +188,9 @@ class BookOverviewViewModel(
     val sortOrder = remember { bookSortOrderStore.data }
       .collectAsState(initial = BookSortOrder.Default).value
 
+    val groupByStatus = remember { groupByStatusStore.data }
+      .collectAsState(initial = false).value
+
     val queueIds = remember { queueRepo.queueFlow }
       .collectAsState(initial = lastQueueIds).value
 
@@ -219,9 +225,10 @@ class BookOverviewViewModel(
       queueBooks = queueBooks,
       queueCount = queueIds.size,
       currentBook = currentBook,
+      groupByStatus = groupByStatus,
       books = filteredBooks
         .groupBy {
-          it.category
+          if (groupByStatus) it.categorizeByStatus() else it.category
         }
         .mapValues { (category, books) ->
           books
@@ -280,6 +287,12 @@ class BookOverviewViewModel(
   fun onSortOrderChange(order: BookSortOrder) {
     scope.launch {
       bookSortOrderStore.updateData { order }
+    }
+  }
+
+  fun onToggleGroupByStatus() {
+    scope.launch {
+      groupByStatusStore.updateData { !it }
     }
   }
 

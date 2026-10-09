@@ -1,4 +1,4 @@
-﻿package de.clio.core.data
+package de.clio.core.data
 
 public data class EqualizerSetting(public val bands: List<Int> = List(10) { 0 }) {
   init {
@@ -21,17 +21,17 @@ public data class EqualizerSetting(public val bands: List<Int> = List(10) { 0 })
   public companion object {
     public val Flat: EqualizerSetting = EqualizerSetting(listOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0))
 
-    // Sprachklarheit: Bass absenken, Sprach-Präsenz (1-4 kHz) hervorheben
-    public val VocalClarity: EqualizerSetting = EqualizerSetting(listOf(-3, -3, -2, 0, 1, 3, 4, 2, 0, 0))
+    // Sprachklarheit: Rumpeln & Dröhnen dämpfen, Sprach-Präsenz (1-4 kHz) deutlich hervorheben
+    public val VocalClarity: EqualizerSetting = EqualizerSetting(listOf(-8, -6, 0, -3, 0, 4, 7, 6, 2, 0))
 
-    // Dumpfe Aufnahmen / Höhen-Boost
-    public val TrebleBoost: EqualizerSetting = EqualizerSetting(listOf(0, 0, 0, 0, 0, 2, 4, 6, 6, 5))
+    // Dumpfe Aufnahmen aufhellen: Höhen ab 2 kHz breit anheben
+    public val TrebleBoost: EqualizerSetting = EqualizerSetting(listOf(-6, -4, 0, 0, 1, 2, 5, 6, 6, 4))
 
-    // Bass-Dröhnen & Rumpeln entfernen
-    public val BassCut: EqualizerSetting = EqualizerSetting(listOf(-12, -8, -4, -2, 0, 0, 0, 0, 0, 0))
+    // Bass-Dröhnen & Rumpeln radikal kappen (High-Pass)
+    public val BassCut: EqualizerSetting = EqualizerSetting(listOf(-12, -12, -8, -4, 0, 0, 0, 0, 0, 0))
 
-    // Zischlaute dämpfen (De-Esser)
-    public val DeEsser: EqualizerSetting = EqualizerSetting(listOf(0, 0, 0, 0, 0, 0, -2, -5, -4, -2))
+    // Zischlaute dämpfen (De-Esser bei 4-8 kHz)
+    public val DeEsser: EqualizerSetting = EqualizerSetting(listOf(0, 0, 0, 0, 0, 0, -2, -6, -8, -5))
 
     public val Presets: List<EqualizerPreset> = EqualizerPreset.entries
 

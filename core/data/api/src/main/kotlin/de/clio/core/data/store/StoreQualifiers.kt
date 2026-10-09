@@ -79,3 +79,9 @@ public annotation class EndOfBookBehaviorStore
 
 @Qualifier
 public annotation class BookQueueStore
+
+@Qualifier
+public annotation class OnlineCoverEnabledStore
+
+@Qualifier
+public annotation class GroupByStatusStore

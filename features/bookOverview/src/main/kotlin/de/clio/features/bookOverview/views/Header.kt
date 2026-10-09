@@ -40,20 +40,23 @@ internal fun Header(
   onDeleteSelectedClick: () -> Unit = {},
   sortOrder: BookSortOrder = BookSortOrder.Default,
   onSortOrderChange: (BookSortOrder) -> Unit = {},
+  groupByStatus: Boolean = false,
+  onToggleGroupByStatus: () -> Unit = {},
+  showActions: Boolean = true,
 ) {
   Row(
     modifier = modifier.fillMaxWidth(),
     verticalAlignment = Alignment.CenterVertically,
     horizontalArrangement = Arrangement.SpaceBetween,
   ) {
-    if (inSelectionMode) {
+    if (inSelectionMode && showActions) {
       Text(
         text = if (allSelected) {
           stringResource(StringsR.string.selection_title_all)
         } else {
           stringResource(StringsR.string.selection_title, selectedCount)
         },
-        style = MaterialTheme.typography.headlineSmall,
+        style = MaterialTheme.typography.titleLarge,
         fontWeight = FontWeight.Bold,
       )
 
@@ -104,69 +107,96 @@ internal fun Header(
           } else {
             stringResource(id = category.nameRes)
           },
-          style = MaterialTheme.typography.headlineSmall,
+          style = MaterialTheme.typography.titleLarge,
           fontWeight = FontWeight.Bold,
         )
       }
 
-      Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(4.dp),
-      ) {
-        if (queueCount > 0) {
-          Surface(
-            onClick = {
-              onTabSelect(if (selectedTab == OverviewTab.Queue) OverviewTab.Books else OverviewTab.Queue)
-            },
-            shape = CircleShape,
-            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.10f),
-            border = BorderStroke(
-              width = 1.dp,
-              color = MaterialTheme.colorScheme.primary.copy(alpha = 0.20f),
-            ),
-            modifier = Modifier.height(32.dp),
-          ) {
-            Row(
-              modifier = Modifier.padding(horizontal = 8.dp),
-              verticalAlignment = Alignment.CenterVertically,
-              horizontalArrangement = Arrangement.spacedBy(4.dp),
-            ) {
-              Icon(
-                imageVector = ClioIcons.QueueMusic,
-                tint = MaterialTheme.colorScheme.onSurface,
-                contentDescription = stringResource(id = StringsR.string.queue_title),
-                modifier = Modifier.size(18.dp),
-              )
-              Text(
-                text = queueCount.toString(),
-                style = MaterialTheme.typography.labelMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface,
-              )
-            }
-          }
-        } else {
-          IconButton(
-            onClick = {
-              onTabSelect(if (selectedTab == OverviewTab.Queue) OverviewTab.Books else OverviewTab.Queue)
-            },
-            modifier = Modifier.size(40.dp),
-          ) {
-            Icon(
-              imageVector = ClioIcons.QueueMusic,
-              tint = MaterialTheme.colorScheme.onSurface,
-              contentDescription = stringResource(id = StringsR.string.queue_title),
-            )
-          }
-        }
+      if (showActions) {
+        HeaderActions(
+          selectedTab = selectedTab,
+          onTabSelect = onTabSelect,
+          queueCount = queueCount,
+          sortOrder = sortOrder,
+          onSortOrderChange = onSortOrderChange,
+          groupByStatus = groupByStatus,
+          onToggleGroupByStatus = onToggleGroupByStatus,
+        )
+      }
+    }
+  }
+}
 
-        if (selectedTab == OverviewTab.Books) {
-          SortOrderIcon(
-            sortOrder = sortOrder,
-            onSortOrderChange = onSortOrderChange,
+@Composable
+internal fun HeaderActions(
+  selectedTab: OverviewTab,
+  onTabSelect: (OverviewTab) -> Unit,
+  queueCount: Int,
+  sortOrder: BookSortOrder,
+  onSortOrderChange: (BookSortOrder) -> Unit,
+  groupByStatus: Boolean,
+  onToggleGroupByStatus: () -> Unit,
+  modifier: Modifier = Modifier,
+) {
+  Row(
+    modifier = modifier,
+    verticalAlignment = Alignment.CenterVertically,
+    horizontalArrangement = Arrangement.spacedBy(4.dp),
+  ) {
+    if (queueCount > 0) {
+      Surface(
+        onClick = {
+          onTabSelect(if (selectedTab == OverviewTab.Queue) OverviewTab.Books else OverviewTab.Queue)
+        },
+        shape = CircleShape,
+        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.10f),
+        border = BorderStroke(
+          width = 1.dp,
+          color = MaterialTheme.colorScheme.primary.copy(alpha = 0.20f),
+        ),
+        modifier = Modifier.height(32.dp),
+      ) {
+        Row(
+          modifier = Modifier.padding(horizontal = 8.dp),
+          verticalAlignment = Alignment.CenterVertically,
+          horizontalArrangement = Arrangement.spacedBy(4.dp),
+        ) {
+          Icon(
+            imageVector = ClioIcons.QueueMusic,
+            tint = MaterialTheme.colorScheme.onSurface,
+            contentDescription = stringResource(id = StringsR.string.queue_title),
+            modifier = Modifier.size(18.dp),
+          )
+          Text(
+            text = queueCount.toString(),
+            style = MaterialTheme.typography.labelMedium,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onSurface,
           )
         }
       }
+    } else {
+      IconButton(
+        onClick = {
+          onTabSelect(if (selectedTab == OverviewTab.Queue) OverviewTab.Books else OverviewTab.Queue)
+        },
+        modifier = Modifier.size(40.dp),
+      ) {
+        Icon(
+          imageVector = ClioIcons.QueueMusic,
+          tint = MaterialTheme.colorScheme.onSurface,
+          contentDescription = stringResource(id = StringsR.string.queue_title),
+        )
+      }
+    }
+
+    if (selectedTab == OverviewTab.Books) {
+      SortOrderIcon(
+        sortOrder = sortOrder,
+        onSortOrderChange = onSortOrderChange,
+        groupByStatus = groupByStatus,
+        onToggleGroupByStatus = onToggleGroupByStatus,
+      )
     }
   }
 }

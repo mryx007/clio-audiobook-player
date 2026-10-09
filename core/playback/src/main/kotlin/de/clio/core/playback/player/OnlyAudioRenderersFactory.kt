@@ -1,4 +1,4 @@
-﻿package de.clio.core.playback.player
+package de.clio.core.playback.player
 
 import android.content.Context
 import android.os.Handler
@@ -12,12 +12,14 @@ import androidx.media3.exoplayer.metadata.MetadataOutput
 import androidx.media3.exoplayer.text.TextOutput
 import androidx.media3.exoplayer.video.VideoRendererEventListener
 import de.clio.core.playback.audio.EqualizerAudioProcessor
+import de.clio.core.playback.audio.GainAudioProcessor
 import dev.zacsweers.metro.Inject
 
 @Inject
 class OnlyAudioRenderersFactory(
   context: Context,
   private val equalizerAudioProcessor: EqualizerAudioProcessor,
+  private val gainAudioProcessor: GainAudioProcessor,
 ) : DefaultRenderersFactory(context) {
 
   override fun buildAudioSink(
@@ -27,7 +29,7 @@ class OnlyAudioRenderersFactory(
   ): AudioSink {
     return DefaultAudioSink.Builder(context)
       .setEnableFloatOutput(enableFloatOutput)
-      .setAudioProcessors(arrayOf(equalizerAudioProcessor))
+      .setAudioProcessors(arrayOf(equalizerAudioProcessor, gainAudioProcessor))
       .build()
   }
 

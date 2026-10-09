@@ -36,6 +36,7 @@
     <string name="book.sort.by_author">Author (A–Z)</string>
     <string name="book.sort.by_duration_asc">Shortest duration</string>
     <string name="book.sort.by_duration_desc">Longest duration</string>
+    <string name="book.sort.group_by_status">Group by status</string>
     <!-- Title for bulk deleting multiple books. -->
     <string name="book.bulk_delete.dialog.title">Delete books</string>
     <!-- Warning message for bulk deleting multiple books. -->
@@ -183,8 +184,8 @@
     <string name="onboarding.explanation.subtitle">With Clio, you can add books as individual files or organize them in folders. You choose!</string>
     <!-- Title on the onboarding explanation screen. -->
     <string name="onboarding.explanation.title">Your Library, Your Way</string>
-    <!-- Title on the onboarding battery optimization screen. -->
-    <string name="onboarding.battery_optimization.title">Background Playback</string>
+    <!-- Title on the onboarding permissions and features screen. -->
+    <string name="onboarding.battery_optimization.title">Permissions &amp; Features</string>
     <!-- Subtitle explaining battery optimization in onboarding. -->
     <string name="onboarding.battery_optimization.subtitle">To ensure your audiobooks keep playing smoothly without interruptions when your screen is off or in the background, please allow unrestricted background activity.</string>
     <!-- Action button to request ignoring battery optimization. -->
@@ -193,6 +194,10 @@
     <string name="onboarding.battery_optimization.status.already_unrestricted">Unrestricted background playback enabled</string>
     <!-- Button label to skip battery optimization. -->
     <string name="onboarding.battery_optimization.action.skip">Later</string>
+    <!-- Title for online cover search option. -->
+    <string name="onboarding.online_cover.title">Online Cover Search</string>
+    <!-- Subtitle for online cover search option. -->
+    <string name="onboarding.online_cover.subtitle">Search and download missing book covers via OpenLibrary. Requires an internet connection.</string>
     <!-- Subtitle on the onboarding welcome screen. -->
     <string name="onboarding.welcome.subtitle">Your personal pocket audiobook player. Let\'s get you set up.</string>
     <!-- Title on the onboarding welcome screen. -->
@@ -274,6 +279,10 @@
     <string name="settings.playback.open_last_book_on_startup.title">Open last book on startup</string>
     <!-- Settings summary for automatically opening the last book on startup. -->
     <string name="settings.playback.open_last_book_on_startup.summary">Skip the overview and go directly to the playback screen</string>
+    <!-- Settings title for online cover search. -->
+    <string name="settings.online_cover.title">Online cover search</string>
+    <!-- Settings summary for online cover search. -->
+    <string name="settings.online_cover.summary">Search and download missing book covers via OpenLibrary</string>
     <!-- Settings title for back button behavior in playback screen. -->
     <string name="settings.playback.back_button_behavior.title">Back button behavior</string>
     <!-- Option for back button behavior: return to library overview. -->

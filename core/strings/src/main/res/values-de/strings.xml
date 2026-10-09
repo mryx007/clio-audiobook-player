@@ -23,6 +23,7 @@
     <string name="book.sort.by_author">Autor (A–Z)</string>
     <string name="book.sort.by_duration_asc">Kürzeste Dauer</string>
     <string name="book.sort.by_duration_desc">Längste Dauer</string>
+    <string name="book.sort.group_by_status">Nach Status gruppieren</string>
     <string name="book.bulk_delete.dialog.title">Bücher löschen</string>
     <string name="book.bulk_delete.dialog.message">Möchtest Du die %1$d ausgewählten Bücher wirklich löschen? Dies wird die Dateien auf Deinem Gerät löschen.</string>
     <string name="book.edit.cover.file">Cover aus dem Dateisystem</string>
@@ -78,7 +79,7 @@
     <string name="library.category.overview.title">Übersicht</string>
     <string name="search.no_results">Keine Hörbücher gefunden für „%s“</string>
     <string name="library.category.completed.title">Abgeschlossen</string>
-    <string name="library.category.current.title">Aktuell</string>
+    <string name="library.category.current.title">Begonnen</string>
     <string name="library.category.not_started.title">Neu</string>
     <string name="library.empty.add_first_book">Füge Deinen Hörbuchordner hinzu, damit Du mit dem Hören beginnen kannst!</string>
     <string name="library.folders.title">Hörbuch-Ordner</string>
@@ -141,6 +142,8 @@
     <string name="settings.analytics_consent.title">Nutzungsdaten</string>
     <string name="settings.playback.open_last_book_on_startup.title">Zuletzt geöffnetes Hörbuch beim Starten öffnen</string>
     <string name="settings.playback.open_last_book_on_startup.summary">Überspringe die Übersicht und gehe direkt zur Wiedergabe</string>
+    <string name="settings.online_cover.title">Online-Coversuche</string>
+    <string name="settings.online_cover.summary">Fehlende Buch-Cover über OpenLibrary aus dem Internet laden</string>
     <string name="settings.appearance.theme.dynamic">Material You</string>
     <string name="settings.appearance.theme.custom">Benutzerdefiniert</string>
     <string name="settings.appearance.theme.custom_hex_title">Benutzerdefinierter dunkler Hintergrund</string>
@@ -245,9 +248,11 @@
     <string name="settings.player_controls.queue_summary">Warteschlangen-Button im Player anzeigen</string>
     <string name="settings.player_controls.category.buttons">Sichtbare Buttons</string>
     <string name="settings.player_controls.category.seeking">Sprungzeiten</string>
-    <string name="onboarding.battery_optimization.title">Hintergrund-Wiedergabe</string>
+    <string name="onboarding.battery_optimization.title">Berechtigungen &amp; Funktionen</string>
     <string name="onboarding.battery_optimization.subtitle">Damit deine Hörbücher auch bei ausgeschaltetem Bildschirm oder im Hintergrund unterbrechungsfrei weiterspielen, erlaube bitte die uneingeschränkte Hintergrundaktivität.</string>
     <string name="onboarding.battery_optimization.action.grant">Hintergrund-Wiedergabe erlauben</string>
     <string name="onboarding.battery_optimization.status.already_unrestricted">Hintergrund-Aktivität uneingeschränkt aktiv</string>
     <string name="onboarding.battery_optimization.action.skip">Später</string>
+    <string name="onboarding.online_cover.title">Online-Coversuche erlauben</string>
+    <string name="onboarding.online_cover.subtitle">Fehlende Buch-Cover über OpenLibrary aus dem Internet laden. Erfordert eine Internetverbindung.</string>
 </resources>

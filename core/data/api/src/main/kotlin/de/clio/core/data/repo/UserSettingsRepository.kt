@@ -23,6 +23,7 @@ public interface UserSettingsRepository {
   public val backButtonBehavior: StateFlow<BackButtonBehavior>
   public val endOfBookBehavior: StateFlow<EndOfBookBehavior>
   public val developerMenuUnlocked: StateFlow<Boolean>
+  public val onlineCoverEnabled: StateFlow<Boolean>
 
   public suspend fun setThemeMode(themeMode: ThemeMode)
   public suspend fun setThemeColor(themeColor: ThemeColor)
@@ -37,4 +38,5 @@ public interface UserSettingsRepository {
   public suspend fun setBackButtonBehavior(behavior: BackButtonBehavior)
   public suspend fun setEndOfBookBehavior(behavior: EndOfBookBehavior)
   public suspend fun setDeveloperMenuUnlocked(unlocked: Boolean)
+  public suspend fun setOnlineCoverEnabled(enabled: Boolean)
 }

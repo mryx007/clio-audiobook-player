@@ -24,6 +24,7 @@ data class BookOverviewViewState(
   val queueBooks: List<BookOverviewItemViewState> = emptyList(),
   val queueCount: Int = 0,
   val currentBook: BookOverviewItemViewState? = null,
+  val groupByStatus: Boolean = false,
 ) {
 
   val inSelectionMode: Boolean = selectedBookIds.isNotEmpty()

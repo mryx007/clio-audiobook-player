@@ -1,5 +1,6 @@
 package de.clio.features.bookOverview.views
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,17 +35,27 @@ internal fun NowPlayingSection(
   book: BookOverviewItemViewState,
   onClick: () -> Unit,
   modifier: Modifier = Modifier,
+  actions: (@Composable () -> Unit)? = null,
 ) {
   Column(
     modifier = modifier.fillMaxWidth(),
   ) {
-    Text(
-      text = stringResource(StringsR.string.queue_now_playing).uppercase(),
-      style = MaterialTheme.typography.labelMedium,
-      color = MaterialTheme.colorScheme.primary,
-      fontWeight = FontWeight.Bold,
-      modifier = Modifier.padding(bottom = 2.dp),
-    )
+    Row(
+      modifier = Modifier.fillMaxWidth(),
+      verticalAlignment = Alignment.CenterVertically,
+      horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+      Text(
+        text = stringResource(StringsR.string.queue_now_playing).uppercase(),
+        style = MaterialTheme.typography.labelMedium,
+        color = MaterialTheme.colorScheme.primary,
+        fontWeight = FontWeight.Bold,
+        modifier = Modifier.padding(bottom = 2.dp),
+      )
+      if (actions != null) {
+        actions()
+      }
+    }
 
     Surface(
       onClick = onClick,

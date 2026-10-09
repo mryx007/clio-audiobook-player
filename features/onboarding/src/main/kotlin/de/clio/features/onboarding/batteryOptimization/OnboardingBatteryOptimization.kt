@@ -20,6 +20,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -66,10 +67,13 @@ fun OnboardingBatteryOptimization(modifier: Modifier = Modifier) {
   }
 
   val isIgnoringBatteryOptimizations by viewModel.isIgnoringBatteryOptimizationsState.collectAsState()
+  val onlineCoverEnabled by viewModel.onlineCoverEnabledState.collectAsState()
 
   OnboardingBatteryOptimization(
     isIgnoringBatteryOptimizations = isIgnoringBatteryOptimizations,
+    onlineCoverEnabled = onlineCoverEnabled,
     onRequestPermission = viewModel::requestIgnoreBatteryOptimization,
+    onOnlineCoverEnabledChange = viewModel::setOnlineCoverEnabled,
     onNext = viewModel::next,
     onBack = viewModel::back,
     modifier = modifier,
@@ -79,7 +83,9 @@ fun OnboardingBatteryOptimization(modifier: Modifier = Modifier) {
 @Composable
 internal fun OnboardingBatteryOptimization(
   isIgnoringBatteryOptimizations: Boolean,
+  onlineCoverEnabled: Boolean,
   onRequestPermission: () -> Unit,
+  onOnlineCoverEnabledChange: (Boolean) -> Unit,
   onNext: () -> Unit,
   onBack: () -> Unit,
   modifier: Modifier = Modifier,
@@ -184,6 +190,41 @@ internal fun OnboardingBatteryOptimization(
               )
             }
           }
+
+          Spacer(modifier = Modifier.size(24.dp))
+
+          Row(
+            modifier = Modifier
+              .padding(horizontal = 24.dp)
+              .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+          ) {
+            Icon(
+              imageVector = ClioIcons.Language,
+              contentDescription = null,
+              tint = MaterialTheme.colorScheme.primary,
+              modifier = Modifier.size(28.dp),
+            )
+            Column(
+              modifier = Modifier.weight(1F),
+            ) {
+              Text(
+                text = stringResource(StringsR.string.onboarding_online_cover_title),
+                style = MaterialTheme.typography.titleMedium,
+              )
+              Spacer(modifier = Modifier.size(4.dp))
+              Text(
+                text = stringResource(StringsR.string.onboarding_online_cover_subtitle),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+              )
+            }
+            Switch(
+              checked = onlineCoverEnabled,
+              onCheckedChange = onOnlineCoverEnabledChange,
+            )
+          }
         }
       }
     },
@@ -203,7 +244,9 @@ private fun OnboardingBatteryOptimizationPreview() {
   ClioTheme {
     OnboardingBatteryOptimization(
       isIgnoringBatteryOptimizations = false,
+      onlineCoverEnabled = false,
       onRequestPermission = {},
+      onOnlineCoverEnabledChange = {},
       onNext = {},
       onBack = {},
     )

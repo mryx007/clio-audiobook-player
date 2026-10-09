@@ -28,6 +28,8 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenu
@@ -90,13 +92,20 @@ internal fun GridBooks(
   onPermissionBugCardClick: () -> Unit = {},
   sortOrder: BookSortOrder = BookSortOrder.Default,
   onSortOrderChange: (BookSortOrder) -> Unit = {},
+  groupByStatus: Boolean = false,
+  onToggleGroupByStatus: () -> Unit = {},
   selectedTab: de.clio.features.bookOverview.overview.OverviewTab = de.clio.features.bookOverview.overview.OverviewTab.Books,
   onTabSelect: (de.clio.features.bookOverview.overview.OverviewTab) -> Unit = {},
   queueCount: Int = 0,
   contentPadding: PaddingValues = PaddingValues(start = 12.dp, end = 12.dp, top = 4.dp, bottom = 12.dp),
   currentBook: BookOverviewItemViewState? = null,
 ) {
+  val gridState = rememberLazyGridState()
+  LaunchedEffect(groupByStatus) {
+    gridState.scrollToItem(0)
+  }
   LazyVerticalGrid(
+    state = gridState,
     columns = GridCells.Fixed(gridColumnCount.coerceIn(1, 3)),
     modifier = modifier,
     verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -110,14 +119,87 @@ internal fun GridBooks(
         PermissionBugCard(onPermissionBugCardClick)
       }
     }
-    books.forEach { (category, books) ->
-      if (books.isEmpty()) return@forEach
+    val showNowPlaying = currentBook != null && !inSelectionMode && allBookIds.size > 1
+    val playingBookId = if (showNowPlaying) currentBook.id else null
+    if (!groupByStatus) {
       item(
         span = { GridItemSpan(maxLineSpan) },
-        key = category,
+        key = "overview_header",
         contentType = "header",
       ) {
-        Column(modifier = Modifier.fillMaxWidth()) {
+        val allSelected = selectedBookIds.size == allBookIds.size && allBookIds.isNotEmpty()
+        Header(
+          modifier = Modifier.padding(start = 4.dp, end = 4.dp, bottom = 4.dp),
+          category = BookOverviewCategory.OVERVIEW,
+          selectedTab = selectedTab,
+          onTabSelect = onTabSelect,
+          queueCount = queueCount,
+          inSelectionMode = inSelectionMode,
+          selectedCount = selectedBookIds.size,
+          allSelected = allSelected,
+          onSelectAllClick = onSelectAllClick,
+          onDeleteSelectedClick = onDeleteSelectedClick,
+          sortOrder = sortOrder,
+          onSortOrderChange = onSortOrderChange,
+          groupByStatus = groupByStatus,
+          onToggleGroupByStatus = onToggleGroupByStatus,
+          showActions = true,
+        )
+      }
+      if (showNowPlaying) {
+        item(
+          span = { GridItemSpan(maxLineSpan) },
+          key = "overview_now_playing",
+          contentType = "now_playing",
+        ) {
+          NowPlayingSection(
+            book = currentBook,
+            onClick = { onBookClick(currentBook.id) },
+            modifier = Modifier.padding(start = 4.dp, end = 4.dp, top = 2.dp),
+          )
+        }
+      }
+    } else if (showNowPlaying) {
+      item(
+        span = { GridItemSpan(maxLineSpan) },
+        key = "overview_now_playing",
+        contentType = "now_playing",
+      ) {
+        NowPlayingSection(
+          book = currentBook,
+          onClick = { onBookClick(currentBook.id) },
+          modifier = Modifier.padding(start = 4.dp, end = 4.dp, top = 2.dp),
+          actions = {
+            HeaderActions(
+              selectedTab = selectedTab,
+              onTabSelect = onTabSelect,
+              queueCount = queueCount,
+              sortOrder = sortOrder,
+              onSortOrderChange = onSortOrderChange,
+              groupByStatus = groupByStatus,
+              onToggleGroupByStatus = onToggleGroupByStatus,
+            )
+          },
+        )
+      }
+    }
+    val firstCategory = books.mapValues { (cat, bks) ->
+      if (groupByStatus && playingBookId != null) bks.filterKeys { it != playingBookId } else bks
+    }.filterValues { it.isNotEmpty() }.keys.firstOrNull()
+    books.forEach { (category, categoryBooks) ->
+      val displayBooks = if (groupByStatus && playingBookId != null) {
+        categoryBooks.filterKeys { it != playingBookId }
+      } else {
+        categoryBooks
+      }
+      if (displayBooks.isEmpty()) return@forEach
+      val showCategoryActions = (!showNowPlaying || inSelectionMode) && category == firstCategory
+      if (groupByStatus) {
+        item(
+          span = { GridItemSpan(maxLineSpan) },
+          key = category,
+          contentType = "section_header",
+        ) {
           val allSelected = selectedBookIds.size == allBookIds.size && allBookIds.isNotEmpty()
           Header(
             modifier = Modifier.padding(start = 4.dp, end = 4.dp, bottom = 4.dp),
@@ -132,21 +214,14 @@ internal fun GridBooks(
             onDeleteSelectedClick = onDeleteSelectedClick,
             sortOrder = sortOrder,
             onSortOrderChange = onSortOrderChange,
+            groupByStatus = groupByStatus,
+            onToggleGroupByStatus = onToggleGroupByStatus,
+            showActions = showCategoryActions,
           )
-
-          if (category == BookOverviewCategory.OVERVIEW && currentBook != null && !inSelectionMode) {
-            NowPlayingSection(
-              book = currentBook,
-              onClick = {
-                onBookClick(currentBook.id)
-              },
-              modifier = Modifier.padding(start = 4.dp, end = 4.dp, top = 2.dp),
-            )
-          }
         }
       }
       items(
-        items = books.toList(),
+        items = displayBooks.toList(),
         key = { (bookId, _) -> bookId.value },
         contentType = { "item" },
       ) { (_, bookState) ->
@@ -162,11 +237,11 @@ internal fun GridBooks(
           onMenuItemClick = onMenuItemClick,
         )
       }
-      item(
-        span = { GridItemSpan(maxLineSpan) },
-      ) {
-        Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.systemBars))
-      }
+    }
+    item(
+      span = { GridItemSpan(maxLineSpan) },
+    ) {
+      Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.systemBars))
     }
   }
 }

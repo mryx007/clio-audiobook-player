@@ -314,6 +314,26 @@ public interface StoreModule {
       defaultValue = emptyList(),
     )
   }
+
+  @Provides
+  @SingleIn(AppScope::class)
+  @OnlineCoverEnabledStore
+  private fun onlineCoverEnabled(factory: ClioDataStoreFactory): DataStore<Boolean> {
+    return factory.boolean(
+      fileName = "onlineCoverEnabled",
+      defaultValue = false,
+    )
+  }
+
+  @Provides
+  @SingleIn(AppScope::class)
+  @GroupByStatusStore
+  private fun groupByStatus(factory: ClioDataStoreFactory): DataStore<Boolean> {
+    return factory.boolean(
+      fileName = "groupByStatus",
+      defaultValue = false,
+    )
+  }
 }
 
 private class LegacyDarkThemeMigration(

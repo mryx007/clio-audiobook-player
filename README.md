@@ -41,7 +41,7 @@ Optional setting to jump straight into your last played audiobook when opening t
 ### Under the Hood
 - Fast startup: Optimized launch time so the player opens instantly.
 - Faster scanning: Quicker folder imports and smoother indexing for large libraries.
-- Private and offline: No tracking, analytics, ads, or internet permissions required.
+- Privacy-first: No tracking, analytics, or ads. Internet permission is used solely for the optional online cover search.
 - Full translations: Complete German and English localization throughout all menus and dialogs.
 
 ---
@@ -49,7 +49,7 @@ Optional setting to jump straight into your last played audiobook when opening t
 ## Downloads
 
 Download the latest version directly from GitHub Releases:
-- [Clio Audiobook Player v1.0.3 (APK)](https://github.com/mryx007/clio-audiobook-player/releases/download/v1.0.3/Clio-Audiobook-Player-v1.0.3.apk)
+- [Clio Audiobook Player v1.0.4 (APK)](https://github.com/mryx007/clio-audiobook-player/releases/download/v1.0.4/Clio-Audiobook-Player-v1.0.4.apk)
 - [All Releases](https://github.com/mryx007/clio-audiobook-player/releases)
 
 ## Credits & Acknowledgements

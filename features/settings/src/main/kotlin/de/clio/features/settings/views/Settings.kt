@@ -189,6 +189,13 @@ private fun Settings(
       }
 
       item {
+        OnlineCoverRow(
+          enabled = viewState.onlineCoverEnabled,
+          toggle = listener::toggleOnlineCover,
+        )
+      }
+
+      item {
         AutoSleepTimerCard(viewState.autoSleepTimer, listener)
       }
 
@@ -292,6 +299,33 @@ private fun OpenLastBookOnStartupRow(
     },
   ) {
     Text(text = stringResource(StringsR.string.settings_playback_open_last_book_on_startup_title))
+  }
+}
+
+@Composable
+private fun OnlineCoverRow(
+  enabled: Boolean,
+  toggle: () -> Unit,
+) {
+  ListItem(
+    modifier = Modifier.clickable { toggle() },
+    leadingContent = {
+      Icon(
+        imageVector = ClioIcons.Language,
+        contentDescription = null,
+      )
+    },
+    supportingContent = {
+      Text(text = stringResource(StringsR.string.settings_online_cover_summary))
+    },
+    trailingContent = {
+      Switch(
+        checked = enabled,
+        onCheckedChange = { toggle() },
+      )
+    },
+  ) {
+    Text(text = stringResource(StringsR.string.settings_online_cover_title))
   }
 }
 
