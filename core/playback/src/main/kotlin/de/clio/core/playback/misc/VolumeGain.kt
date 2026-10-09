@@ -9,9 +9,7 @@ import kotlin.properties.Delegates
 
 @SingleIn(AppScope::class)
 @Inject
-class VolumeGain(
-  private val gainAudioProcessor: GainAudioProcessor,
-) {
+class VolumeGain(private val gainAudioProcessor: GainAudioProcessor) {
 
   var gain: Decibel by Delegates.observable(Decibel(0F)) { _, _, newGain ->
     Logger.v("VolumeGain updated gain=$newGain")

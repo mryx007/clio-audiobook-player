@@ -1,6 +1,7 @@
 # Clio Audiobook Player
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.html)
+[![F-Droid](https://img.shields.io/f-droid/v/de.clio.audiobook?color=blue)](https://f-droid.org/packages/de.clio.audiobook/)
 
 Clio is a clean, simple audiobook player for Android designed for listening to local audio files without clutter, tracking, or account requirements.
 
@@ -48,7 +49,11 @@ Optional setting to jump straight into your last played audiobook when opening t
 
 ## Downloads
 
-Download the latest version directly from GitHub Releases:
+[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
+     alt="Get it on F-Droid"
+     height="75">](https://f-droid.org/packages/de.clio.audiobook/)
+
+Or download the latest APK directly from GitHub Releases:
 - [Clio Audiobook Player v1.0.4 (APK)](https://github.com/mryx007/clio-audiobook-player/releases/download/v1.0.4/Clio-Audiobook-Player-v1.0.4.apk)
 - [All Releases](https://github.com/mryx007/clio-audiobook-player/releases)
 
