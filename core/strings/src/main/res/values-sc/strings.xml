@@ -213,4 +213,5 @@
     <string name="playback.equalizer.title">Ecualizadore</string>
     <string name="playback.equalizer.reset">Riprìstina</string>
     <string name="playback.equalizer.preset.flat">Neutrale</string>
+    <string name="playback.equalizer.preset.vocal_clarity">Craresa de boghe</string>
 </resources>
