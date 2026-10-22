@@ -103,6 +103,12 @@ class PlayerControlsSettingsViewModel(
     }
   }
 
+  fun toggleChapterBar() {
+    scope.launch {
+      playerButtonVisibilityStore.updateData { it.copy(showChapterBar = !it.showChapterBar) }
+    }
+  }
+
   fun onRewindRowClick() {
     dialog.value = PlayerControlsSettingsViewState.Dialog.RewindTime
   }

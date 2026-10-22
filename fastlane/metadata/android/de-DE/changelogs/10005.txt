@@ -1,0 +1,2 @@
+• Ordner-Typ-Auswahl: Beim Hinzufügen eines Ordners kann nun gewählt werden, ob dieser als einzelnes Hörbuch (Dateien als Kapitel), als Hörbücher-Sammlung oder nach Autoren importiert wird (behebt #3).
+• Kapitelleiste ausblendbar: Neue Option unter Einstellungen > Player-Steuerung zum Ein- oder Ausblenden der oberen Kapitelleiste (Titel und Fortschrittsbalken) (behebt #4).

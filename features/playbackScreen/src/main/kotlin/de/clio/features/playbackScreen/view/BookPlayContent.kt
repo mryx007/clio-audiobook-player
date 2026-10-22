@@ -157,14 +157,16 @@ internal fun BookPlayContent(
           .weight(1F),
         verticalArrangement = Arrangement.Center,
       ) {
-        ChapterTitleHeader(
-          chapterName = viewState.chapterName,
-          hasChapters = viewState.hasChapters,
-          isChaptersOpen = isChaptersOpen,
-          isCustomBackground = isCustomBackground,
-          enabled = !viewState.isLocked,
-          onToggleChapters = { isChaptersOpen = !isChaptersOpen },
-        )
+        if (viewState.playerButtonVisibility.showChapterBar) {
+          ChapterTitleHeader(
+            chapterName = viewState.chapterName,
+            hasChapters = viewState.hasChapters,
+            isChaptersOpen = isChaptersOpen,
+            isCustomBackground = isCustomBackground,
+            enabled = !viewState.isLocked,
+            onToggleChapters = { isChaptersOpen = !isChaptersOpen },
+          )
+        }
         Box(
           modifier = Modifier
             .fillMaxWidth()
@@ -177,14 +179,16 @@ internal fun BookPlayContent(
                 alpha = (1f - chaptersProgress * 1.5f).coerceIn(0f, 1f)
               },
           ) {
-            ChapterSliderBar(
-              duration = viewState.duration,
-              playedTime = viewState.playedTime,
-              isCustomBackground = isCustomBackground,
-              enabled = !viewState.isLocked,
-              onSeek = onChapterSeek,
-            )
-            Spacer(modifier = Modifier.size(12.dp))
+            if (viewState.playerButtonVisibility.showChapterBar) {
+              ChapterSliderBar(
+                duration = viewState.duration,
+                playedTime = viewState.playedTime,
+                isCustomBackground = isCustomBackground,
+                enabled = !viewState.isLocked,
+                onSeek = onChapterSeek,
+              )
+              Spacer(modifier = Modifier.size(12.dp))
+            }
             SliderRow(
               duration = viewState.totalDuration,
               playedTime = viewState.totalPlayedTime,
@@ -255,19 +259,21 @@ internal fun BookPlayContent(
             .offset(y = (-14).dp),
         )
 
-        ChapterSliderRow(
-          chapterName = viewState.chapterName,
-          duration = viewState.duration,
-          playedTime = viewState.playedTime,
-          isCustomBackground = isCustomBackground,
-          enabled = !viewState.isLocked,
-          onSeek = onChapterSeek,
-          hasChapters = viewState.hasChapters,
-          isChaptersOpen = isChaptersOpen,
-          onToggleChapters = { isChaptersOpen = !isChaptersOpen },
-        )
+        if (viewState.playerButtonVisibility.showChapterBar) {
+          ChapterSliderRow(
+            chapterName = viewState.chapterName,
+            duration = viewState.duration,
+            playedTime = viewState.playedTime,
+            isCustomBackground = isCustomBackground,
+            enabled = !viewState.isLocked,
+            onSeek = onChapterSeek,
+            hasChapters = viewState.hasChapters,
+            isChaptersOpen = isChaptersOpen,
+            onToggleChapters = { isChaptersOpen = !isChaptersOpen },
+          )
 
-        Spacer(modifier = Modifier.size(8.dp))
+          Spacer(modifier = Modifier.size(8.dp))
+        }
 
         SliderRow(
           duration = viewState.totalDuration,

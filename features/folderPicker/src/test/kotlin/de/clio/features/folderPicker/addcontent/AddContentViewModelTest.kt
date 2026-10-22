@@ -20,23 +20,21 @@ class AddContentViewModelTest {
   private val navigator = mockk<Navigator>(relaxed = true)
 
   @Test
-  fun `add folder directly uses FolderType Root and completes onboarding`() {
+  fun `add folder navigates to SelectFolderType on onboarding`() {
     val viewModel = AddContentViewModel(audiobookFolders, navigator, Origin.Onboarding)
     val uri = mockk<Uri>()
     viewModel.add(uri, FileTypeSelection.Folder)
 
-    verify { audiobookFolders.add(uri, FolderType.Root) }
-    verify { navigator.goTo(Destination.OnboardingBatteryOptimization) }
+    verify { navigator.goTo(Destination.SelectFolderType(uri, Origin.Onboarding)) }
   }
 
   @Test
-  fun `add folder directly uses FolderType Root and sets book overview on default origin`() {
+  fun `add folder navigates to SelectFolderType on default origin`() {
     val viewModel = AddContentViewModel(audiobookFolders, navigator, Origin.Default)
     val uri = mockk<Uri>()
     viewModel.add(uri, FileTypeSelection.Folder)
 
-    verify { audiobookFolders.add(uri, FolderType.Root) }
-    verify { navigator.setRoot(Destination.BookOverview) }
+    verify { navigator.goTo(Destination.SelectFolderType(uri, Origin.Default)) }
   }
 
   @Test

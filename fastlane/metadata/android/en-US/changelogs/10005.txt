@@ -1,0 +1,2 @@
+• Folder Type Selection: Adding a folder now prompts to choose between "Single book" (combines files into chapters), "Audiobooks", or "Authors" (fixes #3).
+• Chapter Bar Toggle: Added a switch under Settings > Player controls to show or hide the chapter bar (title and chapter progress slider) in the player (fixes #4).

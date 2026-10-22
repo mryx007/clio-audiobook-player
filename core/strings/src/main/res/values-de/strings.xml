@@ -246,6 +246,8 @@
     <string name="settings.player_controls.speed_summary">Geschwindigkeit des Hörbuchs regeln</string>
     <string name="settings.player_controls.queue">Warteschlange</string>
     <string name="settings.player_controls.queue_summary">Warteschlangen-Button im Player anzeigen</string>
+    <string name="settings.player_controls.chapter_bar">Kapitelleiste</string>
+    <string name="settings.player_controls.chapter_bar_summary">Kapiteltitel und Fortschritt im Player anzeigen</string>
     <string name="settings.player_controls.category.buttons">Sichtbare Buttons</string>
     <string name="settings.player_controls.category.seeking">Sprungzeiten</string>
     <string name="onboarding.battery_optimization.title">Berechtigungen &amp; Funktionen</string>

@@ -461,6 +461,8 @@
     <string name="settings.player_controls.speed_summary">Adjust playback tempo</string>
     <string name="settings.player_controls.queue">Queue</string>
     <string name="settings.player_controls.queue_summary">Show queue button in player</string>
+    <string name="settings.player_controls.chapter_bar">Chapter bar</string>
+    <string name="settings.player_controls.chapter_bar_summary">Show chapter title and progress in player</string>
     <string name="settings.player_controls.category.buttons">Visible buttons</string>
     <string name="settings.player_controls.category.seeking">Skip duration</string>
 </resources>

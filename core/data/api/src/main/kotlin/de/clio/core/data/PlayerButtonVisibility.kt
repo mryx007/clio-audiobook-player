@@ -10,4 +10,5 @@ public data class PlayerButtonVisibility(
   val showBookmark: Boolean = true,
   val showSpeed: Boolean = true,
   val showQueue: Boolean = true,
+  val showChapterBar: Boolean = true,
 )

@@ -207,6 +207,29 @@ internal fun PlayerControlsSettings(
       }
 
       item {
+        ListItem(
+          modifier = Modifier.clickable { viewModel.toggleChapterBar() },
+          leadingContent = {
+            Icon(
+              imageVector = ClioIcons.LibraryBooks,
+              contentDescription = null,
+            )
+          },
+          supportingContent = {
+            Text(stringResource(StringsR.string.settings_player_controls_chapter_bar_summary))
+          },
+          trailingContent = {
+            Switch(
+              checked = viewState.buttonVisibility.showChapterBar,
+              onCheckedChange = { viewModel.toggleChapterBar() },
+            )
+          },
+        ) {
+          Text(stringResource(StringsR.string.settings_player_controls_chapter_bar))
+        }
+      }
+
+      item {
         HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
       }
 

@@ -23,17 +23,25 @@ class AddContentViewModel(
     uri: Uri,
     type: FileTypeSelection,
   ) {
-    val folderType = when (type) {
-      FileTypeSelection.File -> FolderType.SingleFile
-      FileTypeSelection.Folder -> FolderType.Root
-    }
-    audiobookFolders.add(uri, folderType)
-    when (origin) {
-      Origin.Default -> {
-        navigator.setRoot(Destination.BookOverview)
+    when (type) {
+      FileTypeSelection.File -> {
+        audiobookFolders.add(uri, FolderType.SingleFile)
+        when (origin) {
+          Origin.Default -> {
+            navigator.setRoot(Destination.BookOverview)
+          }
+          Origin.Onboarding -> {
+            navigator.goTo(Destination.OnboardingBatteryOptimization)
+          }
+        }
       }
-      Origin.Onboarding -> {
-        navigator.goTo(Destination.OnboardingBatteryOptimization)
+      FileTypeSelection.Folder -> {
+        navigator.goTo(
+          Destination.SelectFolderType(
+            uri = uri,
+            origin = origin,
+          ),
+        )
       }
     }
   }
