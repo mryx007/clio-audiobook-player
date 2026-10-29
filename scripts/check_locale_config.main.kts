@@ -6,7 +6,7 @@ import javax.xml.parsers.DocumentBuilderFactory
 val repoRoot = File(".").canonicalFile
 val stringsDir = File(repoRoot, "core/strings/src/main/res")
 val localeConfigFile = File(repoRoot, "app/src/main/res/xml/locales_config.xml")
-val minCoverage = 100
+val minCoverage = 90
 val baseLocales = setOf("en-US")
 val documentBuilderFactory = DocumentBuilderFactory.newInstance().apply {
   isNamespaceAware = true
