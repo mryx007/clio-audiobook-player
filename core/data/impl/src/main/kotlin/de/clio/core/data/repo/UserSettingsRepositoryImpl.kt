@@ -13,13 +13,17 @@ import de.clio.core.data.sleeptimer.SleepTimerPreference
 import de.clio.core.data.store.AnalyticsConsentStore
 import de.clio.core.data.store.AutoRewindAmountStore
 import de.clio.core.data.store.BackButtonBehaviorStore
+import de.clio.core.data.store.CompletionThresholdStore
 import de.clio.core.data.store.DeveloperMenuUnlockedStore
 import de.clio.core.data.store.EndOfBookBehaviorStore
 import de.clio.core.data.store.FastForwardTimeStore
 import de.clio.core.data.store.GridModeStore
+import de.clio.core.data.store.HideActiveBookInOverviewStore
+import de.clio.core.data.store.LastSelectedCategoryStore
 import de.clio.core.data.store.OnlineCoverEnabledStore
 import de.clio.core.data.store.OpenLastBookOnStartupStore
 import de.clio.core.data.store.PlaybackBackgroundStyleStore
+import de.clio.core.data.store.RememberSelectedCategoryStore
 import de.clio.core.data.store.RewindTimeStore
 import de.clio.core.data.store.SleepTimerPreferenceStore
 import de.clio.core.data.store.ThemeColorStore
@@ -63,8 +67,16 @@ public class UserSettingsRepositoryImpl(
   private val backButtonBehaviorStore: DataStore<BackButtonBehavior>,
   @EndOfBookBehaviorStore
   private val endOfBookBehaviorStore: DataStore<EndOfBookBehavior>,
+  @CompletionThresholdStore
+  private val completionThresholdStore: DataStore<Int>,
+  @HideActiveBookInOverviewStore
+  private val hideActiveBookInOverviewStore: DataStore<Boolean>,
   @DeveloperMenuUnlockedStore
   private val developerMenuUnlockedStore: DataStore<Boolean>,
+  @RememberSelectedCategoryStore
+  private val rememberSelectedCategoryStore: DataStore<Boolean>,
+  @LastSelectedCategoryStore
+  private val lastSelectedCategoryStore: DataStore<String?>,
   dispatcherProvider: DispatcherProvider = DispatcherProvider(),
 ) : UserSettingsRepository {
 
@@ -109,8 +121,20 @@ public class UserSettingsRepositoryImpl(
   override val developerMenuUnlocked: StateFlow<Boolean> = developerMenuUnlockedStore.data
     .stateIn(scope, SharingStarted.Eagerly, false)
 
+  override val completionThreshold: StateFlow<Int> = completionThresholdStore.data
+    .stateIn(scope, SharingStarted.Eagerly, 30)
+
+  override val hideActiveBookInOverview: StateFlow<Boolean> = hideActiveBookInOverviewStore.data
+    .stateIn(scope, SharingStarted.Eagerly, true)
+
   override val onlineCoverEnabled: StateFlow<Boolean> = onlineCoverEnabledStore.data
     .stateIn(scope, SharingStarted.Eagerly, false)
+
+  override val rememberSelectedCategory: StateFlow<Boolean> = rememberSelectedCategoryStore.data
+    .stateIn(scope, SharingStarted.Eagerly, false)
+
+  override val lastSelectedCategory: StateFlow<String?> = lastSelectedCategoryStore.data
+    .stateIn(scope, SharingStarted.Eagerly, null)
 
   override suspend fun setThemeMode(themeMode: ThemeMode) {
     themeModeStore.updateData { themeMode }
@@ -166,5 +190,21 @@ public class UserSettingsRepositoryImpl(
 
   override suspend fun setOnlineCoverEnabled(enabled: Boolean) {
     onlineCoverEnabledStore.updateData { enabled }
+  }
+
+  override suspend fun setCompletionThreshold(seconds: Int) {
+    completionThresholdStore.updateData { seconds }
+  }
+
+  override suspend fun setHideActiveBookInOverview(hide: Boolean) {
+    hideActiveBookInOverviewStore.updateData { hide }
+  }
+
+  override suspend fun setRememberSelectedCategory(remember: Boolean) {
+    rememberSelectedCategoryStore.updateData { remember }
+  }
+
+  override suspend fun setLastSelectedCategory(category: String?) {
+    lastSelectedCategoryStore.updateData { category }
   }
 }

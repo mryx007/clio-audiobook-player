@@ -134,6 +134,9 @@ private fun Settings(
         EndOfBookBehaviorRow(viewState.endOfBookBehavior, listener::onEndOfBookBehaviorRowClick)
       }
       item {
+        CompletionThresholdRow(viewState.completionThresholdInSeconds, listener::onCompletionThresholdRowClick)
+      }
+      item {
         ListItem(
           modifier = Modifier.clickable { listener.openPlayerControlsSettings() },
           leadingContent = {
@@ -179,6 +182,20 @@ private fun Settings(
         ) {
           Text(stringResource(StringsR.string.settings_library_use_grid_title))
         }
+      }
+
+      item {
+        HideActiveBookInOverviewRow(
+          enabled = viewState.hideActiveBookInOverview,
+          toggle = listener::toggleHideActiveBookInOverview,
+        )
+      }
+
+      item {
+        RememberSelectedCategoryRow(
+          enabled = viewState.rememberSelectedCategory,
+          toggle = listener::toggleRememberSelectedCategory,
+        )
       }
 
       item {
@@ -330,6 +347,60 @@ private fun OnlineCoverRow(
 }
 
 @Composable
+private fun HideActiveBookInOverviewRow(
+  enabled: Boolean,
+  toggle: () -> Unit,
+) {
+  ListItem(
+    modifier = Modifier.clickable { toggle() },
+    leadingContent = {
+      Icon(
+        imageVector = ClioIcons.LibraryBooks,
+        contentDescription = null,
+      )
+    },
+    supportingContent = {
+      Text(text = stringResource(StringsR.string.settings_library_hide_active_book_in_overview_summary))
+    },
+    trailingContent = {
+      Switch(
+        checked = enabled,
+        onCheckedChange = { toggle() },
+      )
+    },
+  ) {
+    Text(text = stringResource(StringsR.string.settings_library_hide_active_book_in_overview_title))
+  }
+}
+
+@Composable
+private fun RememberSelectedCategoryRow(
+  enabled: Boolean,
+  toggle: () -> Unit,
+) {
+  ListItem(
+    modifier = Modifier.clickable { toggle() },
+    leadingContent = {
+      Icon(
+        imageVector = ClioIcons.Tune,
+        contentDescription = null,
+      )
+    },
+    supportingContent = {
+      Text(text = stringResource(StringsR.string.settings_library_remember_selected_category_summary))
+    },
+    trailingContent = {
+      Switch(
+        checked = enabled,
+        onCheckedChange = { toggle() },
+      )
+    },
+  ) {
+    Text(text = stringResource(StringsR.string.settings_library_remember_selected_category_title))
+  }
+}
+
+@Composable
 private fun AnalyticsRow(
   analyticsEnabled: Boolean,
   toggle: () -> Unit,
@@ -448,6 +519,13 @@ private fun Dialog(
       EndOfBookBehaviorDialog(
         selectedBehavior = viewState.endOfBookBehavior,
         onBehaviorSelect = listener::setEndOfBookBehavior,
+        onDismiss = listener::dismissDialog,
+      )
+    }
+    SettingsViewState.Dialog.CompletionThreshold -> {
+      CompletionThresholdDialog(
+        currentSeconds = viewState.completionThresholdInSeconds,
+        onSecondsConfirm = listener::completionThresholdChanged,
         onDismiss = listener::dismissDialog,
       )
     }

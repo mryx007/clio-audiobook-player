@@ -1,21 +1,30 @@
-﻿package de.clio.features.bookOverview.editBookCategory
+package de.clio.features.bookOverview.editBookCategory
 
+import androidx.datastore.core.DataStore
 import de.clio.core.data.BookId
 import de.clio.core.data.repo.BookRepository
+import de.clio.core.data.store.CompletionThresholdStore
 import de.clio.features.bookOverview.bottomSheet.BottomSheetItem
 import de.clio.features.bookOverview.bottomSheet.BottomSheetItemViewModel
 import de.clio.features.bookOverview.di.BookOverviewScope
+import de.clio.features.bookOverview.overview.BookOverviewCategory
+import de.clio.features.bookOverview.overview.categorizeByStatus
 import dev.zacsweers.metro.ContributesIntoSet
 import dev.zacsweers.metro.SingleIn
-import java.util.concurrent.TimeUnit.SECONDS
+import kotlinx.coroutines.flow.first
 
 @SingleIn(BookOverviewScope::class)
 @ContributesIntoSet(BookOverviewScope::class)
-class EditBookCategoryViewModel(private val repo: BookRepository) : BottomSheetItemViewModel {
+class EditBookCategoryViewModel(
+  private val repo: BookRepository,
+  @CompletionThresholdStore
+  private val completionThresholdStore: DataStore<Int>,
+) : BottomSheetItemViewModel {
 
   override suspend fun items(bookId: BookId): List<BottomSheetItem> {
     val book = repo.get(bookId) ?: return emptyList()
-    val isFinished = book.position >= book.duration - SECONDS.toMillis(5)
+    val thresholdSeconds = completionThresholdStore.data.first()
+    val isFinished = book.categorizeByStatus(thresholdSeconds) == BookOverviewCategory.COMPLETED
     return when {
       book.position == 0L -> listOf(BottomSheetItem.BookCategoryMarkAsCompleted)
       isFinished -> listOf(BottomSheetItem.BookCategoryMarkAsNotStarted)

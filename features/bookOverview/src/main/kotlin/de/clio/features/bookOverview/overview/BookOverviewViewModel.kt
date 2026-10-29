@@ -26,11 +26,14 @@ import de.clio.core.data.repo.BookQueueRepository
 import de.clio.core.data.repo.BookRepository
 import de.clio.core.data.repo.FakeBookQueueRepository
 import de.clio.core.data.store.BookSortOrderStore
+import de.clio.core.data.store.CompletionThresholdStore
 import de.clio.core.data.store.CurrentBookStore
 import de.clio.core.data.store.FolderPickerMovedDialogShownStore
 import de.clio.core.data.store.GridColumnCountStore
 import de.clio.core.data.store.GridModeStore
-import de.clio.core.data.store.GroupByStatusStore
+import de.clio.core.data.store.HideActiveBookInOverviewStore
+import de.clio.core.data.store.LastSelectedCategoryStore
+import de.clio.core.data.store.RememberSelectedCategoryStore
 import de.clio.core.featureflag.ExperimentalPlaybackPersistenceQualifier
 import de.clio.core.featureflag.FeatureFlag
 import de.clio.core.featureflag.FolderPickerInSettingsFeatureFlagQualifier
@@ -68,8 +71,14 @@ class BookOverviewViewModel(
   private val gridColumnCountStore: DataStore<Int>,
   @BookSortOrderStore
   private val bookSortOrderStore: DataStore<BookSortOrder>,
-  @GroupByStatusStore
-  private val groupByStatusStore: DataStore<Boolean>,
+  @RememberSelectedCategoryStore
+  private val rememberSelectedCategoryStore: DataStore<Boolean>,
+  @LastSelectedCategoryStore
+  private val lastSelectedCategoryStore: DataStore<String?>,
+  @CompletionThresholdStore
+  private val completionThresholdStore: DataStore<Int>,
+  @HideActiveBookInOverviewStore
+  private val hideActiveBookInOverviewStore: DataStore<Boolean>,
   private val gridCount: GridCount,
   private val navigator: Navigator,
   private val appInfoProvider: AppInfoProvider,
@@ -188,8 +197,25 @@ class BookOverviewViewModel(
     val sortOrder = remember { bookSortOrderStore.data }
       .collectAsState(initial = BookSortOrder.Default).value
 
-    val groupByStatus = remember { groupByStatusStore.data }
+    val rememberSelectedCategory = remember { rememberSelectedCategoryStore.data }
       .collectAsState(initial = false).value
+
+    val lastSelectedCategoryName = remember { lastSelectedCategoryStore.data }
+      .collectAsState(initial = null).value
+
+    val initialCategory = remember(rememberSelectedCategory, lastSelectedCategoryName) {
+      if (rememberSelectedCategory && lastSelectedCategoryName != null) {
+        runCatching { BookOverviewCategory.valueOf(lastSelectedCategoryName) }.getOrNull()
+      } else {
+        null
+      }
+    }
+
+    val completionThreshold = remember { completionThresholdStore.data }
+      .collectAsState(initial = 30).value
+
+    val hideActiveBookInOverview = remember { hideActiveBookInOverviewStore.data }
+      .collectAsState(initial = true).value
 
     val queueIds = remember { queueRepo.queueFlow }
       .collectAsState(initial = lastQueueIds).value
@@ -199,9 +225,9 @@ class BookOverviewViewModel(
       filteredBookMap[bookId]?.let { book ->
         val livePlayback = if (book.id == currentBookId) livePlaybackState.value else null
         if (livePlayback != null) {
-          book.overlay(livePlayback).toItemViewState()
+          book.overlay(livePlayback).toItemViewState(completionThreshold)
         } else {
-          book.toItemViewState()
+          book.toItemViewState(completionThreshold)
         }
       }
     }
@@ -210,11 +236,14 @@ class BookOverviewViewModel(
       filteredBookMap[id] ?: books.firstOrNull { it.id == id }
     }?.let { book ->
       val livePlayback = livePlaybackState.value
-      if (livePlayback != null && livePlayback.bookId == book.id) {
-        book.overlay(livePlayback).toItemViewState()
+      val resolvedBook = if (livePlayback != null && livePlayback.bookId == book.id) {
+        book.overlay(livePlayback)
       } else {
-        book.toItemViewState()
+        book
       }
+      resolvedBook.takeUnless {
+        it.categorizeByStatus(completionThreshold) == BookOverviewCategory.COMPLETED
+      }?.toItemViewState(completionThreshold)
     }
 
     return BookOverviewViewState(
@@ -225,10 +254,13 @@ class BookOverviewViewModel(
       queueBooks = queueBooks,
       queueCount = queueIds.size,
       currentBook = currentBook,
-      groupByStatus = groupByStatus,
+      hideActiveBookInOverview = hideActiveBookInOverview,
+      initialCategory = initialCategory,
       books = filteredBooks
-        .groupBy {
-          if (groupByStatus) it.categorizeByStatus() else it.category
+        .groupBy { book ->
+          val livePlayback = if (book.id == currentBookId) livePlaybackState.value else null
+          val actualBook = if (livePlayback != null) book.overlay(livePlayback) else book
+          actualBook.categorizeByStatus(completionThreshold)
         }
         .mapValues { (category, books) ->
           books
@@ -237,6 +269,7 @@ class BookOverviewViewModel(
               book.id to book.itemViewState(
                 currentBookId = currentBookId,
                 livePlaybackState = { livePlaybackState.value },
+                completionThreshold = completionThreshold,
               )
             }
         }
@@ -290,9 +323,9 @@ class BookOverviewViewModel(
     }
   }
 
-  fun onToggleGroupByStatus() {
+  fun onCategorySelected(category: BookOverviewCategory?) {
     scope.launch {
-      groupByStatusStore.updateData { !it }
+      lastSelectedCategoryStore.updateData { category?.name }
     }
   }
 
@@ -429,19 +462,20 @@ private val FolderPickerMigrationInstallTimeCutoff = Instant.parse("2026-06-17T0
 private fun Book.itemViewState(
   currentBookId: BookId?,
   livePlaybackState: () -> LivePlaybackState?,
+  completionThreshold: Int,
 ): State<BookOverviewItemViewState> {
   if (id != currentBookId) {
-    return rememberUpdatedState(toItemViewState())
+    return rememberUpdatedState(toItemViewState(completionThreshold))
   }
   val currentPlaybackState by rememberUpdatedState(livePlaybackState)
-  return remember(this, currentBookId) {
+  return remember(this, currentBookId, completionThreshold) {
     derivedStateOf {
       val livePlayback = currentPlaybackState()
       if (livePlayback != null) {
         overlay(livePlayback)
       } else {
         this
-      }.toItemViewState()
+      }.toItemViewState(completionThreshold)
     }
   }
 }

@@ -85,3 +85,15 @@ public annotation class OnlineCoverEnabledStore
 
 @Qualifier
 public annotation class GroupByStatusStore
+
+@Qualifier
+public annotation class CompletionThresholdStore
+
+@Qualifier
+public annotation class HideActiveBookInOverviewStore
+
+@Qualifier
+public annotation class RememberSelectedCategoryStore
+
+@Qualifier
+public annotation class LastSelectedCategoryStore

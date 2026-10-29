@@ -1,0 +1,4 @@
+• Added: Status filter chips in library overview (hidden for ≤ 1 book)
+• Added: Setting for book completion threshold
+• Fixed: Progress bar visibility, gap, theme colors, and placement below cover
+• Fixed: Completed books now consistently show 100% and 00:00 remaining time

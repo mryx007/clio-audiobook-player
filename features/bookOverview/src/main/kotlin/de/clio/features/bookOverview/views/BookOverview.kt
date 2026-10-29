@@ -196,7 +196,7 @@ fun BookOverviewScreen(modifier: Modifier = Modifier) {
     onPermissionBugCardClick = bookOverviewViewModel::onPermissionBugCardClick,
     onGridColumnCountChange = bookOverviewViewModel::onGridColumnCountChange,
     onSortOrderChange = bookOverviewViewModel::onSortOrderChange,
-    onToggleGroupByStatus = bookOverviewViewModel::onToggleGroupByStatus,
+    onCategorySelect = bookOverviewViewModel::onCategorySelected,
     modifier = modifier,
     snackbarHostState = snackbarHostState,
   )
@@ -244,7 +244,7 @@ internal fun BookOverview(
   snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
   onGridColumnCountChange: (Int) -> Unit = {},
   onSortOrderChange: (BookSortOrder) -> Unit = {},
-  onToggleGroupByStatus: () -> Unit = {},
+  onCategorySelect: (de.clio.features.bookOverview.overview.BookOverviewCategory?) -> Unit = {},
 ) {
   val density = LocalDensity.current
   val statusBarTop = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
@@ -291,10 +291,6 @@ internal fun BookOverview(
     if (viewState.searchQuery.isNotEmpty() || viewState.inSelectionMode || viewState.selectedTab == OverviewTab.Queue) {
       topBarOffsetHeightPx = 0f
     }
-  }
-
-  LaunchedEffect(viewState.groupByStatus) {
-    topBarOffsetHeightPx = 0f
   }
 
   Scaffold(
@@ -432,8 +428,9 @@ internal fun BookOverview(
                 onPermissionBugCardClick = onPermissionBugCardClick,
                 sortOrder = viewState.sortOrder,
                 onSortOrderChange = onSortOrderChange,
-                groupByStatus = viewState.groupByStatus,
-                onToggleGroupByStatus = onToggleGroupByStatus,
+                hideActiveBookInOverview = viewState.hideActiveBookInOverview,
+                initialCategory = viewState.initialCategory,
+                onCategorySelect = onCategorySelect,
                 selectedTab = viewState.selectedTab,
                 onTabSelect = onTabSelect,
                 queueCount = viewState.queueCount,
@@ -460,8 +457,9 @@ internal fun BookOverview(
                 onPermissionBugCardClick = onPermissionBugCardClick,
                 sortOrder = viewState.sortOrder,
                 onSortOrderChange = onSortOrderChange,
-                groupByStatus = viewState.groupByStatus,
-                onToggleGroupByStatus = onToggleGroupByStatus,
+                hideActiveBookInOverview = viewState.hideActiveBookInOverview,
+                initialCategory = viewState.initialCategory,
+                onCategorySelect = onCategorySelect,
                 selectedTab = viewState.selectedTab,
                 onTabSelect = onTabSelect,
                 queueCount = viewState.queueCount,

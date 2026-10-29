@@ -1,4 +1,4 @@
-﻿package de.clio.features.bookOverview.overview
+package de.clio.features.bookOverview.overview
 
 import androidx.compose.runtime.Immutable
 import de.clio.core.data.Book
@@ -16,14 +16,17 @@ data class BookOverviewItemViewState(
   val remainingTime: String,
 )
 
-internal fun Book.toItemViewState() = BookOverviewItemViewState(
-  name = content.name,
-  author = content.author,
-  cover = content.coverUrl,
-  id = id,
-  progress = progress(),
-  remainingTime = formatTime(duration - position),
-)
+internal fun Book.toItemViewState(completionThreshold: Int = 30): BookOverviewItemViewState {
+  val isCompleted = categorizeByStatus(completionThreshold) == BookOverviewCategory.COMPLETED
+  return BookOverviewItemViewState(
+    name = content.name,
+    author = content.author,
+    cover = content.coverUrl,
+    id = id,
+    progress = if (isCompleted) 1F else progress(),
+    remainingTime = if (isCompleted) formatTime(0L) else formatTime(duration - position),
+  )
+}
 
 private fun Book.progress(): Float {
   val globalPosition = position

@@ -32,4 +32,19 @@ class BookOverviewCategoryTest {
     val book = book(chapters = chapters, time = 9_000L)
     assertEquals(expected = BookOverviewCategory.COMPLETED, actual = book.categorizeByStatus())
   }
+
+  @Test
+  fun `categorizeByStatus respects custom threshold`() {
+    val chapters = listOf(chapter(duration = 100_000L))
+    val book = book(chapters = chapters, time = 75_000L)
+    assertEquals(expected = BookOverviewCategory.STARTED, actual = book.categorizeByStatus(thresholdInSeconds = 20))
+    assertEquals(expected = BookOverviewCategory.COMPLETED, actual = book.categorizeByStatus(thresholdInSeconds = 30))
+  }
+
+  @Test
+  fun `categorizeByStatus does not mark short book completed too early`() {
+    val chapters = listOf(chapter(duration = 10_000L))
+    val book = book(chapters = chapters, time = 1_000L)
+    assertEquals(expected = BookOverviewCategory.STARTED, actual = book.categorizeByStatus(thresholdInSeconds = 30))
+  }
 }

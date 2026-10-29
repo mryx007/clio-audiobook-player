@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -131,23 +133,18 @@ internal fun BookRemainingProgressRow(
 internal fun BookProgressIndicator(
   progress: Float,
   modifier: Modifier = Modifier,
-  color: Color? = null,
-  trackColor: Color? = null,
+  color: Color = MaterialTheme.colorScheme.primary,
+  trackColor: Color = MaterialTheme.colorScheme.surfaceContainerHighest,
 ) {
-  if (progress > 0.05f) {
-    val actualColor = color ?: MaterialTheme.colorScheme.primary
-    val actualTrackColor = trackColor ?: MaterialTheme.colorScheme.surfaceVariant
-    Box(
-      modifier = modifier
-        .background(actualTrackColor, MaterialTheme.shapes.small)
-        .clip(MaterialTheme.shapes.small),
-    ) {
-      Box(
-        modifier = Modifier
-          .fillMaxHeight()
-          .fillMaxWidth(progress)
-          .background(actualColor),
-      )
-    }
+  if (progress > 0f) {
+    LinearProgressIndicator(
+      progress = { progress.coerceIn(0f, 1f) },
+      modifier = modifier,
+      color = color,
+      trackColor = trackColor,
+      strokeCap = StrokeCap.Round,
+      gapSize = 0.dp,
+      drawStopIndicator = {},
+    )
   }
 }

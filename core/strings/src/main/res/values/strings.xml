@@ -134,6 +134,7 @@
     <string name="book.badge.new">NEW</string>
     <!-- Library category header for overview of books. -->
     <string name="library.category.overview.title">Overview</string>
+    <string name="library.category.all.title">All</string>
     <!-- Library category header for completed books. -->
     <string name="library.category.completed.title">Completed</string>
     <!-- Library category header for books currently being listened to. -->
@@ -297,6 +298,13 @@
     <string name="settings.playback.end_of_book_behavior.book_overview">Open book overview</string>
     <!-- Option for end of book behavior: continue with the next queued audiobook. -->
     <string name="settings.playback.end_of_book_behavior.continue_queue">Continue queue</string>
+    <!-- Settings title for completion threshold before audiobook ends. -->
+    <string name="settings.playback.completion_threshold.title">Mark as completed before end</string>
+    <!-- Settings title and summary for hiding active book in overview list. -->
+    <string name="settings.library.hide_active_book_in_overview.title">Hide active book from library</string>
+    <string name="settings.library.hide_active_book_in_overview.summary">Hide the currently playing book from the list below when pinned at the top</string>
+    <string name="settings.library.remember_selected_category.title">Remember selected category</string>
+    <string name="settings.library.remember_selected_category.summary">Start with the last selected status category instead of showing all books</string>
     <string name="queue_title">Queue</string>
     <string name="queue_action_add_to_queue">Add to queue</string>
     <string name="queue_added_snackbar_one">1 audiobook added to queue</string>

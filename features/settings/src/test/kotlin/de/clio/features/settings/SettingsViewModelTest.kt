@@ -243,6 +243,39 @@ class SettingsViewModelTest {
       assertEquals(expected = SettingsViewState.Dialog.EndOfBookBehavior, actual = awaitItem().dialog)
     }
   }
+
+  @Test
+  fun `completion threshold updates and row click opens dialog`() = scope.runTest {
+    viewStateFlow().test {
+      assertEquals(expected = 30, actual = awaitItem().completionThresholdInSeconds)
+
+      viewModel.completionThresholdChanged(45)
+      assertEquals(expected = 45, actual = awaitItem().completionThresholdInSeconds)
+
+      viewModel.onCompletionThresholdRowClick()
+      assertEquals(expected = SettingsViewState.Dialog.CompletionThreshold, actual = awaitItem().dialog)
+    }
+  }
+
+  @Test
+  fun `toggle hide active book in overview`() = scope.runTest {
+    viewStateFlow().test {
+      assertEquals(expected = true, actual = awaitItem().hideActiveBookInOverview)
+
+      viewModel.toggleHideActiveBookInOverview()
+      assertEquals(expected = false, actual = awaitItem().hideActiveBookInOverview)
+    }
+  }
+
+  @Test
+  fun `toggle remember selected category`() = scope.runTest {
+    viewStateFlow().test {
+      assertEquals(expected = false, actual = awaitItem().rememberSelectedCategory)
+
+      viewModel.toggleRememberSelectedCategory()
+      assertEquals(expected = true, actual = awaitItem().rememberSelectedCategory)
+    }
+  }
 }
 
 private class MemoryUserSettingsRepository : UserSettingsRepository {
@@ -260,6 +293,10 @@ private class MemoryUserSettingsRepository : UserSettingsRepository {
   override val endOfBookBehavior = MutableStateFlow(EndOfBookBehavior.DoNothing)
   override val developerMenuUnlocked = MutableStateFlow(false)
   override val onlineCoverEnabled = MutableStateFlow(false)
+  override val completionThreshold = MutableStateFlow(30)
+  override val hideActiveBookInOverview = MutableStateFlow(true)
+  override val rememberSelectedCategory = MutableStateFlow(false)
+  override val lastSelectedCategory = MutableStateFlow<String?>(null)
 
   override suspend fun setThemeMode(themeMode: ThemeMode) {
     this.themeMode.value = themeMode
@@ -315,5 +352,21 @@ private class MemoryUserSettingsRepository : UserSettingsRepository {
 
   override suspend fun setOnlineCoverEnabled(enabled: Boolean) {
     this.onlineCoverEnabled.value = enabled
+  }
+
+  override suspend fun setCompletionThreshold(seconds: Int) {
+    this.completionThreshold.value = seconds
+  }
+
+  override suspend fun setHideActiveBookInOverview(hide: Boolean) {
+    this.hideActiveBookInOverview.value = hide
+  }
+
+  override suspend fun setRememberSelectedCategory(remember: Boolean) {
+    this.rememberSelectedCategory.value = remember
+  }
+
+  override suspend fun setLastSelectedCategory(category: String?) {
+    this.lastSelectedCategory.value = category
   }
 }

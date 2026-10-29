@@ -1,0 +1,4 @@
+• Added: Status-Filter-Chips in der Bibliotheksübersicht (ausgeblendet bei ≤ 1 Buch)
+• Added: Einstellbarer Abschluss-Schwellenwert vor Hörbuchende
+• Fixed: Fortschrittsbalken unter Cover vergrößert, Lücke geschlossen und Theme-Farben korrigiert
+• Fixed: Beendete Hörbücher zeigen nun korrekt 100% und 00:00 Restzeit

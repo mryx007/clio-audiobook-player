@@ -334,6 +334,47 @@ public interface StoreModule {
       defaultValue = false,
     )
   }
+
+  @Provides
+  @SingleIn(AppScope::class)
+  @CompletionThresholdStore
+  private fun completionThreshold(factory: ClioDataStoreFactory): DataStore<Int> {
+    return factory.int(
+      fileName = "completionThreshold",
+      defaultValue = 30,
+    )
+  }
+
+  @Provides
+  @SingleIn(AppScope::class)
+  @HideActiveBookInOverviewStore
+  private fun hideActiveBookInOverview(factory: ClioDataStoreFactory): DataStore<Boolean> {
+    return factory.boolean(
+      fileName = "hideActiveBookInOverview",
+      defaultValue = true,
+    )
+  }
+
+  @Provides
+  @SingleIn(AppScope::class)
+  @RememberSelectedCategoryStore
+  private fun rememberSelectedCategory(factory: ClioDataStoreFactory): DataStore<Boolean> {
+    return factory.boolean(
+      fileName = "rememberSelectedCategory",
+      defaultValue = false,
+    )
+  }
+
+  @Provides
+  @SingleIn(AppScope::class)
+  @LastSelectedCategoryStore
+  private fun lastSelectedCategory(factory: ClioDataStoreFactory): DataStore<String?> {
+    return factory.create(
+      serializer = String.serializer().nullable,
+      fileName = "lastSelectedCategory",
+      defaultValue = null,
+    )
+  }
 }
 
 private class LegacyDarkThemeMigration(

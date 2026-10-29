@@ -64,7 +64,10 @@ class BookOverviewViewModelTest {
       gridModeStore = MemoryDataStore(GridMode.LIST),
       gridColumnCountStore = MemoryDataStore(2),
       bookSortOrderStore = MemoryDataStore(BookSortOrder.Default),
-      groupByStatusStore = MemoryDataStore(false),
+      rememberSelectedCategoryStore = MemoryDataStore(false),
+      lastSelectedCategoryStore = MemoryDataStore(null),
+      completionThresholdStore = MemoryDataStore(30),
+      hideActiveBookInOverviewStore = MemoryDataStore(true),
       gridCount = mockk<GridCount> {
         every { useGridAsDefault() } returns false
       },
@@ -85,7 +88,7 @@ class BookOverviewViewModelTest {
       val initial = awaitItem()
       val initialCurrentItem = initial.currentBook(currentBook.id)
       val initialOtherItem = initial.currentBook(otherBook.id)
-      val initialKeys = initial.books.getValue(BookOverviewCategory.OVERVIEW).keys.toList()
+      val initialKeys = initial.books.values.flatMap { it.keys }
 
       assertEquals(expected = currentBook.toItemViewState(), actual = initialCurrentItem)
       assertEquals(expected = otherBook.toItemViewState(), actual = initialOtherItem)
@@ -100,7 +103,7 @@ class BookOverviewViewModelTest {
       livePlaybackFlow.value = livePlaybackState
       yield()
 
-      assertEquals(expected = initialKeys, actual = initial.books.getValue(BookOverviewCategory.OVERVIEW).keys.toList())
+      assertEquals(expected = initialKeys, actual = initial.books.values.flatMap { it.keys })
       assertEquals(expected = currentBook.overlay(livePlaybackState).toItemViewState(), actual = initial.currentBook(currentBook.id))
       assertEquals(expected = initialOtherItem, actual = initial.currentBook(otherBook.id))
       expectNoEvents()
@@ -126,7 +129,10 @@ class BookOverviewViewModelTest {
       gridModeStore = MemoryDataStore(GridMode.LIST),
       gridColumnCountStore = MemoryDataStore(2),
       bookSortOrderStore = MemoryDataStore(BookSortOrder.Default),
-      groupByStatusStore = MemoryDataStore(false),
+      rememberSelectedCategoryStore = MemoryDataStore(false),
+      lastSelectedCategoryStore = MemoryDataStore(null),
+      completionThresholdStore = MemoryDataStore(30),
+      hideActiveBookInOverviewStore = MemoryDataStore(true),
       gridCount = mockk<GridCount> {
         every { useGridAsDefault() } returns false
       },
@@ -145,16 +151,16 @@ class BookOverviewViewModelTest {
       viewModel.state()
     }.test {
       val initial = awaitItem()
-      assertEquals(expected = listOf(book1.id, book2.id), actual = initial.books.getValue(BookOverviewCategory.OVERVIEW).keys.toList())
+      assertEquals(expected = listOf(book1.id, book2.id), actual = initial.books.values.flatMap { it.keys })
 
       viewModel.onSearchQueryChange("potter")
       val filtered = awaitItem()
       assertEquals(expected = "potter", actual = filtered.searchQuery)
-      assertEquals(expected = listOf(book1.id), actual = filtered.books.getValue(BookOverviewCategory.OVERVIEW).keys.toList())
+      assertEquals(expected = listOf(book1.id), actual = filtered.books.values.flatMap { it.keys })
 
       viewModel.onSearchQueryChange("")
       val reset = awaitItem()
-      assertEquals(expected = listOf(book1.id, book2.id), actual = reset.books.getValue(BookOverviewCategory.OVERVIEW).keys.toList())
+      assertEquals(expected = listOf(book1.id, book2.id), actual = reset.books.values.flatMap { it.keys })
     }
   }
 
@@ -175,7 +181,10 @@ class BookOverviewViewModelTest {
       gridModeStore = MemoryDataStore(GridMode.LIST),
       gridColumnCountStore = MemoryDataStore(2),
       bookSortOrderStore = MemoryDataStore(BookSortOrder.Default),
-      groupByStatusStore = MemoryDataStore(false),
+      rememberSelectedCategoryStore = MemoryDataStore(false),
+      lastSelectedCategoryStore = MemoryDataStore(null),
+      completionThresholdStore = MemoryDataStore(30),
+      hideActiveBookInOverviewStore = MemoryDataStore(true),
       gridCount = mockk<GridCount> {
         every { useGridAsDefault() } returns false
       },
@@ -332,7 +341,10 @@ class BookOverviewViewModelTest {
       gridModeStore = MemoryDataStore(GridMode.LIST),
       gridColumnCountStore = MemoryDataStore(2),
       bookSortOrderStore = sortOrderStore,
-      groupByStatusStore = MemoryDataStore(false),
+      rememberSelectedCategoryStore = MemoryDataStore(false),
+      lastSelectedCategoryStore = MemoryDataStore(null),
+      completionThresholdStore = MemoryDataStore(30),
+      hideActiveBookInOverviewStore = MemoryDataStore(true),
       gridCount = mockk<GridCount> {
         every { useGridAsDefault() } returns false
       },
@@ -352,17 +364,17 @@ class BookOverviewViewModelTest {
     }.test {
       val initial = awaitItem()
       assertEquals(BookSortOrder.BY_LAST_PLAYED, initial.sortOrder)
-      assertEquals(listOf(bookZ.id, bookA.id), initial.books.getValue(BookOverviewCategory.OVERVIEW).keys.toList())
+      assertEquals(listOf(bookZ.id, bookA.id), initial.books.values.flatMap { it.keys })
 
       viewModel.onSortOrderChange(BookSortOrder.BY_NAME_ASC)
       val updated = awaitItem()
       assertEquals(BookSortOrder.BY_NAME_ASC, updated.sortOrder)
-      assertEquals(listOf(bookA.id, bookZ.id), updated.books.getValue(BookOverviewCategory.OVERVIEW).keys.toList())
+      assertEquals(listOf(bookA.id, bookZ.id), updated.books.values.flatMap { it.keys })
     }
   }
 
   private fun BookOverviewViewState.currentBook(bookId: BookId): BookOverviewItemViewState {
-    return books.getValue(BookOverviewCategory.OVERVIEW).getValue(bookId).value
+    return books.values.firstNotNullOf { it[bookId]?.value }
   }
 
   private fun viewModel(
@@ -386,7 +398,10 @@ class BookOverviewViewModelTest {
       gridModeStore = MemoryDataStore(GridMode.LIST),
       gridColumnCountStore = MemoryDataStore(2),
       bookSortOrderStore = MemoryDataStore(BookSortOrder.Default),
-      groupByStatusStore = MemoryDataStore(false),
+      rememberSelectedCategoryStore = MemoryDataStore(false),
+      lastSelectedCategoryStore = MemoryDataStore(null),
+      completionThresholdStore = MemoryDataStore(30),
+      hideActiveBookInOverviewStore = MemoryDataStore(true),
       gridCount = mockk<GridCount> {
         every { useGridAsDefault() } returns false
       },

@@ -77,8 +77,9 @@
     <string name="folder.type.title">Wie sind Deine Dateien organisiert?</string>
     <string name="book.badge.new">NEU</string>
     <string name="library.category.overview.title">Übersicht</string>
+    <string name="library.category.all.title">Alle</string>
     <string name="search.no_results">Keine Hörbücher gefunden für „%s“</string>
-    <string name="library.category.completed.title">Abgeschlossen</string>
+    <string name="library.category.completed.title">Beendet</string>
     <string name="library.category.current.title">Begonnen</string>
     <string name="library.category.not_started.title">Neu</string>
     <string name="library.empty.add_first_book">Füge Deinen Hörbuchordner hinzu, damit Du mit dem Hören beginnen kannst!</string>
@@ -176,6 +177,11 @@
     <string name="settings.playback.end_of_book_behavior.do_nothing">Nichts tun</string>
     <string name="settings.playback.end_of_book_behavior.book_overview">Bücherübersicht öffnen</string>
     <string name="settings.playback.end_of_book_behavior.continue_queue">Warteschlange fortsetzen</string>
+    <string name="settings.playback.completion_threshold.title">Als beendet markieren vor Ende</string>
+    <string name="settings.library.hide_active_book_in_overview.title">Aktives Buch aus Liste ausblenden</string>
+    <string name="settings.library.hide_active_book_in_overview.summary">Blendet das aktuell gehörte Buch aus der Liste darunter aus, wenn es oben angeheftet ist</string>
+    <string name="settings.library.remember_selected_category.title">Zuletzt gewählte Kategorie merken</string>
+    <string name="settings.library.remember_selected_category.summary">Startet mit der zuletzt aktiven Status-Kategorie statt immer mit allen Büchern</string>
     <string name="queue_title">Warteschlange</string>
     <string name="queue_action_add_to_queue">Zur Warteschlange hinzufügen</string>
     <string name="queue_added_snackbar_one">1 Hörbuch zur Warteschlange hinzugefügt</string>

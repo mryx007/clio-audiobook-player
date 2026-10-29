@@ -60,6 +60,9 @@ class SettingsViewModel(
     val playbackBackgroundStyle by userSettingsRepository.playbackBackgroundStyle.collectAsState()
     val backButtonBehavior by userSettingsRepository.backButtonBehavior.collectAsState()
     val endOfBookBehavior by userSettingsRepository.endOfBookBehavior.collectAsState()
+    val completionThreshold by userSettingsRepository.completionThreshold.collectAsState()
+    val hideActiveBookInOverview by userSettingsRepository.hideActiveBookInOverview.collectAsState()
+    val rememberSelectedCategory by userSettingsRepository.rememberSelectedCategory.collectAsState()
     val showDeveloperMenu by userSettingsRepository.developerMenuUnlocked.collectAsState()
     val kioskMode = remember {
       kioskModeFeatureFlag.get()
@@ -70,6 +73,9 @@ class SettingsViewModel(
       playbackBackgroundStyle = playbackBackgroundStyle,
       backButtonBehavior = backButtonBehavior,
       endOfBookBehavior = endOfBookBehavior,
+      completionThresholdInSeconds = completionThreshold,
+      hideActiveBookInOverview = hideActiveBookInOverview,
+      rememberSelectedCategory = rememberSelectedCategory,
       rewindTimeInSeconds = rewindTime,
       fastForwardTimeInSeconds = fastForwardTime,
       autoRewindInSeconds = autoRewindAmount,
@@ -113,6 +119,16 @@ class SettingsViewModel(
 
   override fun onEndOfBookBehaviorRowClick() {
     dialog.value = SettingsViewState.Dialog.EndOfBookBehavior
+  }
+
+  override fun onCompletionThresholdRowClick() {
+    dialog.value = SettingsViewState.Dialog.CompletionThreshold
+  }
+
+  override fun completionThresholdChanged(seconds: Int) {
+    mainScope.launch {
+      userSettingsRepository.setCompletionThreshold(seconds)
+    }
   }
 
   override fun setThemeMode(themeMode: ThemeMode) {
@@ -181,6 +197,20 @@ class SettingsViewModel(
         }
       }
       userSettingsRepository.setGridMode(nextMode)
+    }
+  }
+
+  override fun toggleHideActiveBookInOverview() {
+    mainScope.launch {
+      val current = userSettingsRepository.hideActiveBookInOverview.value
+      userSettingsRepository.setHideActiveBookInOverview(!current)
+    }
+  }
+
+  override fun toggleRememberSelectedCategory() {
+    mainScope.launch {
+      val current = userSettingsRepository.rememberSelectedCategory.value
+      userSettingsRepository.setRememberSelectedCategory(!current)
     }
   }
 

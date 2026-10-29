@@ -24,6 +24,10 @@ public interface UserSettingsRepository {
   public val endOfBookBehavior: StateFlow<EndOfBookBehavior>
   public val developerMenuUnlocked: StateFlow<Boolean>
   public val onlineCoverEnabled: StateFlow<Boolean>
+  public val completionThreshold: StateFlow<Int>
+  public val hideActiveBookInOverview: StateFlow<Boolean>
+  public val rememberSelectedCategory: StateFlow<Boolean>
+  public val lastSelectedCategory: StateFlow<String?>
 
   public suspend fun setThemeMode(themeMode: ThemeMode)
   public suspend fun setThemeColor(themeColor: ThemeColor)
@@ -39,4 +43,8 @@ public interface UserSettingsRepository {
   public suspend fun setEndOfBookBehavior(behavior: EndOfBookBehavior)
   public suspend fun setDeveloperMenuUnlocked(unlocked: Boolean)
   public suspend fun setOnlineCoverEnabled(enabled: Boolean)
+  public suspend fun setCompletionThreshold(seconds: Int)
+  public suspend fun setHideActiveBookInOverview(hide: Boolean)
+  public suspend fun setRememberSelectedCategory(remember: Boolean)
+  public suspend fun setLastSelectedCategory(category: String?)
 }

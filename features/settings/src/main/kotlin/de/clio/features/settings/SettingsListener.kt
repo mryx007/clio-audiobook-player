@@ -12,6 +12,7 @@ interface SettingsListener {
   fun onPlaybackBackgroundStyleRowClick()
   fun onBackButtonBehaviorRowClick()
   fun onEndOfBookBehaviorRowClick()
+  fun onCompletionThresholdRowClick()
   fun setThemeMode(themeMode: ThemeMode)
   fun setCustomThemeHex(hex: String)
   fun setCustomTheme(
@@ -21,7 +22,10 @@ interface SettingsListener {
   fun setPlaybackBackgroundStyle(style: PlaybackBackgroundStyle)
   fun setBackButtonBehavior(behavior: BackButtonBehavior)
   fun setEndOfBookBehavior(behavior: EndOfBookBehavior)
+  fun completionThresholdChanged(seconds: Int)
   fun toggleGrid()
+  fun toggleHideActiveBookInOverview()
+  fun toggleRememberSelectedCategory()
   fun rewindAmountChanged(seconds: Int)
   fun onRewindRowClick()
   fun fastForwardAmountChanged(seconds: Int)
@@ -55,12 +59,16 @@ interface SettingsListener {
       override fun onPlaybackBackgroundStyleRowClick() {}
       override fun onBackButtonBehaviorRowClick() {}
       override fun onEndOfBookBehaviorRowClick() {}
+      override fun onCompletionThresholdRowClick() {}
       override fun setThemeMode(themeMode: ThemeMode) {}
       override fun setCustomThemeHex(hex: String) {}
       override fun setPlaybackBackgroundStyle(style: PlaybackBackgroundStyle) {}
       override fun setBackButtonBehavior(behavior: BackButtonBehavior) {}
       override fun setEndOfBookBehavior(behavior: EndOfBookBehavior) {}
+      override fun completionThresholdChanged(seconds: Int) {}
       override fun toggleGrid() {}
+      override fun toggleHideActiveBookInOverview() {}
+      override fun toggleRememberSelectedCategory() {}
       override fun rewindAmountChanged(seconds: Int) {}
       override fun onRewindRowClick() {}
       override fun fastForwardAmountChanged(seconds: Int) {}

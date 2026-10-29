@@ -40,8 +40,6 @@ internal fun Header(
   onDeleteSelectedClick: () -> Unit = {},
   sortOrder: BookSortOrder = BookSortOrder.Default,
   onSortOrderChange: (BookSortOrder) -> Unit = {},
-  groupByStatus: Boolean = false,
-  onToggleGroupByStatus: () -> Unit = {},
   showActions: Boolean = true,
 ) {
   Row(
@@ -119,8 +117,6 @@ internal fun Header(
           queueCount = queueCount,
           sortOrder = sortOrder,
           onSortOrderChange = onSortOrderChange,
-          groupByStatus = groupByStatus,
-          onToggleGroupByStatus = onToggleGroupByStatus,
         )
       }
     }
@@ -134,8 +130,6 @@ internal fun HeaderActions(
   queueCount: Int,
   sortOrder: BookSortOrder,
   onSortOrderChange: (BookSortOrder) -> Unit,
-  groupByStatus: Boolean,
-  onToggleGroupByStatus: () -> Unit,
   modifier: Modifier = Modifier,
 ) {
   Row(
@@ -194,8 +188,6 @@ internal fun HeaderActions(
       SortOrderIcon(
         sortOrder = sortOrder,
         onSortOrderChange = onSortOrderChange,
-        groupByStatus = groupByStatus,
-        onToggleGroupByStatus = onToggleGroupByStatus,
       )
     }
   }

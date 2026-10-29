@@ -13,6 +13,9 @@ data class SettingsViewState(
   val playbackBackgroundStyle: PlaybackBackgroundStyle,
   val backButtonBehavior: BackButtonBehavior,
   val endOfBookBehavior: EndOfBookBehavior,
+  val completionThresholdInSeconds: Int,
+  val hideActiveBookInOverview: Boolean,
+  val rememberSelectedCategory: Boolean,
   val rewindTimeInSeconds: Int,
   val fastForwardTimeInSeconds: Int,
   val autoRewindInSeconds: Int,
@@ -37,6 +40,7 @@ data class SettingsViewState(
     BackgroundStyle,
     BackButtonBehavior,
     EndOfBookBehavior,
+    CompletionThreshold,
   }
 
   companion object {
@@ -47,6 +51,9 @@ data class SettingsViewState(
         playbackBackgroundStyle = PlaybackBackgroundStyle.Solid,
         backButtonBehavior = BackButtonBehavior.BookOverview,
         endOfBookBehavior = EndOfBookBehavior.DoNothing,
+        completionThresholdInSeconds = 30,
+        hideActiveBookInOverview = true,
+        rememberSelectedCategory = false,
         rewindTimeInSeconds = 20,
         fastForwardTimeInSeconds = 30,
         autoRewindInSeconds = 12,

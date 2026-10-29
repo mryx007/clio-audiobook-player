@@ -31,8 +31,9 @@ enum class BookOverviewCategory(
 val Book.category: BookOverviewCategory
   get() = BookOverviewCategory.OVERVIEW
 
-fun Book.categorizeByStatus(): BookOverviewCategory {
-  val isFinished = position >= duration - SECONDS.toMillis(5)
+fun Book.categorizeByStatus(thresholdInSeconds: Int = 30): BookOverviewCategory {
+  val thresholdMs = minOf(SECONDS.toMillis(thresholdInSeconds.toLong()), duration / 2)
+  val isFinished = position > 0L && position >= duration - thresholdMs
   return when {
     isFinished -> BookOverviewCategory.COMPLETED
     position > 0L -> BookOverviewCategory.STARTED
