@@ -154,8 +154,8 @@
     <string name="book.sort.by_name_asc">Título (A-Z)</string>
     <string name="book.sort.by_name_desc">Título (Z-A)</string>
     <string name="book.sort.by_author">Autoría (A-Z)</string>
-    <string name="book.sort.by_duration_asc">Máis curto</string>
-    <string name="book.sort.by_duration_desc">Máis longo</string>
+    <string name="book.sort.by_duration_asc">A duración máis curta</string>
+    <string name="book.sort.by_duration_desc">A duración máis larga</string>
     <string name="book.sort.group_by_status">Agrupar por estado</string>
     <string name="book.bulk_delete.dialog.title">Eliminar libros</string>
     <string name="book.bulk_delete.dialog.message">Queres eliminar os %1$d libros seleccionados? Isto vai eliminar os ficheiros do teu dispositivo.</string>
@@ -257,4 +257,10 @@
     <string name="settings.player_controls.chapter_bar_summary">Mostra o título do capítulo e o progreso no reprodutor</string>
     <string name="settings.player_controls.category.buttons">Botóns visibles</string>
     <string name="settings.player_controls.category.seeking">Omitir duración</string>
+    <string name="library.category.all.title">Todo</string>
+    <string name="settings.playback.completion_threshold.title">Marcar como completo antes do final</string>
+    <string name="settings.library.hide_active_book_in_overview.title">Ocultar na biblioteca o libro activo</string>
+    <string name="settings.library.hide_active_book_in_overview.summary">Oculta na lista inferior o libro que se está escoitando cando está fixado arriba</string>
+    <string name="settings.library.remember_selected_category.title">Lembrar a categoría seleccionada</string>
+    <string name="settings.library.remember_selected_category.summary">Comezar coa última categoría de estado seleccionada no lugar de todos os libros</string>
 </resources>
