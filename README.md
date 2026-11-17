@@ -54,7 +54,7 @@ Optional setting to jump straight into your last played audiobook when opening t
      height="75">](https://f-droid.org/packages/de.clio.audiobook/)
 
 Or download the latest APK directly from GitHub Releases:
-- [Clio Audiobook Player v1.0.6 (APK)](https://github.com/mryx007/clio-audiobook-player/releases/download/v1.0.6/Clio-Audiobook-Player-v1.0.6.apk)
+- [Clio Audiobook Player v1.0.7 (APK)](https://github.com/mryx007/clio-audiobook-player/releases/download/v1.0.7/Clio-Audiobook-Player-v1.0.7.apk)
 - [All Releases](https://github.com/mryx007/clio-audiobook-player/releases)
 
 ## Credits & Acknowledgements

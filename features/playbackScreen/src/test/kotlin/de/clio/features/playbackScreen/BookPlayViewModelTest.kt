@@ -17,7 +17,6 @@ import de.clio.core.data.MarkData
 import de.clio.core.data.PlaybackBackgroundStyle
 import de.clio.core.data.PlayerButtonVisibility
 import de.clio.core.data.repo.BookQueueRepository
-import de.clio.core.data.repo.FakeBookQueueRepository
 import de.clio.core.data.sleeptimer.SleepTimerPreference
 import de.clio.core.featureflag.MemoryFeatureFlag
 import de.clio.core.playback.CurrentBookResolver
@@ -132,9 +131,9 @@ class BookPlayViewModelTest {
     playerLockedStore = playerLockedStore,
     backButtonBehaviorStore = backButtonBehaviorStore,
     endOfBookBehaviorStore = endOfBookBehaviorStore,
+    queueRepository = FakeBookQueueRepository(),
     bookId = book.id,
     dispatcherProvider = DispatcherProvider(scope.coroutineContext, scope.coroutineContext, scope.coroutineContext),
-    experimentalPlaybackPersistenceFeatureFlag = MemoryFeatureFlag(false),
     kioskModeFeatureFlag = MemoryFeatureFlag(false),
   )
 
@@ -284,12 +283,11 @@ class BookPlayViewModelTest {
   }
 
   @Test
-  fun `viewState prefers live playback state when feature flag is enabled`() = scope.runTest {
+  fun `viewState prefers live playback state`() = scope.runTest {
     val persistedBook = book()
     val livePlaybackFlow = MutableStateFlow<LivePlaybackState?>(null)
     val viewModel = viewModel(
       book = persistedBook,
-      experimentalPlaybackPersistence = true,
       livePlaybackFlow = livePlaybackFlow,
     )
 
@@ -317,7 +315,6 @@ class BookPlayViewModelTest {
   @Test
   fun `viewState falls back to manager play state when live playback is unavailable`() = scope.runTest {
     val viewModel = viewModel(
-      experimentalPlaybackPersistence = true,
       livePlaybackFlow = MutableStateFlow(null),
       playStateFlow = MutableStateFlow(PlayStateManager.PlayState.Playing),
     )
@@ -417,10 +414,10 @@ class BookPlayViewModelTest {
       playerLockedStore = playerLockedStore,
       backButtonBehaviorStore = backButtonBehaviorStore,
       endOfBookBehaviorStore = localEndOfBookBehaviorStore,
+      queueRepository = FakeBookQueueRepository(),
       bookId = book.id,
       dispatcherProvider = DispatcherProvider(scope.coroutineContext, scope.coroutineContext, scope.coroutineContext),
-      experimentalPlaybackPersistenceFeatureFlag = MemoryFeatureFlag(false),
-      kioskModeFeatureFlag = MemoryFeatureFlag(false),
+        kioskModeFeatureFlag = MemoryFeatureFlag(false),
     )
     assertIs<BookPlayViewModel>(localViewModel)
 
@@ -459,10 +456,10 @@ class BookPlayViewModelTest {
       playerLockedStore = playerLockedStore,
       backButtonBehaviorStore = backButtonBehaviorStore,
       endOfBookBehaviorStore = localEndOfBookBehaviorStore,
+      queueRepository = FakeBookQueueRepository(),
       bookId = book.id,
       dispatcherProvider = DispatcherProvider(scope.coroutineContext, scope.coroutineContext, scope.coroutineContext),
-      experimentalPlaybackPersistenceFeatureFlag = MemoryFeatureFlag(false),
-      kioskModeFeatureFlag = MemoryFeatureFlag(false),
+        kioskModeFeatureFlag = MemoryFeatureFlag(false),
     )
     assertIs<BookPlayViewModel>(localViewModel)
 
@@ -558,7 +555,6 @@ class BookPlayViewModelTest {
     navigator: Navigator = mockk(relaxed = true),
     queueRepository: BookQueueRepository = FakeBookQueueRepository(),
     endOfBookBehavior: EndOfBookBehavior = EndOfBookBehavior.DoNothing,
-    experimentalPlaybackPersistence: Boolean = false,
     kioskMode: Boolean = false,
     playStateFlow: MutableStateFlow<PlayStateManager.PlayState> = MutableStateFlow(PlayStateManager.PlayState.Paused),
     dispatcherProvider: DispatcherProvider = DispatcherProvider(scope.coroutineContext, scope.coroutineContext, scope.coroutineContext),
@@ -592,7 +588,6 @@ class BookPlayViewModelTest {
       queueRepository = queueRepository,
       bookId = book.id,
       dispatcherProvider = dispatcherProvider,
-      experimentalPlaybackPersistenceFeatureFlag = MemoryFeatureFlag(experimentalPlaybackPersistence),
       kioskModeFeatureFlag = MemoryFeatureFlag(kioskMode),
     )
   }

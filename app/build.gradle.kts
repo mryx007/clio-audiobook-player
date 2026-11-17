@@ -31,8 +31,8 @@ android {
 
   defaultConfig {
     applicationId = "de.clio.audiobook"
-    versionName = providers.gradleProperty("de.clio.versionName").orNull ?: "1.0.6"
-    versionCode = providers.gradleProperty("de.clio.versionCode").orNull?.toInt() ?: 10006
+    versionName = providers.gradleProperty("de.clio.versionName").orNull ?: "1.0.7"
+    versionCode = providers.gradleProperty("de.clio.versionCode").orNull?.toInt() ?: 10007
 
     testInstrumentationRunner = "de.clio.app.ClioJUnitRunner"
   }

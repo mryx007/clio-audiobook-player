@@ -33,8 +33,6 @@ class GainAudioProcessor : BaseAudioProcessor() {
     }
   }
 
-  fun getGain(): Decibel = gain
-
   override fun isActive(): Boolean = gain.value > 0f && super.isActive()
 
   override fun onConfigure(inputAudioFormat: AudioProcessor.AudioFormat): AudioProcessor.AudioFormat {

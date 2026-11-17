@@ -16,6 +16,7 @@ import de.clio.core.data.Book
 import de.clio.core.data.BookId
 import de.clio.core.data.repo.BookRepository
 import de.clio.core.data.store.CurrentBookStore
+import de.clio.core.logging.api.Logger
 import de.clio.core.playback.notification.MainActivityIntentProvider
 import de.clio.core.playback.playstate.PlayStateManager
 import de.clio.core.playback.receiver.WidgetButtonReceiver
@@ -23,9 +24,11 @@ import de.clio.core.ui.dpToPxRounded
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -44,7 +47,9 @@ class WidgetUpdater(
 
   private val appWidgetManager = AppWidgetManager.getInstance(context)
 
-  private val scope = CoroutineScope(Dispatchers.IO)
+  private val scope = CoroutineScope(
+    SupervisorJob() + Dispatchers.IO + CoroutineExceptionHandler { _, throwable -> Logger.e(throwable, "Widget update failed") },
+  )
   private var updateJob: Job? = null
 
   fun update() {

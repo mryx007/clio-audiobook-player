@@ -9,9 +9,11 @@ import de.clio.core.logging.api.Logger
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.SingleIn
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,7 +35,9 @@ internal constructor(
   public val scannerActive: Flow<Boolean>
     field = MutableStateFlow(false)
 
-  private val scope = CoroutineScope(Dispatchers.IO)
+  private val scope = CoroutineScope(
+    SupervisorJob() + Dispatchers.IO + CoroutineExceptionHandler { _, throwable -> Logger.e(throwable, "Scan failed") },
+  )
   private var scanningJob: Job? = null
 
   public fun scan(restartIfScanning: Boolean = false) {

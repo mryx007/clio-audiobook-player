@@ -72,4 +72,24 @@ class EqualizerAudioProcessorTest {
     val output = processor.output
     assertTrue(output.remaining() > 0)
   }
+
+  @Test
+  @Suppress("DEPRECATION")
+  fun `setting applied before configure filters audio`() {
+    val processor = EqualizerAudioProcessor()
+    processor.setSetting(EqualizerSetting(listOf(12, 12, 12, 0, 0, 0, 0, 0, 0, 0)))
+    processor.configure(AudioProcessor.AudioFormat(44100, 1, C.ENCODING_PCM_16BIT))
+    processor.flush()
+
+    val input = ShortArray(256) { 1000 }
+    val buffer = ByteBuffer.allocateDirect(input.size * 2).order(ByteOrder.LITTLE_ENDIAN)
+    input.forEach { buffer.putShort(it) }
+    buffer.flip()
+
+    processor.queueInput(buffer)
+    val output = processor.output.order(ByteOrder.LITTLE_ENDIAN)
+    val outputSamples = ShortArray(output.remaining() / 2) { output.short }
+
+    assertTrue(outputSamples.toList() != input.toList())
+  }
 }

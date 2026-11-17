@@ -26,7 +26,6 @@ import de.clio.core.data.markForPosition
 import de.clio.core.data.repo.BookQueueRepository
 import de.clio.core.data.repo.BookRepository
 import de.clio.core.data.repo.BookmarkRepo
-import de.clio.core.data.repo.FakeBookQueueRepository
 import de.clio.core.data.sleeptimer.SleepTimerPreference
 import de.clio.core.data.store.BackButtonBehaviorStore
 import de.clio.core.data.store.CurrentBookStore
@@ -37,7 +36,6 @@ import de.clio.core.data.store.PlayerButtonVisibilityStore
 import de.clio.core.data.store.PlayerLockedStore
 import de.clio.core.data.store.RewindTimeStore
 import de.clio.core.data.store.SleepTimerPreferenceStore
-import de.clio.core.featureflag.ExperimentalPlaybackPersistenceQualifier
 import de.clio.core.featureflag.FeatureFlag
 import de.clio.core.featureflag.KioskModeFeatureFlagQualifier
 import de.clio.core.logging.api.Logger
@@ -103,9 +101,7 @@ class BookPlayViewModel(
   private val backButtonBehaviorStore: DataStore<BackButtonBehavior>,
   @EndOfBookBehaviorStore
   private val endOfBookBehaviorStore: DataStore<EndOfBookBehavior>,
-  private val queueRepository: BookQueueRepository = FakeBookQueueRepository(),
-  @ExperimentalPlaybackPersistenceQualifier
-  private val experimentalPlaybackPersistenceFeatureFlag: FeatureFlag<Boolean>,
+  private val queueRepository: BookQueueRepository,
   @KioskModeFeatureFlagQualifier
   private val kioskModeFeatureFlag: FeatureFlag<Boolean>,
   @Assisted

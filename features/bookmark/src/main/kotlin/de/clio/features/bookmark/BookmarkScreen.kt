@@ -30,6 +30,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.retain.RetainedEffect
 import androidx.compose.runtime.retain.retain
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -75,6 +76,9 @@ interface BookmarkProvider {
 fun BookmarkScreen(bookId: BookId) {
   val viewModel = retain(bookId.value) {
     rootGraphAs<Graph>().bookmarkViewModelFactory.create(bookId)
+  }
+  RetainedEffect(viewModel) {
+    onRetire(viewModel::close)
   }
   val viewState = viewModel.viewState()
   BookmarkScreen(

@@ -58,11 +58,6 @@ public class StatisticsViewModel(
     selectedMonthIndexState = if (selectedMonthIndexState == monthIndex) null else monthIndex
   }
 
-  public fun clearSelectedYear() {
-    selectedYearState = null
-    selectedMonthIndexState = null
-  }
-
   @Composable
   @SuppressLint("NonObservableLocale")
   public fun viewState(): StatisticsViewState {
@@ -210,10 +205,6 @@ public class StatisticsViewModel(
     scope.launch {
       statisticRepo.clearStatistics()
     }
-  }
-
-  public fun importXml(uri: Uri) {
-    importFromUri(uri)
   }
 
   @SuppressLint("Recycle")

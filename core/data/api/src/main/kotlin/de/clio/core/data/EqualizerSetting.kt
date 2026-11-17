@@ -9,15 +9,6 @@ public data class EqualizerSetting(public val bands: List<Int> = List(10) { 0 })
 
   public fun serialize(): String = bands.joinToString(",")
 
-  public fun withBand(
-    index: Int,
-    valueDb: Int,
-  ): EqualizerSetting {
-    val newBands = bands.toMutableList()
-    newBands[index] = valueDb.coerceIn(-12, 12)
-    return EqualizerSetting(newBands)
-  }
-
   public companion object {
     public val Flat: EqualizerSetting = EqualizerSetting(listOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0))
 

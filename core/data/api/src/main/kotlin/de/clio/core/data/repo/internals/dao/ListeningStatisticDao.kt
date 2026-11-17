@@ -15,9 +15,6 @@ public interface ListeningStatisticDao {
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   public suspend fun insert(statistic: ListeningStatistic)
 
-  @Insert(onConflict = OnConflictStrategy.REPLACE)
-  public suspend fun insertAll(statistics: List<ListeningStatistic>)
-
   @Query("SELECT * FROM listening_statistics WHERE bookTitle = :bookTitle AND yearMonth = :yearMonth LIMIT 1")
   public suspend fun findByBookAndMonth(
     bookTitle: String,

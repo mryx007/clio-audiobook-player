@@ -4,8 +4,6 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import de.clio.core.data.repo.BookRepository
 import de.clio.core.data.repo.ListeningStatisticRepository
-import de.clio.core.featureflag.ExperimentalPlaybackPersistenceQualifier
-import de.clio.core.featureflag.FeatureFlag
 import de.clio.core.logging.api.Logger
 import de.clio.core.playback.di.PlaybackScope
 import de.clio.core.playback.session.bookId
@@ -33,8 +31,6 @@ class PositionUpdater(
   private val listeningStatisticRepo: ListeningStatisticRepository,
   private val scope: CoroutineScope,
   private val playStateManager: PlayStateManager,
-  @ExperimentalPlaybackPersistenceQualifier
-  private val experimentalPlaybackPersistenceFeatureFlag: FeatureFlag<Boolean>,
 ) : Player.Listener {
 
   private var player: Player? = null

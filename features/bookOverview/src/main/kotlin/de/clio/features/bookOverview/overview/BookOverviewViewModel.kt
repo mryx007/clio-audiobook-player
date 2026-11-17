@@ -24,7 +24,6 @@ import de.clio.core.data.GridMode
 import de.clio.core.data.KioskModeDemoData
 import de.clio.core.data.repo.BookQueueRepository
 import de.clio.core.data.repo.BookRepository
-import de.clio.core.data.repo.FakeBookQueueRepository
 import de.clio.core.data.store.BookSortOrderStore
 import de.clio.core.data.store.CompletionThresholdStore
 import de.clio.core.data.store.CurrentBookStore
@@ -57,7 +56,7 @@ import kotlin.time.Instant
 @Inject
 class BookOverviewViewModel(
   private val repo: BookRepository,
-  private val queueRepo: BookQueueRepository = FakeBookQueueRepository(),
+  private val queueRepo: BookQueueRepository,
   private val mediaScanner: MediaScanTrigger,
   private val playStateManager: PlayStateManager,
   private val playerController: PlayerController,
@@ -427,12 +426,6 @@ class BookOverviewViewModel(
     dialog = null
     scope.launch {
       folderPickerMovedDialogShownStore.updateData { true }
-    }
-  }
-
-  fun onSearchActiveChange(active: Boolean) {
-    if (!active) {
-      query = ""
     }
   }
 

@@ -1,12 +1,13 @@
-package de.clio.core.data.repo
+package de.clio.features.bookOverview.overview
 
 import de.clio.core.data.BookId
+import de.clio.core.data.repo.BookQueueRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-public class FakeBookQueueRepository(initial: List<BookId> = emptyList()) : BookQueueRepository {
+class FakeBookQueueRepository(initial: List<BookId> = emptyList()) : BookQueueRepository {
 
   private val _queueFlow = MutableStateFlow(initial)
   override val queueFlow: StateFlow<List<BookId>> = _queueFlow.asStateFlow()

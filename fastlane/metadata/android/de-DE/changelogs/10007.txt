@@ -1,0 +1,2 @@
+• Fixed: Equalizer-Einstellungen greifen nach einem App-Neustart wieder sofort
+• Bugfixes

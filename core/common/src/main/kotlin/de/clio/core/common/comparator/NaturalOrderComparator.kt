@@ -39,5 +39,3 @@ object NaturalOrderComparator {
     }
   }
 }
-
-fun Set<String>.sortedNaturally(): List<String> = sortedWith(NaturalOrderComparator.stringComparator)

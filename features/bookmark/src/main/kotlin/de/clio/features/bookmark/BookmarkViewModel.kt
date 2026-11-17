@@ -27,8 +27,12 @@ import de.clio.navigation.Navigator
 import dev.zacsweers.metro.Assisted
 import dev.zacsweers.metro.AssistedFactory
 import dev.zacsweers.metro.AssistedInject
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import kotlin.time.Duration.Companion.days
@@ -135,8 +139,11 @@ class BookmarkViewModel(
 
     val wasPlaying = playStateManager.playState == PlayStateManager.PlayState.Playing
 
-    scope.launch {
-      currentBookStore.updateData { bookId }
+    // Navigating back retires the view model and cancels its scope, so this update must not be cancellable.
+    scope.launch(start = CoroutineStart.UNDISPATCHED) {
+      withContext(NonCancellable) {
+        currentBookStore.updateData { bookId }
+      }
     }
     playerController.setPosition(bookmark.time, bookmark.chapterId)
 
@@ -199,6 +206,10 @@ class BookmarkViewModel(
 
   fun closeScreen() {
     navigator.goBack()
+  }
+
+  fun close() {
+    scope.cancel()
   }
 
   @AssistedFactory

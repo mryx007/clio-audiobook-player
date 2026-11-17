@@ -27,7 +27,7 @@ class EqualizerAudioProcessor : BaseAudioProcessor() {
   fun setSetting(newSetting: EqualizerSetting) {
     setting = newSetting
     isFlat = newSetting.isFlat
-    updateCoefficients()
+    updateCoefficients(inputAudioFormat.sampleRate)
   }
 
   fun getSetting(): EqualizerSetting = setting
@@ -38,7 +38,7 @@ class EqualizerAudioProcessor : BaseAudioProcessor() {
     if (inputAudioFormat.encoding != C.ENCODING_PCM_16BIT) {
       throw UnhandledAudioFormatException(inputAudioFormat)
     }
-    updateCoefficients()
+    updateCoefficients(inputAudioFormat.sampleRate)
     return inputAudioFormat
   }
 
@@ -92,6 +92,7 @@ class EqualizerAudioProcessor : BaseAudioProcessor() {
   @Deprecated("Deprecated in Java")
   @Suppress("DEPRECATION")
   override fun onFlush() {
+    updateCoefficients(inputAudioFormat.sampleRate)
     for (filter in filters) {
       filter.reset()
     }
@@ -103,8 +104,7 @@ class EqualizerAudioProcessor : BaseAudioProcessor() {
     }
   }
 
-  private fun updateCoefficients() {
-    val sampleRate = inputAudioFormat.sampleRate
+  private fun updateCoefficients(sampleRate: Int) {
     if (sampleRate <= 0) return
 
     val bands = setting.bands

@@ -21,12 +21,15 @@ import de.clio.core.playback.session.playbackItemForPosition
 import de.clio.core.playback.session.positionInMediaItem
 import de.clio.core.playback.session.sendCustomCommand
 import de.clio.core.playback.session.toMediaIdOrNull
+import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.Inject
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
@@ -40,6 +43,7 @@ import kotlinx.coroutines.launch
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
+@SingleIn(AppScope::class)
 @Inject
 class PlayerController(
   private val context: Context,
@@ -59,15 +63,19 @@ class PlayerController(
   private val controller: Deferred<MediaController>
     get() {
       if (_controller.isCompleted) {
-        val completedController = _controller.getCompleted()
-        if (!completedController.isConnected) {
-          completedController.release()
+        if (_controller.getCompletionExceptionOrNull() != null) {
           _controller = newControllerAsync()
+        } else {
+          val completedController = _controller.getCompleted()
+          if (!completedController.isConnected) {
+            completedController.release()
+            _controller = newControllerAsync()
+          }
         }
       }
       return _controller
     }
-  private val scope = CoroutineScope(Dispatchers.Main.immediate)
+  private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
   fun setPosition(
     time: Long,

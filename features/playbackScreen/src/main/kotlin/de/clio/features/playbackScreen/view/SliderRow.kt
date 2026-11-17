@@ -27,7 +27,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import de.clio.core.ui.formatTime
@@ -173,15 +172,4 @@ internal fun SliderRow(
       )
     }
   }
-}
-
-internal fun Color.toVibrant(): Color {
-  val hsv = FloatArray(3)
-  android.graphics.Color.colorToHSV(this.toArgb(), hsv)
-  if (hsv[1] > 0.08f) {
-    hsv[1] = hsv[1].coerceAtLeast(0.85f)
-    hsv[2] = hsv[2].coerceIn(0.85f, 1.0f)
-    return Color(android.graphics.Color.HSVToColor(hsv))
-  }
-  return Color.White
 }

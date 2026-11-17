@@ -48,6 +48,7 @@ class BookOverviewViewModelTest {
     val otherBook = book(name = "Other", time = 2_000)
     val livePlaybackFlow = MutableStateFlow<LivePlaybackState?>(null)
     val viewModel = BookOverviewViewModel(
+      queueRepo = FakeBookQueueRepository(),
       repo = mockk<BookRepository> {
         every { flow() } returns MutableStateFlow(listOf(currentBook, otherBook))
       },
@@ -115,6 +116,7 @@ class BookOverviewViewModelTest {
     val book1 = book(name = "Harry Potter", time = 1_000)
     val book2 = book(name = "Lord of the Rings", time = 2_000)
     val viewModel = BookOverviewViewModel(
+      queueRepo = FakeBookQueueRepository(),
       repo = mockk<BookRepository> {
         every { flow() } returns MutableStateFlow(listOf(book1, book2))
       },
@@ -167,6 +169,7 @@ class BookOverviewViewModelTest {
   @Test
   fun `state uses demo books in kiosk mode`() = runTest {
     val viewModel = BookOverviewViewModel(
+      queueRepo = FakeBookQueueRepository(),
       repo = mockk<BookRepository> {
         every { flow() } returns MutableStateFlow(emptyList())
       },
@@ -327,6 +330,7 @@ class BookOverviewViewModelTest {
     val bookZ = book(name = "Zeta", lastPlayedAt = java.time.Instant.ofEpochMilli(200))
     val sortOrderStore = MemoryDataStore(BookSortOrder.BY_LAST_PLAYED)
     val viewModel = BookOverviewViewModel(
+      queueRepo = FakeBookQueueRepository(),
       repo = mockk<BookRepository> {
         every { flow() } returns MutableStateFlow(listOf(bookA, bookZ))
       },
@@ -384,6 +388,7 @@ class BookOverviewViewModelTest {
     appInfoProvider: AppInfoProvider = appInfoProvider(),
   ): BookOverviewViewModel {
     return BookOverviewViewModel(
+      queueRepo = FakeBookQueueRepository(),
       repo = mockk<BookRepository> {
         every { flow() } returns MutableStateFlow(emptyList())
       },
